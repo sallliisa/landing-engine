@@ -1,0 +1,225 @@
+// schema.prisma
+datasource db {
+  provider = "postgresql" // or your preferred database provider
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ENUMS
+enum ContentMediaType {
+  image
+  video
+  panorama
+  viruma
+}
+
+enum Language {
+  id
+  en
+}
+
+enum FieldType {
+  text
+  textarea
+  image
+  file
+  date
+}
+
+// MODELS
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  name     String
+  password String
+
+  // Each user has one role.
+  role_id   Int
+  role     Role   @relation(fields: [role_id], references: [id])
+
+  sessions Session[]
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  user_id    Int
+  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model MenuItem {
+  id           String                 @id @default(cuid())
+  parent_id     String?
+  level        Int                    // 0 for root, 1 for first level, etc.
+  parent       MenuItem?              @relation("MenuItemChildren", fields: [parent_id], references: [id])
+  children     MenuItem[]             @relation("MenuItemChildren")
+  page_id       String?                // Only set for leaf items linking to an actual page
+  page         Page?                  @relation(fields: [page_id], references: [id])
+  order        Int                    // For ordering among siblings
+  translations MenuItemTranslation[]
+}
+
+model MenuItemTranslation {
+  id         String   @id @default(cuid())
+  menu_item_id String
+  language   Language
+  title      String
+  menuItem   MenuItem @relation(fields: [menu_item_id], references: [id], onDelete: Cascade)
+}
+
+model Page {
+  id          String    @id @default(cuid())
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  translations PageTranslation[]
+  MenuItem     MenuItem[]
+}
+
+model PageTranslation {
+  id       String   @id @default(cuid())
+  page_id   String
+  language Language
+  title    String
+  page     Page      @relation(fields: [page_id], references: [id])
+  sections Section[]
+}
+
+model SectionType {
+  id        String   @id @default(cuid())
+  name      String
+  structure Json
+  Section   Section[]
+}
+
+model Section {
+  id                String          @id @default(cuid())
+  name              String
+  description       String?
+  visible           Boolean         @default(true)
+  order             Int
+  section_type_id     String?
+  sectionType       SectionType?    @relation(fields: [section_type_id], references: [id])
+  page_translation_id String?
+  pageTranslation   PageTranslation? @relation(fields: [page_translation_id], references: [id])
+  parent_section_id   String?
+  parentSection     Section?         @relation("SectionChildren", fields: [parent_section_id], references: [id])
+  childrenSections  Section[]        @relation("SectionChildren")
+  section_group_id    String?
+  sectionGroup      SectionGroup?    @relation(fields: [section_group_id], references: [id])
+  contents          Content[]
+  galleries         Gallery[]
+  sectionGroups     SectionGroup[]   @relation("SectionToGroups")
+}
+
+model Content {
+  id          String   @id @default(cuid())
+  imageUrl    String
+  title       String
+  subtitle    String?
+  description String?
+  order       Int
+  section_id   String?
+  section     Section? @relation(fields: [section_id], references: [id])
+  gallery_id   String?
+  gallery     Gallery? @relation(fields: [gallery_id], references: [id])
+}
+
+model Gallery {
+  id        String    @id @default(cuid())
+  order     Int
+  section_id String
+  section   Section   @relation(fields: [section_id], references: [id])
+  items     Content[]
+}
+
+model SectionGroup {
+  id                  String @id @default(cuid())
+  structureDefinition Json
+  order               Int
+  parent_section_id     String?
+  parentSection       Section? @relation("SectionToGroups", fields: [parent_section_id], references: [id])
+  sections            Section[]
+}
+
+model FormType {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  fields      FormField[]
+  submissions FormSubmission[]
+  // Many-to-many relation to Role for access control.
+  allowedRoles Role[]    @relation("FormTypeAccess")
+}
+
+model FormField {
+  id              String    @id @default(cuid())
+  form_type_id      String
+  formType        FormType  @relation(fields: [form_type_id], references: [id])
+  order           Int
+  type            FieldType
+  label           String
+  required        Boolean   @default(false)
+  helperMessage   String?
+  validationRegex String?
+}
+
+model FormSubmission {
+  id          String    @id @default(cuid())
+  form_type_id  String
+  formType    FormType  @relation(fields: [form_type_id], references: [id])
+  data        Json
+  read        Boolean   @default(false)
+  submitted_at DateTime  @default(now())
+}
+
+///
+/// User Roles & Permissions
+///
+
+model Role {
+  id         Int       @id @default(autoincrement())
+  name       String
+  role_group_id Int
+  roleGroup  RoleGroup @relation(fields: [role_group_id], references: [id])
+  // Many-to-many relation with Permission
+  permissions Permission[] @relation("RolePermissions")
+  // Users that have this Role
+  users       User[]
+  // Access control for forms: which form types are accessible to this role.
+  accessibleFormTypes FormType[] @relation("FormTypeAccess")
+}
+
+model RoleGroup {
+  id    Int     @id @default(autoincrement())
+  name  String
+  roles Role[]
+}
+
+model Permission {
+  id          Int       @id @default(autoincrement())
+  name        String
+  code        String    @unique
+  description String?
+  // Many-to-many relation with Role
+  roles       Role[]    @relation("RolePermissions")
+}
+
+model CompanyProfile {
+  id        Int     @id @default(autoincrement())
+  name      String?
+  slogan    String?
+  address   String?
+  email     String?
+  phone     String?
+  facebook  String?
+  instagram String?
+  twitter   String?
+  youtube   String?
+  whatsapp  String?
+  brochure  String?
+}
