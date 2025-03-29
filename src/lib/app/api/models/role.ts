@@ -28,9 +28,6 @@ export default {
       roleGroup: {
         fields: ["name"],
       },
-      permissions: {
-        fields: ["name", "code"],
-      },
     },
   },
 

@@ -1,15 +1,15 @@
+import { languages } from "$lib/utils/common";
 import prisma from "$lib/utils/prisma";
 import type { Language, Prisma } from "@prisma/client";
 
 export default {
   allow: true,
-  fields: ['id', 'parent_id', 'page_id', 'order'],
+  fields: ['id', 'parent_id', 'page_id', 'level', 'order', 'menu_item_type', 'url'],
   types: {
     order: 'number'
   },
 
   create: {
-    fields: ['parent_id', 'page_id', 'level', 'order'],
     validation: {
       name: [
         {
@@ -47,7 +47,6 @@ export default {
         return body;
       },
       post: async (body: any, data: any) => {
-        const languages = ['id', 'en'] as Language[];
         const translations = languages.map(language => ({
           title: body.name,
           language,
@@ -63,7 +62,6 @@ export default {
 
   update: {
     by: ['id'],
-    fields: ['parent_id', 'page_id', 'order'],
     validation: {
       order: [
         {
@@ -75,7 +73,6 @@ export default {
   },
 
   list: {
-    fields: ['id', 'parent_id', 'level', 'page_id', 'order'],
     searchableBy: ['id'],
     filterableBy: ['parent_id', 'page_id', "level"],
     orderBy: { order: 'asc' },
@@ -99,7 +96,6 @@ export default {
 
   detail: {
     by: ['id'],
-    fields: ['id', 'parent_id', 'page_id', 'order'],
     fieldsForeign: {
       translations: {
         fields: ['title', 'language']

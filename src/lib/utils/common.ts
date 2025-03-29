@@ -1,3 +1,4 @@
+import type { Language } from "@prisma/client";
 import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -114,6 +115,31 @@ export function isValidUrl (url: string) {
     return false; 
   }
 }
+
+export function resolveCustomField(data: any, path: string[], arrayStrategy?: ArrayStrategy): any {
+  let value = data;
+  for (const segment of path) {
+    if (!value) return null;
+    
+    if (Array.isArray(value)) {
+      if (!arrayStrategy || arrayStrategy === 'first') {
+        value = value[0]?.[segment];
+      } else if (arrayStrategy === 'last') {
+        value = value[value.length - 1]?.[segment];
+      } else if (arrayStrategy === 'all') {
+        value = value.map(item => item[segment]);
+      } else if (typeof arrayStrategy === 'object' && arrayStrategy.where) {
+        const { field, value: matchValue } = arrayStrategy.where;
+        value = value.find(item => item[field] === matchValue)?.[segment];
+      }
+    } else {
+      value = value[segment];
+    }
+  }
+  return value;
+}
+
+export const languages: Language[] = ['id', 'en'];
 
 export function isFileURL(url: string) {
   return !!url.split(/[#?]/)[0].split('.').pop()?.trim();

@@ -10,20 +10,23 @@ declare global {
     value?: any
   }
 
+  type ArrayStrategy = 'first' | 'last' | 'all' | {
+    where?: {
+      field: string
+      value: any
+    }
+  }
+
   type WhereConfig<T> = {
     AND?: Condition<T>[]
     OR?: Condition<T>[]
     NOT?: Condition<T>[]
   }
   type FieldType = 'file' | 'number' | 'string'
-  
-  type Validator = {
-    validator: (value: any) => boolean | Promise<boolean>,
-    message: string
-  }
 
-  type ValidationConfig<T> = {
-    [K in keyof T]?: Validator[]
+  type CustomFieldConfig = {
+    name: string,        // Name of the field
+    generator: (data: Record<string, any>) => any // Handler function to process the data
   }
 
   type FieldsForeignConfig<T> = {
@@ -33,12 +36,62 @@ declare global {
     }
   }
 
+  type Validator = {
+    validator: (value: any) => boolean | Promise<boolean>,
+    message: string
+  }
+
+  type ValidationConfig<T> = {
+    [K in keyof T]?: Validator[]
+  }
+
   type TransactionOperationConfig<T> = {
     // Validation config. supports multiple validators per field
     validation?: ValidationConfig<T>,
+    lifecycle?: TransactionLifecycleConfig
   }
 
-  type LifecycleConfig = {
+  type ViewOperationConfig<T> = {
+    // References another field from another model
+    // Ex. fieldsForeign: {"categories": {fields: ["name"]}}
+    //     Will add the "name" field from the "categories" model of data that are correlated with each of the data being listed
+    //     There's no need to specify which field relates to which model, as that's already described in the Prisma schema
+    fieldsForeign?: FieldsForeignConfig<T>,
+    // Custom fields derived from relations
+    customFields?: CustomFieldConfig[],
+  }
+
+  type DetailLifecycleConfig = {
+    // Prepare data before the main update operation
+    // Field data augmentation, value derivation, etc.
+    // body: Raw data body
+    pre?: (urlSearchParams: Record<string, any>) => Promise<Record<string, any>>,
+    // Main update operation
+    // Ex. use case: Different fields to assign depending on a value of a field
+    // body: What's returned by pre
+    main?: (where: Record<string, any>, skip?: number, take?: number) => Promise<Record<string, any>>,
+    // What to do after the main operation
+    // Ex. use case: Create on another model depending on the value of what's being returned from main
+    // body: What's returned by main
+    post?: (data: Record<string, any>, total?: number) => Promise<Record<string, any>>
+  }
+
+  type ListLifecycleConfig = {
+    // Prepare data before the main update operation
+    // Field data augmentation, value derivation, etc.
+    // body: Raw data body
+    pre?: (urlSearchParams: Record<string, any>) => Promise<Record<string, any>>,
+    // Main update operation
+    // Ex. use case: Different fields to assign depending on a value of a field
+    // body: What's returned by pre
+    main?: (where: Record<string, any>, skip?: number, take?: number) => Promise<Record<string, any>>,
+    // What to do after the main operation
+    // Ex. use case: Create on another model depending on the value of what's being returned from main
+    // body: What's returned by main
+    post?: (data: Record<string, any>[], total?: number) => Promise<Record<string, any>>
+  }
+
+  type TransactionLifecycleConfig = {
     // Prepare data before the main update operation
     // Field data augmentation, value derivation, etc.
     // body: Raw data body
@@ -71,16 +124,39 @@ declare global {
     //   ]
     // }
     where?: WhereConfig<T>,
-    // References another field from another model
-    // Ex. fieldsForeign: {"categories": {fields: ["name"]}}
-    //     Will add the "name" field from the "categories" model of data that are correlated with each of the data being listed
-    //     There's no need to specify which field relates to which model, as that's already described in the Prisma schema
-    fieldsForeign?: FieldsForeignConfig<T>
     // Which fields are used to identify a specific record when performing the update operation
     by?: (keyof T)[],
   }
 
+  type CreateConfig<T> = Omit<BaseOperationConfig<T>, 'where'> & TransactionOperationConfig<T>
+  type UpdateConfig<T> = BaseOperationConfig<T> & TransactionOperationConfig<T>
+  type ListConfig<T> = BaseOperationConfig<T> & ViewOperationConfig<T> & {
+    // Which fields will be matched by the "search" query parameter.
+    // Will do a case-insensitive search
+    // Ex. searchableBy: ['name', 'age']
+    //     .../list?search=Bobby would search the records where the field name contains "bobby" or age contains "bobby"
+    //     .../list?search=25 would search the records for the field name contains "25" or age contains "25"
+    searchableBy?: (keyof T)[],
+    // Which fields will be matched by the "[fieldName]" query parameter
+    // Will do a case-sensitive search
+    // Ex. filterableBy: ['category_id', 'name']
+    //     .../list?category_id=25 would search the records where the field "category_id" is equal to "25"
+    //     .../list?name=Bobby%20Anderson would search the records for the field "name" is equal to "Bobby Anderson"
+    filterableBy?: (keyof T)[],
+    // The order of which the data is being displayed, according to what field
+    // Ex. orderBy: {"age": "asc"}
+    //     Will return the list of data from the lowest to highest age
+    orderBy?: Record<keyof T?, 'asc' | 'desc'>,
+    lifecycle?: ListLifecycleConfig,
+  }
+  type DetailConfig<T> = BaseOperationConfig<T> & ViewOperationConfig<T> & {
+    lifecycle?: DetailLifecycleConfig,
+  }
+  type DeleteConfig<T> = Pick<BaseOperationConfig<T>, 'by' | 'allow' | 'where'>
+
   type ModelConfig<T> = BaseOperationConfig<T> & {
+    view?: ViewOperationConfig<T>,
+    transaction?: TransactionOperationConfig<T>,
     // Describes the type of each of the field.
     // Primarily used for declaring which field contains a file URL (of type file)
     // So that that field could be handled accordingly
@@ -98,32 +174,11 @@ declare global {
     //          So make sure to type fields that are not of type string
     //          properly.
     types?: {[K in keyof T]?: FieldType},
-    create?: BaseOperationConfig<T> & TransactionOperationConfig<T> &  {
-      lifecycle?: LifecycleConfig
-    },
-    update?: BaseOperationConfig<T> & TransactionOperationConfig<T> & {
-      lifecycle?: LifecycleConfig
-    },
-    list?: Omit<BaseOperationConfig<T>, 'validation'> &  {
-      // Which fields will be matched by the "search" query parameter.
-      // Will do a case-insensitive search
-      // Ex. searchableBy: ['name', 'age']
-      //     .../list?search=Bobby would search the records where the field name contains "bobby" or age contains "bobby"
-      //     .../list?search=25 would search the records for the field name contains "25" or age contains "25"
-      searchableBy?: (keyof T)[],
-      // Which fields will be matched by the "[fieldName]" query parameter
-      // Will do a case-sensitive search
-      // Ex. filterableBy: ['category_id', 'name']
-      //     .../list?category_id=25 would search the records where the field "category_id" is equal to "25"
-      //     .../list?name=Bobby%20Anderson would search the records for the field "name" is equal to "Bobby Anderson"
-      filterableBy?: (keyof T)[],
-      // The order of which the data is being displayed, according to what field
-      // Ex. orderBy: {"age": "asc"}
-      //     Will return the list of data from the lowest to highest age
-      orderBy?: Record<keyof T?, 'asc' | 'desc'>
-    },
-    detail?: BaseOperationConfig<T>,
-    delete?: Pick<BaseOperationConfig<T>, 'by' | 'allow' | 'where'>,
+    create?: CreateConfig<T>,
+    update?: UpdateConfig<T>,
+    list?: ListConfig<T>,
+    detail?: DetailConfig<T>,
+    delete?: DeleteConfig<T>,
     reorder?: BaseOperationConfig<T>
   }
 }

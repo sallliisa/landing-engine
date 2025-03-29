@@ -5,18 +5,18 @@ import { deleteFile, saveFileFromTemp } from '$lib/utils/filestorage.js'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response.js'
 
-function mergeUpdateConfigs<T>(
-  base: ModelConfig<T>,
-  create?: BaseOperationConfig<T> & TransactionOperationConfig<T>,
-  update?: BaseOperationConfig<T> & TransactionOperationConfig<T>
-): BaseOperationConfig<T> & TransactionOperationConfig<T> {
+function mergeUpdateConfigs<T>(base: ModelConfig<T>, create?: CreateConfig<T>, update?: UpdateConfig<T>): UpdateConfig<T> {
   return {
     allow: update?.allow ?? base?.allow,
     fields: update?.fields ?? create?.fields ?? base?.fields,
     validation: update?.validation ?? create?.validation,
-    where: update?.where ?? create?.where ?? base?.where,
-    fieldsForeign: update?.fieldsForeign ?? create?.fieldsForeign ?? base?.fieldsForeign,
-    by: update?.by ?? create?.by ?? base?.by
+    where: update?.where ?? base?.where,
+    by: update?.by ?? create?.by ?? base?.by,
+    lifecycle: {
+      pre: update?.lifecycle?.pre ?? create?.lifecycle?.pre ?? base?.transaction?.lifecycle?.pre,
+      main: update?.lifecycle?.main ?? create?.lifecycle?.main ?? base?.transaction?.lifecycle?.main,
+      post: update?.lifecycle?.post ?? create?.lifecycle?.post ?? base?.transaction?.lifecycle?.post,
+    }
   }
 }
 

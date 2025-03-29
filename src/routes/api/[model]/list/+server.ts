@@ -1,16 +1,18 @@
 import { MESSAGE } from '$lib/app/api/constants.js';
 import { configs } from '$lib/app/api/models/_index';
-import { buildWhereClause, omitIfEmptyObject, parseSearchParams, transformFieldsForeign } from '$lib/utils/common.js';
+import { buildWhereClause, omitIfEmptyObject, parseSearchParams, resolveCustomField, transformFieldsForeign } from '$lib/utils/common.js';
 import prisma from '$lib/utils/prisma.js';
 import { exception, success } from '$lib/utils/response.js';
+import { withPagination } from '$lib/utils/pagination';
 
-function mergeListConfigs<T>(base: BaseOperationConfig<T>, operation?: BaseOperationConfig<T>): BaseOperationConfig<T> {
+function mergeListConfigs<T>(base: ModelConfig<T>, operation?: ListConfig<T>): ListConfig<T> {
   return {
     allow: operation?.allow ?? base?.allow,
     fields: operation?.fields ?? base?.fields,
     where: operation?.where ?? base?.where,
-    fieldsForeign: operation?.fieldsForeign ?? base?.fieldsForeign,
-    by: operation?.by ?? base?.by
+    fieldsForeign: operation?.fieldsForeign ?? base?.view?.fieldsForeign,
+    by: operation?.by ?? base?.by,
+    customFields: operation?.customFields ?? base?.view?.customFields,
   }
 }
 
@@ -20,20 +22,18 @@ export async function GET({ params, url }) {
     if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND);
 
     const config: ModelConfig<Record<string, any>> = (await (configs[`./${params.model}.ts`] as any)()).default;
-    
-    // Merge base config with list config
     const mergedConfig = mergeListConfigs(config, config.list);
     
     if (!mergedConfig?.allow) throw Error(MESSAGE.MODEL.OPERATION_FORBIDDEN);
 
     let urlSearchParams = parseSearchParams(url.searchParams);
 
-    // Extract pagination parameters
-    const limit = parseInt(urlSearchParams.limit as any) || 10;
-    const page = parseInt(urlSearchParams.page as any) || 1;
-    const skip = (page - 1) * limit;
+    // Lifecycle hook - pre
+    if (config.list?.lifecycle?.pre) {
+      urlSearchParams = await config.list.lifecycle.pre(urlSearchParams);
+    }
 
-    // Build where clause once for reuse
+    // Build where clause
     const whereClause = {
       ...(
         config.list?.filterableBy
@@ -58,33 +58,47 @@ export async function GET({ params, url }) {
       ...(mergedConfig.where ? buildWhereClause(mergedConfig.where) : undefined)
     };
 
-    const data = await (prisma as any)[params.model].findMany({
-      orderBy: config.list?.orderBy,
-      where: whereClause,
-      select: omitIfEmptyObject({
-        ...(Object.fromEntries((mergedConfig.fields ?? Object.keys((prisma as any)[params.model].fields)).map(field => [field, true]))),
-        ...(mergedConfig.fieldsForeign ? transformFieldsForeign(mergedConfig.fieldsForeign) : undefined),
-      }),
-      skip,
-      take: limit
-    });
-
-    // Count total records for pagination metadata
-    const totalRecords = await (prisma as any)[params.model].count({
-      where: whereClause
-    });
-
-    const totalPages = Math.ceil(totalRecords / limit);
-
-    return success({
-      data,
-      meta: {
-        totalRecords,
-        totalPages,
-        currentPage: page,
-        limit
+    const paginatedData = await withPagination(async (skip, take) => {
+      let data;
+      
+      // Lifecycle hook - main
+      if (config.list?.lifecycle?.main) {
+        data = await config.list?.lifecycle.main(whereClause, skip, take);
+      } else {
+        data = await (prisma as any)[params.model].findMany({
+          orderBy: config.list?.orderBy,
+          where: whereClause,
+          select: omitIfEmptyObject({
+            ...(Object.fromEntries((mergedConfig.fields ?? Object.keys((prisma as any)[params.model].fields)).map(field => [field, true]))),
+            ...(mergedConfig.fieldsForeign ? transformFieldsForeign(mergedConfig.fieldsForeign) : undefined),
+          }),
+          skip,
+          take
+        });
       }
-    });
+
+      const total = await (prisma as any)[params.model].count({
+        where: whereClause
+      });
+
+      // Lifecycle hook - post
+      if (config.list?.lifecycle?.post) {
+        data = await config.list?.lifecycle.post(data, total);
+      }
+
+      // Process custom fields
+      if (mergedConfig?.customFields) {
+        data.forEach((item: any) => {
+          mergedConfig.customFields!.forEach(customField => {
+            item[customField.name] = customField.generator(item);
+          });
+        });
+      }
+
+      return { data, total };
+    }, urlSearchParams);
+
+    return success(paginatedData);
   } catch (err) {
     return exception(err);
   }

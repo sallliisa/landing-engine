@@ -8,14 +8,16 @@ export default {
   by: ['id'],
   fields: ['id', 'email', 'name', 'role_id'],
 
-  fieldsForeign: {
-    role: {
-      fields: ['name'],
-    }
+  view: {
+    fieldsForeign: {
+      role: {
+        fields: ['name'],
+      }
+    },
   },
   
   list: {
-    searchableBy: ['email', 'name'],
+    searchableBy: ['email', 'name', 'role_id'],
     filterableBy: ['role_id'],
   },
 
