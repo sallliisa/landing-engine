@@ -1,10 +1,10 @@
 import { languages } from "$lib/utils/common";
 import prisma from "$lib/utils/prisma";
-import type { Language, Prisma } from "@prisma/client";
+import type { Language, MenuItem, Prisma } from "@prisma/client";
 
 export default {
   allow: true,
-  fields: ['id', 'parent_id', 'page_id', 'level', 'order', 'menu_item_type', 'url'],
+  fields: ['id', 'parent_id', 'level', 'order', 'menu_item_type', 'url'],
   types: {
     order: 'number'
   },
@@ -74,7 +74,7 @@ export default {
 
   list: {
     searchableBy: ['id'],
-    filterableBy: ['parent_id', 'page_id', "level"],
+    filterableBy: ['parent_id', "level"],
     orderBy: { order: 'asc' },
     // where: {
     //   AND: [
@@ -88,9 +88,6 @@ export default {
       translations: {
         fields: ['title', 'language']
       },
-      page: {
-        fields: ['id']
-      }
     }
   },
 
@@ -100,6 +97,19 @@ export default {
       translations: {
         fields: ['title', 'language']
       },
+      page: {
+        fields: ['id'],
+        fieldsForeign: {
+          translations: {
+            fields: ['id', 'language'],
+            fieldsForeign: {
+              sectionGroups: {
+                fields: ['id']
+              }
+            }
+          }
+        }
+      },
       children: {
         fields: ['id', 'order'],
         fieldsForeign: {
@@ -108,9 +118,11 @@ export default {
           }
         }
       },
-      page: {
-        fields: ['id']
-      }
+    },
+    lifecycle: {
+      async post(data) {
+          return {...data, hasPage: !!data.page[0]}
+      },
     }
   },
 
