@@ -41,7 +41,7 @@ export default {
   // Create operation config
   create: {
     allow: true,
-    fields: ['calculator_type_id', 'order', 'type', 'label', 'code', 'required', 'helperMessage', 'colSpan'],
+    fields: ['calculator_type_id', 'order', 'type', 'label', 'code', 'data', 'required', 'helperMessage', 'colSpan'],
     validation: {
       calculator_type_id: [
         {
@@ -84,7 +84,7 @@ export default {
   update: {
     allow: true,
     by: ['id'],
-    fields: ['order', 'type', 'label', 'code', 'required', 'helperMessage', 'colSpan'],
+    fields: ['order', 'type', 'label', 'code', 'required', 'data', 'helperMessage', 'colSpan'],
     validation: {
       label: [
         {

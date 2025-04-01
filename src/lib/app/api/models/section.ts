@@ -24,12 +24,13 @@ export default {
         data.galleries = data.galleries.sort((a: any, b: any) => a.order - b.order)
         data.childSections = data.childSections.sort((a: any, b: any) => a.order - b.order)
         data.childSectionGroups = data.childSectionGroups.sort((a: any, b: any) => a.order - b.order)
+        // sort it descending by order
         const parsedStructure = [
           ...data.contents.map((item: any) => ({...item, type: 'content'})),
           ...data.galleries.map((item: any) => ({...item, type: 'gallery'})),
           ...data.childSections.map((item: any) => ({...item, type: 'section'})),
           ...data.childSectionGroups.map((item: any) => ({...item, type:'sectionGroup'}))
-        ].sort((a, b) => a.order - b.order)
+        ]
         return {
           ...data,
           structure: parsedStructure,
