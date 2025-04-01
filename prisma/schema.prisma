@@ -24,9 +24,16 @@ enum Language {
 enum FieldType {
   text
   textarea
+  number
+  select
   image
   file
   date
+}
+
+enum CalculatorFieldType {
+  number
+  select
 }
 
 enum MenuItemType {
@@ -42,7 +49,6 @@ enum FormFieldValidationType {
   date
   file
 }
-
 
 enum SectionTypeType {
   parent
@@ -116,33 +122,33 @@ model PageTranslation {
 }
 
 model SectionType {
-  id        String    @id @default(cuid())
-  name      String
-  code       String   @unique
+  id          String          @id @default(cuid())
+  name        String
+  code        String          @unique
   description String?
-  category  SectionTypeType @default(parent)
-  Section   Section[]
+  category    SectionTypeType @default(parent)
+  Section     Section[]
 }
 
 model Section {
-  id               String       @id @default(cuid())
-  name             String
-  description      String?
-  visible          Boolean      @default(true)
-  order            Int
-  meta             Json         @default("{}")
-  section_type_code  String?
-  sectionType      SectionType? @relation(fields: [section_type_code], references: [code])
-  section_group_id String?
-  sectionGroup     SectionGroup? @relation(fields: [section_group_id], references: [id], onDelete: Cascade)
+  id                String        @id @default(cuid())
+  name              String
+  description       String?
+  visible           Boolean       @default(true)
+  order             Int
+  meta              Json          @default("{}")
+  section_type_code String?
+  sectionType       SectionType?  @relation(fields: [section_type_code], references: [code])
+  section_group_id  String?
+  sectionGroup      SectionGroup? @relation(fields: [section_group_id], references: [id], onDelete: Cascade)
 
   // Add parent-child relationship
   parent_section_id String?
   parentSection     Section?  @relation("SectionChildren", fields: [parent_section_id], references: [id], onDelete: Cascade)
   childSections     Section[] @relation("SectionChildren")
 
-  contents  Content[]
-  galleries Gallery[]
+  contents           Content[]
+  galleries          Gallery[]
   childSectionGroups SectionGroup[] @relation("SectionToGroups")
 }
 
@@ -164,7 +170,7 @@ model Gallery {
   order      Int
   section_id String
   section    Section   @relation(fields: [section_id], references: [id], onDelete: Cascade)
-  contents      Content[]
+  contents   Content[]
 }
 
 ///
@@ -205,23 +211,51 @@ model FormType {
 model FormField {
   id                   String                   @id @default(cuid())
   form_type_id         String
-  formType             FormType                 @relation(fields: [form_type_id], references: [id])
+  formType             FormType                 @relation(fields: [form_type_id], references: [id], onDelete: Cascade)
   order                Int
   colSpan              Int                      @default(12)
   type                 FieldType
   validation_type_code FormFieldValidationType?
   label                String
+  code                 String
   required             Boolean                  @default(false)
   helperMessage        String?
+  data                 Json?
 }
 
 model FormSubmission {
   id           String   @id @default(cuid())
   form_type_id String
-  formType     FormType @relation(fields: [form_type_id], references: [id])
+  formType     FormType @relation(fields: [form_type_id], references: [id], onDelete: SetDefault)
   data         Json
   read         Boolean  @default(false)
   submitted_at DateTime @default(now())
+}
+
+///
+/// Calculator
+///
+
+model CalculatorType {
+  id          String            @id @default(cuid())
+  name        String
+  description String?
+  formula     String?
+  fields      CalculatorField[]
+}
+
+model CalculatorField {
+  id                 String         @id @default(cuid())
+  calculator_type_id String
+  calculatorType     CalculatorType @relation(fields: [calculator_type_id], references: [id], onDelete: Cascade)
+  order              Int
+  colSpan            Int            @default(12)
+  type               CalculatorFieldType
+  label              String
+  code               String
+  required           Boolean        @default(false)
+  helperMessage      String?
+  data               Json?
 }
 
 ///

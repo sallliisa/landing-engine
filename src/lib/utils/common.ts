@@ -236,3 +236,14 @@ export function parseSlug(text: string) {
     .replace(/\s+/g, "-") // Replace spaces with hyphens
     .replace(/-+/g, "-"); // Replace multiple hyphens with a single hyphen
 }
+
+export function parseCode(text: string) {
+  return text
+    .toLowerCase() // Convert to lowercase
+    .trim() // Remove leading and trailing whitespace
+    .normalize("NFD") // Normalize to decompose accents
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+    .replace(/[^a-z0-9_\s]/g, "") // Remove non-alphanumeric characters (except spaces and underscores)
+    .replace(/\s+/g, "_") // Replace spaces with underscores
+    .replace(/_+/g, "_"); // Replace multiple underscores with a single underscore
+}

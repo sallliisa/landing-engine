@@ -12,7 +12,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"prisma": {
-  	"seed": "tsx prisma/seeder/index.ts"
+		"seed": "tsx prisma/seeder/index.ts"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^4.0.0",
@@ -33,6 +33,7 @@
 		"@inlang/paraglide-js": "^2.0.0",
 		"@prisma/client": "^6.5.0",
 		"bcrypt": "^5.1.1",
+		"mathjs": "^14.4.0",
 		"mime-types": "^3.0.1",
 		"tailwind-merge": "^3.0.2"
 	}

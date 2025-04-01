@@ -8,7 +8,7 @@ export default {
   // View-related configurations
   view: {
     fieldsForeign: {
-      formType: {
+      calculatorType: {
         fields: ['id', 'name']
       }
     }
@@ -19,9 +19,9 @@ export default {
     allow: true,
     searchableBy: ['label'],
     orderBy: { order: 'asc' },
-    filterableBy: ['form_type_id', 'type'],
+    filterableBy: ['calculator_type_id', 'type'],
     fieldsForeign: {
-      formType: {
+      calculatorType: {
         fields: ['id', 'name']
       }
     }
@@ -32,7 +32,7 @@ export default {
     allow: true,
     by: ['id'],
     fieldsForeign: {
-      formType: {
+      calculatorType: {
         fields: ['id', 'name']
       }
     }
@@ -41,12 +41,12 @@ export default {
   // Create operation config
   create: {
     allow: true,
-    fields: ['form_type_id', 'order', 'type', 'validation_type_code', 'label', 'code', 'required', 'helperMessage', 'colSpan'],
+    fields: ['calculator_type_id', 'order', 'type', 'label', 'code', 'required', 'helperMessage', 'colSpan'],
     validation: {
-      form_type_id: [
+      calculator_type_id: [
         {
           validator: (value: string) => value.length > 0,
-          message: 'Form type is required'
+          message: 'Calculator type is required'
         }
       ],
       label: [
@@ -57,7 +57,7 @@ export default {
       ],
       type: [
         {
-          validator: (value: string) => ['text', 'textarea', 'number', 'image', 'file', 'date', 'select'].includes(value),
+          validator: (value: string) => ['number', 'select'].includes(value),
           message: 'Invalid field type'
         }
       ],
@@ -65,16 +65,16 @@ export default {
     lifecycle: {
       pre: async (body) => {
         // get the max order of the form type and increment it
-        const maxOrderItem = await prisma.formField.findFirst({
+        const maxOrderItem = await prisma.calculatorField.findFirst({
           where: { 
-            form_type_id: body.form_type_id,
+            calculator_type_id: body.calculator_type_id,
           },
           orderBy: { order: 'desc' },
           select: { order: true }
         });
 
         body.order = (maxOrderItem?.order ?? 0) + 1;
-        body.code = parseSlug(body.label)
+        body.code = parseCode(body.label)
         return body;
       }
     },
@@ -84,7 +84,7 @@ export default {
   update: {
     allow: true,
     by: ['id'],
-    fields: ['order', 'type', 'validation_type_code', 'label', 'code', 'required', 'helperMessage', 'colSpan'],
+    fields: ['order', 'type', 'label', 'code', 'required', 'helperMessage', 'colSpan'],
     validation: {
       label: [
         {
@@ -94,7 +94,7 @@ export default {
       ],
       type: [
         {
-          validator: (value: string) => ['text', 'textarea', 'image', 'file', 'date'].includes(value),
+          validator: (value: string) => ['number', 'select'].includes(value),
           message: 'Invalid field type'
         }
       ],
@@ -107,7 +107,7 @@ export default {
     },
     lifecycle: {
       pre: async (body) => {
-        body.code = parseCode(body.label)
+        body.code = parseSlug(body.label)
         return body;
       }
     },
@@ -124,4 +124,4 @@ export default {
     allow: true,
     fields: ['order']
   }
-} satisfies ModelConfig<Prisma.FormFieldGetPayload<{include: {formType: true}}>>;
+} satisfies ModelConfig<Prisma.CalculatorFieldGetPayload<{include: {calculatorType: true}}>>;
