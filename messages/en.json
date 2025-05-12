@@ -1,4 +1,10 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from en!"
+	"hello_world": "Hello, {name} from en!",
+	"send": "Send",
+	"address": "Address",
+	"follow_us": "Follow Us",
+	"visit_us": "Visit Us",
+	"phone": "Phone",
+	"contact_us": "Contact Us"
 }

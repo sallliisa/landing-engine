@@ -1,8 +1,10 @@
-import type { Language } from "@prisma/client";
+import { parseSlug } from "$lib/utils/common";
+import prisma from "$lib/utils/prisma";
+import type { Language, MenuItemTranslation } from "@prisma/client";
 
 export default {
   allow: true,
-  fields: ['id', 'menu_item_id', 'language', 'title'],
+  fields: ['id', 'menu_item_id', 'language', 'name'],
 
   create: {
     allow: false,
@@ -10,19 +12,25 @@ export default {
 
   update: {
     by: ['id'],
-    fields: ['title'],
+    fields: ['name'],
     validation: {
-      title: [
+      name: [
         {
           validator: (value: string) => typeof value === 'string' && value.length > 0,
-          message: 'Title is required'
+          message: 'Name is required'
         }
       ]
+    },
+    lifecycle: {
+      post: async (body: any, data: any) => {
+        // update parent menu item slug
+        return body;
+      }
     }
   },
 
   detail: {
     by: ['menu_item_id', 'language'],
-    fields: ['id', 'menu_item_id', 'language', 'title'],
+    fields: ['id', 'menu_item_id', 'language', 'name'],
   },
-} as const;
+} as ModelConfig<MenuItemTranslation>

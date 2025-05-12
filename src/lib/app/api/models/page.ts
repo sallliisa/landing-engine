@@ -1,4 +1,4 @@
-import { languages } from '$lib/utils/common';
+import { languages, parseSlug } from '$lib/utils/common';
 import prisma from '$lib/utils/prisma';
 import type { Page, Prisma } from '@prisma/client';
 
@@ -7,13 +7,25 @@ export default {
     allow: true,
     fields: ['menu_item_id'],
     lifecycle: {
+      pre: async (body: any) => {
+        const parentMenuItem = await prisma.menuItem.findUnique({
+          where: { id: body.menu_item_id },
+          include: {
+            translations: {
+              where: { language: 'id' },
+            },
+          },
+        })
+        if (parentMenuItem?.translations[0]) body.slug = parseSlug(parentMenuItem.translations[0].name)
+        return body;
+      },
       post: async (body: any, data: any) => {
         const translations = languages.map(language => ({
           language,
           page_id: data.id
         }));
         const pageTranslations = await prisma.pageTranslation.createManyAndReturn({
-          data: translations
+          data: translations,
         });
         // create SectionGroups for each pageTranslations
         const sectionGroups = await prisma.sectionGroup.createManyAndReturn({

@@ -89,6 +89,9 @@ model MenuItem {
   parent         MenuItem?             @relation("MenuItemChildren", fields: [parent_id], references: [id], onDelete: Cascade)
   children       MenuItem[]            @relation("MenuItemChildren")
   menu_item_type MenuItemType          @default(page)
+  visible        Boolean               @default(true)
+  primary        Boolean               @default(false)
+  slug           String
   url            String?
   order          Int // For ordering among siblings
   translations   MenuItemTranslation[]
@@ -99,7 +102,7 @@ model MenuItemTranslation {
   id           String   @id @default(cuid())
   menu_item_id String
   language     Language
-  title        String
+  name         String
   menuItem     MenuItem @relation(fields: [menu_item_id], references: [id], onDelete: Cascade)
 }
 
@@ -127,7 +130,7 @@ model SectionType {
   code        String          @unique
   description String?
   category    SectionTypeType @default(parent)
-  Section     Section[]
+  section     Section[]
 }
 
 model Section {
@@ -202,6 +205,7 @@ model FormType {
   id           String           @id @default(cuid())
   name         String
   description  String?
+  success_message String
   fields       FormField[]
   submissions  FormSubmission[]
   // Many-to-many relation to Role for access control.
@@ -213,13 +217,13 @@ model FormField {
   form_type_id         String
   formType             FormType                 @relation(fields: [form_type_id], references: [id], onDelete: Cascade)
   order                Int
-  colSpan              Int                      @default(12)
+  col_span              Int                      @default(12)
   type                 FieldType
   validation_type_code FormFieldValidationType?
   label                String
   code                 String
   required             Boolean                  @default(false)
-  helperMessage        String?
+  helper_message        String?
   data                 Json?
 }
 
@@ -249,12 +253,12 @@ model CalculatorField {
   calculator_type_id String
   calculatorType     CalculatorType @relation(fields: [calculator_type_id], references: [id], onDelete: Cascade)
   order              Int
-  colSpan            Int            @default(12)
+  col_span           Int            @default(12)
   type               CalculatorFieldType
   label              String
   code               String
   required           Boolean        @default(false)
-  helperMessage      String?
+  helper_message      String?
   data               Json?
 }
 
@@ -350,8 +354,17 @@ model CompanyProfile {
   twitter   String?
   youtube   String?
   whatsapp  String?
+  linkedin  String?
+  logo      String?
   brochure  String?
 
   @@unique([id]) // Ensure only one record exists
   @@map("company_profile")
+}
+
+model WebsiteVisit {
+  id        Int      @id @default(autoincrement())
+  ip_address String
+  user_agent String?
+  visited_at DateTime @default(now())
 }

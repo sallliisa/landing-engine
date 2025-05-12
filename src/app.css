@@ -1,3 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+@config "../tailwind.config.js"; 
+
+@theme {
+  --font-sans: 'Montserrat', system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --gap-xs: 0.25rem;
+  --gap-sm: 0.5rem;
+  --gap-base: 1rem;
+  --gap-lg: 2rem;
+  --gap-xl: 4rem;
+}
+
+@layer base {
+  button, [role="button"] {
+    cursor: pointer;
+  }
+}

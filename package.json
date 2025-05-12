@@ -22,6 +22,7 @@
 		"@tailwindcss/typography": "^0.5.15",
 		"@tailwindcss/vite": "^4.0.0",
 		"@types/bcrypt": "^5.0.2",
+		"@types/uuid": "^10.0.0",
 		"prisma": "^6.5.0",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
@@ -35,6 +36,9 @@
 		"bcrypt": "^5.1.1",
 		"mathjs": "^14.4.0",
 		"mime-types": "^3.0.1",
-		"tailwind-merge": "^3.0.2"
+		"remixicon": "^4.6.0",
+		"tailwind-merge": "^3.0.2",
+		"tailwindcss-animate": "^1.0.7",
+		"typescript-svelte-plugin": "^0.3.46"
 	}
 }

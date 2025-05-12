@@ -1,10 +1,10 @@
-import { languages } from "$lib/utils/common";
+import { languages, parseSlug } from "$lib/utils/common";
 import prisma from "$lib/utils/prisma";
 import type { Language, MenuItem, Prisma } from "@prisma/client";
 
 export default {
   allow: true,
-  fields: ['id', 'parent_id', 'level', 'order', 'menu_item_type', 'url'],
+  fields: ['id', 'parent_id', 'primary', 'visible', 'level', 'order', 'menu_item_type', 'url', 'slug'],
   types: {
     order: 'number'
   },
@@ -35,7 +35,7 @@ export default {
 
         // Find maximum order in the same level
         const maxOrderItem = await prisma.menuItem.findFirst({
-          where: { 
+          where: {
             level,
             parent_id: body.parent_id || null
           },
@@ -44,13 +44,14 @@ export default {
         });
 
         body.order = (maxOrderItem?.order ?? 0) + 1;
+        body.slug = parseSlug(body.name); // Add this line to set the slug based on the name
         return body;
       },
       post: async (body: any, data: any) => {
         const translations = languages.map(language => ({
-          title: body.name,
+          name: body.name,
           language,
-          menu_item_id: data.id
+          menu_item_id: data.id,
         }));
         await prisma.menuItemTranslation.createMany({
           data: translations
@@ -62,6 +63,7 @@ export default {
 
   update: {
     by: ['id'],
+    fields: ['visible', 'primary'],
     validation: {
       order: [
         {
@@ -69,6 +71,27 @@ export default {
           message: 'Order must be a non-negative number'
         }
       ]
+    },
+    lifecycle: {
+      pre: async (body) => {
+        if (body.primary) {
+          await prisma.menuItem.updateMany({
+            where: { primary: true },
+            data: { primary: false }
+          });
+        }
+        if (body.visible == null) body.visible = false
+        return body
+      },
+      post: async (body, data) => {
+        if (body.visible && body.primary) {
+          await prisma.menuItem.update({
+            where: {id: body.id},
+            data: {visible: false}
+          })
+        }
+        return data
+      }
     }
   },
 
@@ -86,16 +109,16 @@ export default {
     // },
     fieldsForeign: {
       translations: {
-        fields: ['title', 'language']
+        fields: ['name', 'language']
       },
-    }
+    },
   },
 
   detail: {
     by: ['id'],
     fieldsForeign: {
       translations: {
-        fields: ['title', 'language']
+        fields: ['name', 'language']
       },
       page: {
         fields: ['id'],
@@ -114,14 +137,14 @@ export default {
         fields: ['id', 'order'],
         fieldsForeign: {
           translations: {
-            fields: ['title', 'language']
+            fields: ['name', 'language']
           }
         }
       },
     },
     lifecycle: {
       async post(data) {
-          return {...data, hasPage: !!data.page[0]}
+          return {...data, has_page: !!data.page[0]}
       },
     }
   },

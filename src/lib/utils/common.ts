@@ -247,3 +247,11 @@ export function parseCode(text: string) {
     .replace(/\s+/g, "_") // Replace spaces with underscores
     .replace(/_+/g, "_"); // Replace multiple underscores with a single underscore
 }
+
+export const debounce = (fn: Function, ms = 300) => {
+  let timeoutId: ReturnType<typeof setTimeout>
+  return function (this: any, ...args: any[]) {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn.apply(this, args), ms)
+  }
+}

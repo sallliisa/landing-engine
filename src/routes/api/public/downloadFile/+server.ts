@@ -13,7 +13,6 @@ export async function POST({ request }) {
       'Content-Length': fileBuffer.length.toString(),
     };
 
-    console.log('headers', headers)
     return new Response(fileBuffer, {
       status: 200,
       headers,

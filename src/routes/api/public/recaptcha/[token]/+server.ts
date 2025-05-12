@@ -2,7 +2,6 @@ import {RECAPTCHA_SECRETKEY} from '$env/static/private'
 import { success } from '$lib/utils/response.js';
 
 export async function GET({params}) {
-  console.log('validating', params)
   const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
     method: 'POST',
     headers: {

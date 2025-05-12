@@ -4,37 +4,26 @@ const plugin = require('tailwindcss/plugin')
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
-    fontFamily: {
-      sans: ['Sora'],
-      title: ['Dosis']
-    },
+    // fontFamily: ['Montserrat'],
     extend: {
       colors: {
-        muted: {
-          DEFAULT: '#707070'
+        surface: {
+          DEFAULT: '#FFF9F5',
         },
         primary: {
-          DEFAULT: '#14524B',
-          cta: '#4C837D',
-          variant: '#4C837D'
+          DEFAULT: '#F68B1E',
         },
         secondary: {
-          DEFAULT: '#165780'
+          DEFAULT: '#ED1C25'
         },
-        surface: {
-          DEFAULT: '#E3EAE9',
-          container: {
-            low: '#f3f3f3',
-            DEFAULT: '#DBE4E3',
-            high: '#D3DEDD'
-          },
+        outline: {
+          DEFAULT: '#656E95',
+          variant: '#CDC9C9'
         },
         on: {
-          primary: {
-            DEFAULT: '#CFD3D7',
-            cta: '#FFFFFF'
-          }
-        }
+          surface: '#111F55',
+          primary: '#FCF7E5'
+        },
       }
     },
   },

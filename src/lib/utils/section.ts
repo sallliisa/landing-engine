@@ -1,17 +1,13 @@
 import prisma from '$lib/utils/prisma';
 import type { Section } from '@prisma/client';
 
-type ItemConfig = {
-  fields?: string[];
-  name?: string;
-  structure?: StructureItem[];
-}
-
 type StructureItem = {
   type: 'content' | 'gallery' | 'section' | 'sectionGroup';
   order: number;
-  config?: ItemConfig;
+  fields?: string[];
   meta?: Record<string, any>;
+  structure?: StructureItem[];
+  sectionGroupStructure?: StructureItem[];
 }
 
 type SectionConfig = {
@@ -27,7 +23,7 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
         await prisma.content.create({
           data: {
             order: item.order,
-            section_id: parentSection.id,
+            section_id: parentSection.id
           }
         });
         break;
@@ -36,13 +32,13 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
         await prisma.gallery.create({
           data: {
             order: item.order,
-            section_id: parentSection.id,
+            section_id: parentSection.id
           }
         });
         break;
 
       case 'section':
-        if (item.config?.structure) {
+        if (item.structure) {
           const childSection = await prisma.section.create({
             data: {
               name: `Child of ${parentSection.name}`,
@@ -52,13 +48,13 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
           });
           // Recursively build children with new config structure
           await buildSectionStructure(childSection, {
-            structure: item.config.structure
+            structure: item.structure 
           });
         }
         break;
 
       case 'sectionGroup':
-        if (item.config?.structure) {
+        if (item.sectionGroupStructure) {
           await prisma.sectionGroup.create({
             data: {
               order: item.order,

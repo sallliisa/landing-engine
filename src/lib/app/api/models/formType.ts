@@ -29,7 +29,7 @@ export default {
   // Create operation config
   create: {
     allow: true,
-    fields: ['name', 'description'],
+    fields: ['name', 'description', 'success_message'],
     validation: {
       name: [
         {
@@ -44,15 +44,6 @@ export default {
   update: {
     allow: true,
     by: ['id'],
-    fields: ['name', 'description'],
-    validation: {
-      name: [
-        {
-          validator: (value: string) => value.length > 0,
-          message: 'Name is required'
-        }
-      ]
-    }
   },
 
   // Delete operation config

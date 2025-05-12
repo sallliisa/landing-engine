@@ -41,7 +41,7 @@ export default {
   // Create operation config
   create: {
     allow: true,
-    fields: ['form_type_id', 'order', 'type', 'data', 'validation_type_code', 'label', 'code', 'required', 'helperMessage', 'colSpan'],
+    fields: ['form_type_id', 'order', 'type', 'data', 'validation_type_code', 'label', 'code', 'required', 'helper_message', 'col_span'],
     validation: {
       form_type_id: [
         {
@@ -84,7 +84,7 @@ export default {
   update: {
     allow: true,
     by: ['id'],
-    fields: ['order', 'type', 'validation_type_code', 'label', 'code', 'required', 'helperMessage', 'data', 'colSpan'],
+    fields: ['order', 'type', 'validation_type_code', 'label', 'code', 'required', 'helper_message', 'data', 'col_span'],
     validation: {
       label: [
         {
