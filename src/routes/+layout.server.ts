@@ -172,6 +172,13 @@ export async function load({params, url}) {
   //   throw redirect(308, `/id/${menu[0].code}/${menu[0].submenuLanguageMap[0].code}`);
   // }
 
+  console.log(url.pathname)
+
+  if (primaryMenu && url.pathname == '/') {
+    console.log(primaryMenu)
+    return redirect(308, getFullSlugPath(primaryMenu))
+  }
+
   const currentPageSectionGroup = getCurrentPageSectionGroup(menu, url.pathname.split('/').slice(1))
   if (!currentPageSectionGroup) throw error(404, 'Page not found')
 
