@@ -49,7 +49,7 @@
                     class="text-on-surface flex flex-row gap-xs"
                   >
                     <p>{menu.name}</p>
-                    <i class="ri-arrow-down-s-line"></i>
+                    <i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>
                   </button>
                 {:else}
                   <a

@@ -130,7 +130,7 @@ model SectionType {
   code        String          @unique
   description String?
   category    SectionTypeType @default(parent)
-  section     Section[]
+  // section     Section[]
 }
 
 model Section {
@@ -141,7 +141,7 @@ model Section {
   order             Int
   meta              Json          @default("{}")
   section_type_code String?
-  sectionType       SectionType?  @relation(fields: [section_type_code], references: [code])
+  // sectionType       SectionType?  @relation(fields: [section_type_code], references: [code])
   section_group_id  String?
   sectionGroup      SectionGroup? @relation(fields: [section_group_id], references: [id], onDelete: Cascade)
 

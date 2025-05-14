@@ -4,10 +4,12 @@ import type { Section } from '@prisma/client';
 type StructureItem = {
   type: 'content' | 'gallery' | 'section' | 'sectionGroup';
   order: number;
-  fields?: string[];
-  meta?: Record<string, any>;
-  structure?: StructureItem[];
-  sectionGroupStructure?: StructureItem[];
+  config: {
+    fields?: string[];
+    meta?: Record<string, any>;
+    structure?: StructureItem[];
+    sectionGroupStructure?: StructureItem[];
+  }
 }
 
 type SectionConfig = {
@@ -17,7 +19,9 @@ type SectionConfig = {
 
 export async function buildSectionStructure(parentSection: Section, config: SectionConfig) {
   // Then process the structure
+  console.log('received', config)
   for (const item of config.structure) {
+    console.log('processing', item)
     switch (item.type) {
       case 'content':
         await prisma.content.create({
@@ -26,6 +30,7 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
             section_id: parentSection.id
           }
         });
+        console.log('created content')
         break;
 
       case 'gallery':
@@ -35,10 +40,11 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
             section_id: parentSection.id
           }
         });
+        console.log('created gallery')
         break;
 
       case 'section':
-        if (item.structure) {
+        if (item.config.structure) {
           const childSection = await prisma.section.create({
             data: {
               name: `Child of ${parentSection.name}`,
@@ -46,21 +52,23 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
               parent_section_id: parentSection.id,
             }
           });
+          console.log('created section')
           // Recursively build children with new config structure
           await buildSectionStructure(childSection, {
-            structure: item.structure 
+            structure: item.config.structure 
           });
         }
         break;
 
       case 'sectionGroup':
-        if (item.sectionGroupStructure) {
+        if (item.config.structure) {
           await prisma.sectionGroup.create({
             data: {
               order: item.order,
               parent_section_id: parentSection.id,
             }
           });
+          console.log('created sectionGroup')
         }
         break;
     }

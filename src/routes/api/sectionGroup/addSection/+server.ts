@@ -8,19 +8,10 @@ export async function POST({request}) {
   try {
     if (!body.section_group_id) throw 'section_group_id is required'
     if (!body.config) throw 'config is required'
-    // check if section_type_code is exist in prisma
-    let sectionType: SectionType | null = null
 
-    if (body.section_type_code) {
-      sectionType = await prisma.sectionType.findFirst({
-        where: {
-          code: body.section_type_code
-        }
-      })
-      if (!sectionType) throw 'section_type_code is not a valid code'
-    } else if (!body.name) {
-      throw 'name is required'
-    }
+    // Determine if this is a top-level section add (no parent_section_id in group)
+    // We'll assume top-level if body.name is not present (per your previous logic)
+    const isTopLevel = !body.name
 
     const maxOrderSection = await prisma.section.findFirst({
       where: { 
@@ -30,12 +21,24 @@ export async function POST({request}) {
       select: { order: true }
     });
 
+    let sectionName: string
+    if (isTopLevel) {
+      // Top-level: derive name from config.info.name
+      if (!body.config.info?.name) throw 'config.info.name is required for top-level section'
+      sectionName = body.config.info.name
+    } else {
+      // Child section: use provided name
+      if (!body.name) throw 'name is required'
+      sectionName = body.name
+    }
+
     const newSection = await prisma.section.create({
       data: {
-        name: sectionType ? sectionType.name : body.name,
+        name: sectionName,
         order: (maxOrderSection?.order ?? 0) + 1,
         section_group_id: body.section_group_id,
-        section_type_code: body.section_type_code,
+        section_type_code: body.config.info?.code
+        // Remove section_type_code entirely
       }
     })
 
