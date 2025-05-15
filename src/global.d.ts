@@ -154,6 +154,10 @@ declare global {
   }
   type DeleteConfig<T> = Pick<BaseOperationConfig<T>, 'by' | 'allow' | 'where'>
 
+  type ReorderConfig<T> = Pick<BaseOperationConfig<T>, 'by' | 'allow'> & {
+    axis: (keyof T)[],
+  }
+
   type ModelConfig<T> = BaseOperationConfig<T> & {
     view?: ViewOperationConfig<T>,
     transaction?: TransactionOperationConfig<T>,
@@ -179,6 +183,6 @@ declare global {
     list?: ListConfig<T>,
     detail?: DetailConfig<T>,
     delete?: DeleteConfig<T>,
-    reorder?: BaseOperationConfig<T>
+    reorder?: ReorderConfig<T>
   }
 }

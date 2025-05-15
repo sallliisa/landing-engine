@@ -155,7 +155,8 @@ export default {
   },
 
   reorder: {
-    fields: ['order'],
+    allow: true,
+    axis: ['parent_id'],
     by: ['id']
   }
 } as ModelConfig<Prisma.MenuItemGetPayload<{include: {page: true}}>>;

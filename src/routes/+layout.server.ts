@@ -6,7 +6,7 @@ import { error, redirect } from '@sveltejs/kit';
 function getCurrentPageSectionGroup(menu: any[], pathname: string[]) {
   for (const menuItem of menu) {
     if (menuItem.slug === pathname[0]) {
-      if (pathname.length === 1) return menuItem.page[0]?.translations[0].id || null
+      if (pathname.length === 1) return menuItem.page[0]?.translations[0].sectionGroups[0].id || null
       return getCurrentPageSectionGroup(menuItem.children, pathname.slice(1))
     }
   }
@@ -25,7 +25,8 @@ function getFullSlugPath(node: any): string {
   return '/' + parts.join('/');
 }
 
-export async function load({params, url}) {
+export async function load({params, url, untrack}) {
+  console.log('RAN MAIN LAYOUT')
   const [menu, primaryMenu, companyProfile] = await Promise.all([
     prisma.menuItem.findMany({
       where: {
@@ -154,34 +155,14 @@ export async function load({params, url}) {
       }
     }),
     prisma.companyProfile.findFirst({where: {id: 1}}),
-    // prisma.adBannerLanguageMap.findMany({
-    //   where: {active: true},
-    //   include: {
-    //     adBanner: {
-    //       where: {language: languageTag()}
-    //     }
-    //   }
-    // })
   ])
 
-  // if (['/en', '/en/'].includes(url.pathname)) {
-  //   throw redirect(308, `/en/${menu[0].translations[0].slug}/${menu[0].submenuLanguageMap[0].code}`);
-  // }
-
-  // if (['/id', '/id/'].includes(url.pathname)) {
-  //   throw redirect(308, `/id/${menu[0].code}/${menu[0].submenuLanguageMap[0].code}`);
-  // }
-
-  console.log(url.pathname)
-
-  if (primaryMenu && url.pathname == '/') {
-    console.log(primaryMenu)
+  if (primaryMenu && untrack(() => url.pathname == '/')) {
     return redirect(308, getFullSlugPath(primaryMenu))
   }
 
-  const currentPageSectionGroup = getCurrentPageSectionGroup(menu, url.pathname.split('/').slice(1))
-  if (!currentPageSectionGroup) throw error(404, 'Page not found')
-
+  
+  
   return {
     menu: menu
             .map((item) => ({
@@ -201,6 +182,7 @@ export async function load({params, url}) {
             })),
     primaryMenuPath: primaryMenu ? getFullSlugPath(primaryMenu) : '',
     companyProfile,
-    currentPageSectionGroup: currentPageSectionGroup
+    rawMenu: menu,
+    // currentPageSectionGroup: currentPageSectionGroup
   }
 }

@@ -7,7 +7,15 @@ export default {
     fields: ['id'],
     fieldsForeign: {
       sections: {
-        fields: ['id', 'name', 'section_type_code']
+        fields: ['id', 'order', 'name', 'section_type_code']
+      }
+    },
+    lifecycle: {
+      post: async (data) => {
+        return {
+          ...data,
+          sections: data.sections.sort((a: Record<string, any>, b: Record<string, any>) => a.order - b.order)
+        }
       }
     }
   }

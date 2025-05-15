@@ -19,9 +19,7 @@ type SectionConfig = {
 
 export async function buildSectionStructure(parentSection: Section, config: SectionConfig) {
   // Then process the structure
-  console.log('received', config)
   for (const item of config.structure) {
-    console.log('processing', item)
     switch (item.type) {
       case 'content':
         await prisma.content.create({
@@ -30,7 +28,6 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
             section_id: parentSection.id
           }
         });
-        console.log('created content')
         break;
 
       case 'gallery':
@@ -40,7 +37,6 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
             section_id: parentSection.id
           }
         });
-        console.log('created gallery')
         break;
 
       case 'section':
@@ -52,7 +48,6 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
               parent_section_id: parentSection.id,
             }
           });
-          console.log('created section')
           // Recursively build children with new config structure
           await buildSectionStructure(childSection, {
             structure: item.config.structure 
@@ -68,7 +63,6 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
               parent_section_id: parentSection.id,
             }
           });
-          console.log('created sectionGroup')
         }
         break;
     }

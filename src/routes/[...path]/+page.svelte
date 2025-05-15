@@ -1,21 +1,36 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { sectionComponents } from './sections/index.js'
+
+  export let data;
+
+  // Helper to load and cache components
+  let loadedComponents: Record<string, any> = {};
+
+  async function getSectionComponent(section_type_code: string) {
+    if (!loadedComponents[section_type_code]) {
+      const mod = await sectionComponents[section_type_code]();
+      loadedComponents[section_type_code] = mod.default;
+    }
+    return loadedComponents[section_type_code];
+  }
 </script>
 
-
 <div class="flex flex-col gap-4">
-  <!-- <Navbar/> -->
-  <div class="h-[400px]"></div>
-  <!-- <div class="flex flex-col gap-4">
-    <p>{JSON.stringify(page.data.menu)}</p>
-    <p>{JSON.stringify(page.data.currentPageTranslation)}</p>
-  </div> -->
-  <!-- <div class="flex flex-col gap-2">
-    <a href="/beranda">beranda</a>
-    <a href="/tentang-kami">tentang kami</a>
-    <button on:click={() => setLocale('en')}>set to en</button>
-    <button on:click={() => setLocale('id')}>set to id</button>
-  </div> -->
-  <p>{page.data.currentPageSectionGroup}</p>
-  <!-- <Footer/> -->
+  {#each data.sections as section, index}
+    {#if section?.section_type_code}
+      {@const sectionComponentPromise = getSectionComponent(section.section_type_code)}
+      {#if sectionComponentPromise}
+        {#await sectionComponentPromise then SectionComponent}
+          <SectionComponent {section}/>
+        {/await}
+      {:else}
+        <div class="h-[20vh] bg-primary flex items-center justify-center">
+          <p class="text-4xl font-bold">Section Missing</p>
+        </div>
+      {/if}
+    {/if}
+  {/each}
+  <!-- <div class="h-[400px]"></div> -->
+  <!-- <p>{JSON.stringify(data.sections)}</p> -->
 </div>

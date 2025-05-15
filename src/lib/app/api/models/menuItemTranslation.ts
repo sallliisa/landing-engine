@@ -24,6 +24,12 @@ export default {
     lifecycle: {
       post: async (body: any, data: any) => {
         // update parent menu item slug
+        const menuItem = await prisma.menuItem.findUnique({ where: { id: data.menu_item_id } });
+        if (!menuItem) return body;
+        await prisma.menuItem.update({
+          where: { id: menuItem.id },
+          data: { slug: parseSlug(body.name) }
+        })
         return body;
       }
     }

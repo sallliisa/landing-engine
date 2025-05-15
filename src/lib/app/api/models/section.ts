@@ -52,5 +52,10 @@ export default {
     allow: true,
     by: ['id'],
     fields: ['name', 'description', 'visible', 'meta']
+  },
+
+  reorder: {
+    allow: true,
+    axis: ['section_group_id']
   }
 } as ModelConfig<Prisma.SectionGetPayload<{include: {contents: true, galleries: true, childSections: true, childSectionGroups: true}}>>
