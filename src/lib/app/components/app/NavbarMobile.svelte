@@ -8,7 +8,7 @@
   let activeLevel1Index = $state<number | null>(null)
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col lg:hidden">
   <div class="w-full flex flex-row items-center bg-surface text-on-surface justify-center {isMenuExpanded ? 'border-transparent' : 'border-outline-variant'} transition-[border] duration-500 border-b z-[50]">
     <div class="flex flex-row items-center justify-between w-full px-6 py-3 max-w-screen-xl">
       {#if activeLevel1Index != null}

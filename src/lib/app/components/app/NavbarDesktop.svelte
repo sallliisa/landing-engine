@@ -29,9 +29,9 @@
 {#if isMenuExpanded}
   <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen absolute backdrop-blur-md"></div>
 {/if}
-<div class="flex flex-col">
-  <div class="w-full flex flex-row items-center justify-center fixed z-[50]">
-    <div class="flex flex-row items-center justify-between w-full px-12 pt-6 max-w-screen-xl">
+<div class="lg:flex flex-col hidden">
+  <div class="w-full flex flex-row items-center justify-center fixed z-[50] box-border transition-all border-b {windowScrollY != 0 ? 'bg-surface border-b-outline-variant' : 'border-transparent'}">
+    <div class="flex flex-row items-center justify-between w-full px-12 py-6 max-w-screen-xl">
       <a href="{page.data.primaryMenuPath}">
         <img src="/assets/logo/hkr.svg" class="w-[64px] h-[27px]" alt="HK Realtindo"/>
       </a>

@@ -3,15 +3,6 @@ import { getLanguagePrefix } from '$lib/utils/common.js';
 import prisma from '$lib/utils/prisma.js';
 import { error, redirect } from '@sveltejs/kit';
 
-function getCurrentPageSectionGroup(menu: any[], pathname: string[]) {
-  for (const menuItem of menu) {
-    if (menuItem.slug === pathname[0]) {
-      if (pathname.length === 1) return menuItem.page[0]?.translations[0].sectionGroups[0].id || null
-      return getCurrentPageSectionGroup(menuItem.children, pathname.slice(1))
-    }
-  }
-}
-
 function getFullSlugPath(node: any): string {
   const parts: string[] = [];
 
@@ -161,8 +152,6 @@ export async function load({params, url, untrack}) {
     return redirect(308, getFullSlugPath(primaryMenu))
   }
 
-  
-  
   return {
     menu: menu
             .map((item) => ({
@@ -182,7 +171,6 @@ export async function load({params, url, untrack}) {
             })),
     primaryMenuPath: primaryMenu ? getFullSlugPath(primaryMenu) : '',
     companyProfile,
-    rawMenu: menu,
     // currentPageSectionGroup: currentPageSectionGroup
   }
 }

@@ -1,3 +1,4 @@
+import { parseSlug } from "$lib/utils/common";
 import type { ArticleTranslation } from "@prisma/client";
 
 export default {
@@ -10,7 +11,7 @@ export default {
 
   update: {
     by: ['id'],
-    fields: ['title'],
+    fields: ['title', 'slug', 'excerpt', 'thumbnail', 'content'],
     validation: {
       title: [
         {
@@ -18,7 +19,13 @@ export default {
           message: 'Title is required'
         }
       ]
-    }
+    },
+    lifecycle: {
+      pre: async (body) => {
+        body.slug = parseSlug(body.title)
+        return body
+      }
+    },
   },
 
   detail: {

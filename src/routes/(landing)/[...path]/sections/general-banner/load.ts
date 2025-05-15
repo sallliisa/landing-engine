@@ -13,5 +13,7 @@ export async function load(sectionId: string) {
       },
     }
   })
-  return data
+  return {
+    contents: data?.contents
+  }
 }

@@ -18,6 +18,7 @@
 
 <div class="flex flex-col gap-4">
   {#each data.sections as section, index}
+    <!-- {JSON.stringify(section)} -->
     {#if section?.section_type_code}
       {@const sectionComponentPromise = getSectionComponent(section.section_type_code)}
       {#if sectionComponentPromise}

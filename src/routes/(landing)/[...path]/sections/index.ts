@@ -1,6 +1,7 @@
 // Dynamically import all data.ts files in subfolders (section code = folder name)
-const dataModules = import.meta.glob('./*/data.ts');
-const svelteModules = import.meta.glob('./*/*.svelte');
+const dataModules = import.meta.glob('./*/load.ts');
+// Updated glob pattern to match .svelte files
+const svelteModules = import.meta.glob('./*/SectionComponent.svelte');
 
 type SectionDataLoader = (sectionId: string) => Promise<any>;
 
@@ -8,8 +9,7 @@ const sectionLoaders: Record<string, SectionDataLoader> = {};
 const sectionComponents: Record<string, () => Promise<any>> = {};
 
 for (const path in dataModules) {
-  // Extract section code from path: './general-banner/data.ts' => 'general-banner'
-  const match = path.match(/\.\/([^/]+)\/data\.ts$/);
+  const match = path.match(/\.\/([^/]+)\/load\.ts$/);
   if (match) {
     const sectionCode = match[1];
     sectionLoaders[sectionCode] = async (sectionId: string) => {
@@ -20,8 +20,7 @@ for (const path in dataModules) {
 }
 
 for (const path in svelteModules) {
-  // Extract section code from path: './general-banner/GeneralBanner.svelte' => 'general-banner'
-  const match = path.match(/\.\/([^/]+)\/[^/]+\.svelte$/);
+  const match = path.match(/\.\/([^/]+)\/SectionComponent\.svelte$/);
   if (match) {
     const sectionCode = match[1];
     sectionComponents[sectionCode] = svelteModules[path];

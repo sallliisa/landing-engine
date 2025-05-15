@@ -54,12 +54,9 @@ export async function PUT({ params, request }) {
       mergedConfig.axis.map((field) => [field, currentItem[field]])
     );
 
-    console.log("axisConditions", axisConditions); // Add this line for debugging
-
     // Start a transaction to reorder entries
     await prisma.$transaction(async (tx) => {
       if (old_order < new_order) {
-        console.log("old_order < new_order", "Moving down in the order");
         // Moving down in the order
         await (tx[params.model as any] as any).updateMany({
           where: {
@@ -76,7 +73,6 @@ export async function PUT({ params, request }) {
           },
         });
       } else {
-        console.log("old_order > new_order", "Moving up in the order"); // Add this line for debugging
         // Moving up in the order
         await (tx[params.model as any] as any).updateMany({
           where: {
@@ -95,7 +91,6 @@ export async function PUT({ params, request }) {
       }
 
       // Update the order of the current item
-      console.log("Updating order of the current item"); // Add this line for debugging
       await (tx[params.model as any] as any).update({
         where: { id },
         data: { order: new_order },
