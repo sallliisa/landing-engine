@@ -18,11 +18,11 @@
   --gap-xl: 4rem;
 }
 
-/* @layer base {
+@layer base {
   button, [role="button"] {
     cursor: pointer;
   }
-} */
+}
 
 @layer components {
   .overlay {
