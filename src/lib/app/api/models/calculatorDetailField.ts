@@ -3,6 +3,7 @@ import prisma from '$lib/utils/prisma';
 import { api } from '$lib/utils/services';
 import type { Prisma } from '@prisma/client';
 import {PUT as reorder} from '../../../../routes/api/[model]/reorder/+server'
+import { reorderEntries } from '$lib/utils/reorder';
 
 export default {
   allow: true,
@@ -72,6 +73,15 @@ export default {
     },
     lifecycle: {
       pre: async (body) => {
+        const maxOrderItem = await prisma.calculatorDetailField.findFirst({
+          where: {
+            calculator_type_id: body.calculator_type_id,
+          },
+          orderBy: { order: 'desc' },
+          select: { order: true },
+        });
+        body.order = (maxOrderItem?.order ?? 0) + 1;
+
         if (body.primary) {
           // Unset 'primary' for other items of the same calculator_type_id
           await prisma.calculatorDetailField.updateMany({
@@ -81,38 +91,20 @@ export default {
             },
             data: { primary: false },
           });
-
-          // Increment order of all existing items for this calculator_type_id
-          // to make space for the new primary item at order 1.
-          await prisma.calculatorDetailField.updateMany({
-            where: {
-              calculator_type_id: body.calculator_type_id,
-            },
-            data: {
-              order: {
-                increment: 1,
-              },
-            },
-          });
-
-          // Set the new primary item's order to 1
-          body.order = 1;
-
-        } else {
-          // If not primary, assign order as the next available number at the end of the list
-          const maxOrderItem = await prisma.calculatorDetailField.findFirst({
-            where: {
-              calculator_type_id: body.calculator_type_id,
-            },
-            orderBy: { order: 'desc' },
-            select: { order: true },
-          });
-          body.order = (maxOrderItem?.order ?? 0) + 1;
         }
 
-        // Note: CalculatorDetailField does not have a 'code' field in the schema,
-        // so we don't generate one here, unlike CalculatorField.
         return body;
+      },
+      post: async (body, data) => {
+        if (data.primary) {
+          await reorderEntries({
+            oldOrder: data.order,
+            newOrder: 1,
+            model: 'calculatorDetailField',
+            id: data.id,
+          })
+        }
+        return data
       }
     },
   },
@@ -150,48 +142,26 @@ export default {
     },
     lifecycle: {
       pre: async (body) => {
-        // Fetch the existing item to get its calculator_type_id and current primary status
-        const existingItem = await prisma.calculatorDetailField.findUnique({
-          where: { id: body.id },
-          select: { calculator_type_id: true, primary: true }
-        });
-
-        // Only apply primary logic if the item exists and the update body sets primary to true,
-        // and the existing item was not already primary.
-        if (existingItem && body.primary && !existingItem.primary) {
-          // Unset 'primary' for other items of the same calculator_type_id
+        if (body.primary) {
           await prisma.calculatorDetailField.updateMany({
-            where: {
-              calculator_type_id: existingItem.calculator_type_id,
-              primary: true,
-              NOT: { id: body.id } // Exclude the current item
-            },
+            where: { primary: true },
             data: { primary: false }
           });
-
-          // Increment order of all existing items for this calculator_type_id
-          // (excluding the current item) to make space for the new primary item at order 1.
-          await prisma.calculatorDetailField.updateMany({
-            where: {
-              calculator_type_id: existingItem.calculator_type_id,
-              NOT: { id: body.id } // Exclude the current item
-            },
-            data: {
-              order: {
-                increment: 1,
-              },
-            },
-          });
-
-          // Set the current item's order to 1
-          body.order = 1;
         }
-
-        // Handle visible field if not provided
-        if (body.visible == null) body.visible = false;
-
-        return body;
+        return body
       },
+      post: async (body, data) => {
+        if (data.primary) {
+          console.log('udpate primary', data)
+          await reorderEntries({
+            oldOrder: data.order,
+            newOrder: 1,
+            model: 'calculatorDetailField',
+            id: data.id,
+          })
+        }
+        return data
+      }
     },
   },
 
