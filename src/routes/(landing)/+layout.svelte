@@ -7,6 +7,9 @@
   import { navigating } from '$app/state';
   import { onMount } from 'svelte';
   import NavbarMobile from '$lib/app/components/app/NavbarMobile.svelte';
+  import DateInput from '$lib/app/components/input/DateInput.svelte';
+  import TextInput from '$lib/app/components/input/TextInput.svelte';
+  import SelectInput from '$lib/app/components/input/SelectInput.svelte';
 
 	let wInnerWidth = $state(0)
 	
@@ -18,6 +21,12 @@
   })
 
 	let { children, data } = $props();
+
+	let testValue = $state({
+		input1: null,
+		input2: null,
+		input3: null
+	})
 </script>
 
 <div class="bg-surface text-on-surface">

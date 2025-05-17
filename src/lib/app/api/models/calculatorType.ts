@@ -45,7 +45,7 @@ export default {
   update: {
     allow: true,
     by: ['id'],
-    fields: ['name', 'description', 'formula'],
+    fields: ['name', 'description'],
     validation: {
       name: [
         {
@@ -53,12 +53,12 @@ export default {
           message: 'Name is required'
         },
       ],
-      formula: [
-        {
-          validator: (value: string) => value.length > 0,
-          message: 'Formula is required'
-        },
-      ]
+      // formula: [
+      //   {
+      //     validator: (value: string) => value?.length > 0,
+      //     message: 'Formula is required'
+      //   },
+      // ]
     },
     lifecycle: {
       pre: async (body) => {

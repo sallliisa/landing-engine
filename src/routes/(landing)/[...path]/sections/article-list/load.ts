@@ -1,7 +1,7 @@
 import { getLocale } from "$lib/paraglide/runtime"
 import prisma from "$lib/utils/prisma"
 
-export async function load(sectionId: string) {
+export async function load() {
   const data = await prisma.articleCategory.findMany({
     include: {
       translations: {

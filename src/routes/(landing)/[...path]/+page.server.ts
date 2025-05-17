@@ -73,7 +73,7 @@ export async function load({ params, parent, url }) {
       let data = null
       if (loader) {
         try {
-           data = await loader(section.id);
+           data = await loader(section);
         } catch (loaderError) {
            console.error(`Error loading data for section ${section.id} (${section.section_type_code}):`, loaderError);
            data = null;

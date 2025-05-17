@@ -1,9 +1,9 @@
 import prisma from "$lib/utils/prisma"
 
-export async function load(sectionId: string) {
+export async function load(section: Record<string, any>) {
   const data = await prisma.section.findUnique({
     where: {
-      id: sectionId
+      id: section.id
     },
     include: {
       contents: {

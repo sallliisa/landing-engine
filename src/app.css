@@ -1,5 +1,10 @@
+@layer theme, base, components, utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 @config "../tailwind.config.js"; 
@@ -13,11 +18,11 @@
   --gap-xl: 4rem;
 }
 
-@layer base {
+/* @layer base {
   button, [role="button"] {
     cursor: pointer;
   }
-}
+} */
 
 @layer components {
   .overlay {

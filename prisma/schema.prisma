@@ -36,6 +36,11 @@ enum CalculatorFieldType {
   select
 }
 
+enum CalculatorResultType {
+  number
+  currency
+}
+
 enum MenuItemType {
   link
   page
@@ -244,8 +249,8 @@ model CalculatorType {
   id          String            @id @default(cuid())
   name        String
   description String?
-  formula     String?
   fields      CalculatorField[]
+  details     CalculatorDetailField[]
 }
 
 model CalculatorField {
@@ -260,6 +265,18 @@ model CalculatorField {
   required           Boolean        @default(false)
   helper_message      String?
   data               Json?
+}
+
+model CalculatorDetailField {
+  id                 String         @id @default(cuid())
+  calculator_type_id String
+  calculatorType     CalculatorType @relation(fields: [calculator_type_id], references: [id], onDelete: Cascade)
+  order              Int
+  label              String
+  formula            String
+  type               CalculatorResultType
+  unit               String?
+  primary            Boolean @default(false)
 }
 
 ///

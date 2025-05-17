@@ -9,12 +9,15 @@ export default {
       colors: {
         surface: {
           DEFAULT: '#FFF9F5',
+          muted: '#EFE9E7'
         },
         primary: {
           DEFAULT: '#F68B1E',
+          muted: '#FEE5CE'
         },
         secondary: {
-          DEFAULT: '#ED1C25'
+          DEFAULT: '#ED1C25',
+          muted: '#FCD1CF'
         },
         outline: {
           DEFAULT: '#656E95',

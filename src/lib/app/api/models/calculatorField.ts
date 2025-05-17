@@ -41,7 +41,7 @@ export default {
   // Create operation config
   create: {
     allow: true,
-    fields: ['calculator_type_id', 'order', 'type', 'label', 'code', 'data', 'required', 'helperMessage', 'colSpan'],
+    fields: ['calculator_type_id', 'order', 'type', 'label', 'code', 'data', 'required', 'helper_message', 'col_span'],
     validation: {
       calculator_type_id: [
         {
@@ -84,7 +84,7 @@ export default {
   update: {
     allow: true,
     by: ['id'],
-    fields: ['order', 'type', 'label', 'code', 'required', 'data', 'helperMessage', 'colSpan'],
+    fields: ['order', 'type', 'label', 'code', 'required', 'data', 'helper_message', 'col_span'],
     validation: {
       label: [
         {
@@ -107,7 +107,7 @@ export default {
     },
     lifecycle: {
       pre: async (body) => {
-        body.code = parseSlug(body.label)
+        body.code = parseCode(body.label)
         return body;
       }
     },
@@ -122,6 +122,6 @@ export default {
   // Reorder operation config
   reorder: {
     allow: true,
-    fields: ['order']
+    axis: ['calculator_type_id']
   }
 } satisfies ModelConfig<Prisma.CalculatorFieldGetPayload<{include: {calculatorType: true}}>>;

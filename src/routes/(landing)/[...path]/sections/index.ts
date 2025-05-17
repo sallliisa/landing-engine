@@ -3,7 +3,7 @@ const dataModules = import.meta.glob('./*/load.ts');
 // Updated glob pattern to match .svelte files
 const svelteModules = import.meta.glob('./*/SectionComponent.svelte');
 
-type SectionDataLoader = (sectionId: string) => Promise<any>;
+type SectionDataLoader = (section: Record<string, any>) => Promise<any>;
 
 const sectionLoaders: Record<string, SectionDataLoader> = {};
 const sectionComponents: Record<string, () => Promise<any>> = {};
@@ -12,9 +12,9 @@ for (const path in dataModules) {
   const match = path.match(/\.\/([^/]+)\/load\.ts$/);
   if (match) {
     const sectionCode = match[1];
-    sectionLoaders[sectionCode] = async (sectionId: string) => {
+    sectionLoaders[sectionCode] = async (section) => {
       const mod = await dataModules[path]() as { load: SectionDataLoader };
-      return mod.load(sectionId);
+      return mod.load(section);
     };
   }
 }
