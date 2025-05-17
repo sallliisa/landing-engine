@@ -8,31 +8,29 @@
   let formData = $state<Record<string, any>>({})
 
   let viewIndex = $state<0 | 1>(0)
+
+  const componentTypeMap: Record<string, any> = {
+    text: TextInput,
+    select: SelectInput
+  }
 </script>
 
 {#if viewIndex === 0}
   <div class="flex flex-col gap-4">
     <div class="grid grid-cols-12 gap-4">
       {#each section.data.calculatorType.fields as calculatorField}
+        {@const InputComponent = componentTypeMap[calculatorField.type]}
         <div class="flex flex-col gap-4" style="grid-column: span {calculatorField.col_span} / span {calculatorField.col_span};">
-          {#if calculatorField.type === 'text'}
-            <TextInput
-              placeholder={calculatorField.placeholder}
-              label={calculatorField.label}
-              required={calculatorField.required}
-              bind:value={formData[calculatorField.code]}
-            />
-          {:else if calculatorField.type === 'select'}
-            <SelectInput
-              placeholder={calculatorField.placeholder}
-              label={calculatorField.label}
-              required={calculatorField.required}
-              bind:value={formData[calculatorField.code]}
-              data={calculatorField.data}
-              pick="value"
-              view="label"
-            />
-          {/if}
+          <InputComponent
+            placeholder={calculatorField.placeholder}
+            label={calculatorField.label}
+            required={calculatorField.required}
+            helperMessage={calculatorField.helper_message}
+            bind:value={formData[calculatorField.code]}
+            data={calculatorField.data}
+            pick="value"
+            view="label"
+          />
         </div>
       {/each}
     </div>

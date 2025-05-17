@@ -8,7 +8,19 @@
     data = [],
     pick = 'id',
     view = 'name',
-    placeholder = 'Select an item'
+    placeholder = 'Select an item',
+    helperMessage = null, // New prop
+    errorMessage = null,         // New prop
+  }: {
+    value?: any,
+    label?: string,
+    required?: boolean,
+    data?: any[],
+    pick?: string,
+    view?: string,
+    placeholder?: string,
+    helperMessage?: string | null, // New prop
+    errorMessage?: string | null          // New prop
   } = $props();
 
   const selectedLabel = $derived(
@@ -29,7 +41,7 @@
 <Select.Root type="single" bind:value={getValue, setValue} items={data}>
   <div class="flex flex-col gap-xs">
     {#if label}
-      <Label.Root>
+      <Label.Root class="font-medium text-xs">
         {label}
         {#if required}<span class="text-xs text-primary">*</span>{/if}
       </Label.Root>
@@ -38,9 +50,14 @@
       class="px-4 py-3 rounded-sm outline outline-outline-variant focus-within:outline-outline select-none flex flex-row items-center justify-between text-sm tracking-[0.01em]"
       aria-label={placeholder}
     >
-      <p>{selectedLabel}</p>
+      <p class={value ? '' : 'text-muted-foreground'}>{selectedLabel}</p>
       <i class="ri-expand-up-down-line text-lg"></i>
     </Select.Trigger>
+    {#if errorMessage}
+      <p class="text-xs text-error">{errorMessage}</p>
+    {:else if helperMessage}
+      <p class="text-xs text-muted-foreground">{helperMessage}</p>
+    {/if}
     <Select.Portal>
       <Select.Content
         class="focus-override border-outline-variant bg-surface text-on-surface data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 outline-hidden z-50 h-fit max-h-[var(--bits-select-content-available-height)] w-[var(--bits-select-anchor-width)] min-w-[var(--bits-select-anchor-width)] select-none rounded border p-0 data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1"

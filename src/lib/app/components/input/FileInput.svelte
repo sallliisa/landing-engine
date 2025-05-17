@@ -7,6 +7,8 @@
     required = false,
     placeholder = 'No file chosen',
     accept = '', // e.g., "image/*,application/pdf"
+    helperMessage = null, // New prop
+    errorMessage = null,         // New prop
     ...restProps
   }: {
     value?: string,
@@ -14,6 +16,8 @@
     required?: boolean,
     placeholder?: string,
     accept?: string,
+    helperMessage?: string | null, // New prop
+    errorMessage?: string | null,         // New prop
     [key: string]: any;
   } = $props();
 
@@ -59,12 +63,10 @@
           const publicUrl = await response.json();
           value = publicUrl; 
         } else {
-          console.error('File upload failed:', await response.text());
           selectedFile = null; 
           value = ''; // Clear value on failure
         }
-      } catch (error) {
-        console.error('Error uploading file:', error);
+      } catch (err) {
         selectedFile = null; 
         value = ''; // Clear value on error
       } finally {
@@ -92,29 +94,26 @@
 
 <div class="flex flex-col gap-xs">
   {#if label}
-    <Label.Root>
+    <Label.Root class="font-medium text-xs">
       {label}
       {#if required}<span class="text-xs text-primary">*</span>{/if}
     </Label.Root>
   {/if}
-  <div 
+  <div
     class="px-4 py-3 rounded-sm outline outline-outline-variant focus-within:outline-outline select-none flex flex-row items-center justify-between text-sm tracking-[0.01em] cursor-pointer"
-    onclick={() => !isUploading && !(value || selectedFile) && inputElement?.click()}
-    role="button"
+    onclick={() => inputElement.click()}
+    onkeypress={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        inputElement.click();
+      }
+    }}
     tabindex="0"
-    onkeypress={(e) => { if (!isUploading && !(value || selectedFile) && (e.key === 'Enter' || e.key === ' ')) inputElement?.click(); }}
-    aria-disabled={isUploading}
+    role="button"
+    aria-label={label || 'File input'}
   >
-    <button
-      class="text-start truncate pr-2 flex-grow {(selectedFile || value) && !isUploading ? '' : 'text-muted'}"
-      onclick={() => !isUploading && inputElement?.click()}
-    >
-      {#if isUploading}
-        Uploading...
-      {:else}
-        {displayFileName}
-      {/if}
-    </button>
+    <span class:text-muted-foreground={!value && !selectedFile && placeholder === displayFileName} class="truncate">
+      {displayFileName}
+    </span>
     <input
       type="file"
       bind:this={inputElement}
@@ -125,18 +124,14 @@
       {...restProps}
     />
     {#if isUploading}
-      <i class="ri-loader-4-line animate-spin text-lg ml-2"></i>
-    {:else if value || selectedFile}
-      <button 
-        type="button" 
-        onclick={clearFile} 
-        class="p-0 m-0 bg-transparent border-none text-muted hover:text-default focus:text-default"
-        aria-label="Clear file"
-      >
-        <i class="ri-close-circle-line text-lg ml-2"></i>
-      </button>
+      <i class="ri-loader-4-line animate-spin ml-2 text-lg"></i>
     {:else}
-      <i class="ri-upload-cloud-2-line text-lg ml-2"></i>
+      <i class="ri-upload-2-line ml-2 text-lg"></i>
     {/if}
   </div>
+  {#if errorMessage}
+    <p class="text-xs text-error">{errorMessage}</p>
+  {:else if helperMessage}
+    <p class="text-xs text-muted-foreground">{helperMessage}</p>
+  {/if}
 </div>

@@ -9,6 +9,8 @@
     placeholder = 'Click to upload image',
     alt = 'Uploaded image',
     previewClass = 'w-full h-48 object-cover rounded-sm border border-outline-variant',
+    helperMessage,
+    errorMessage,
     ...restProps
   }: {
     value?: string,
@@ -17,6 +19,8 @@
     placeholder?: string,
     alt?: string,
     previewClass?: string,
+    helperMessage?: string,
+    errorMessage?: string,
     [key: string]: any;
   } = $props();
 
@@ -126,4 +130,9 @@
     disabled={isUploading}
     {...restProps}
   />
+  {#if errorMessage}
+    <p class="text-xs text-error">{errorMessage}</p>
+  {:else if helperMessage}
+    <p class="text-xs text-muted-foreground">{helperMessage}</p>
+  {/if}
 </div>

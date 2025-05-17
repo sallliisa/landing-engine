@@ -6,13 +6,23 @@
     label = null,
     required = false,
     placeholder = '',
+    helperMessage = null, // New prop
+    errorMessage = null,         // New prop
     ...restProps
+  }: {
+    value?: string | number | undefined | null,
+    label?: string | null,
+    required?: boolean,
+    placeholder?: string,
+    helperMessage?: string | null, // New prop
+    errorMessage?: string | null,         // New prop
+    [key: string]: any;
   } = $props();
 </script>
 
 <div class="flex flex-col gap-xs">
   {#if label}
-    <Label.Root>
+    <Label.Root class="font-medium text-xs">
       {label}
       {#if required}<span class="text-xs text-primary">*</span>{/if}
     </Label.Root>
@@ -25,4 +35,9 @@
       {...restProps}
     />
   </div>
+  {#if errorMessage}
+    <p class="text-xs text-error">{errorMessage}</p>
+  {:else if helperMessage}
+    <p class="text-xs text-muted-foreground">{helperMessage}</p>
+  {/if}
 </div>

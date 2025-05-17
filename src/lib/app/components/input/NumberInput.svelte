@@ -1,22 +1,24 @@
 <script lang="ts">
   import { Label } from "bits-ui";
 
-  type $$Props = {
-    value?: number | undefined | null; // The bound numeric value
-    label?: string | null;
-    required?: boolean;
-    placeholder?: string;
-    // Allow any other HTML input attributes to be passed down
-    [key: string]: any;
-  };
-
   let {
     value = $bindable<number | undefined | null>(), // External numeric value
     label = null,
     required = false,
     placeholder = '',
+    helperMessage = null, // New prop
+    errorMessage = null,         // New prop
     ...restProps
-  }: $$Props = $props();
+  }: {
+    value?: number | undefined | null; // The bound numeric value
+    label?: string | null;
+    required?: boolean;
+    placeholder?: string;
+    helperMessage?: string | null; // New prop
+    errorMessage?: string | null;         // New prop
+    // Allow any other HTML input attributes to be passed down
+    [key: string]: any;
+  } = $props();
 
   // Internal string representation for the <input> element.
   // This is what the user sees and types into.
@@ -84,7 +86,7 @@
 
 <div class="flex flex-col gap-xs">
   {#if label}
-    <Label.Root>
+    <Label.Root class="font-medium text-xs">
       {label}
       {#if required}<span class="text-xs text-primary">*</span>{/if}
     </Label.Root>
@@ -100,4 +102,9 @@
       {...restProps}
     />
   </div>
+  {#if errorMessage}
+    <p class="text-xs text-error">{errorMessage}</p>
+  {:else if helperMessage}
+    <p class="text-xs text-muted-foreground">{helperMessage}</p>
+  {/if}
 </div>

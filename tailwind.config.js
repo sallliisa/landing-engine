@@ -7,6 +7,10 @@ export default {
     // fontFamily: ['Montserrat'],
     extend: {
       colors: {
+        error: {
+          DEFAULT: '#FF3B30',
+          muted: '#FFD1CF'
+        },
         surface: {
           DEFAULT: '#FFF9F5',
           muted: '#EFE9E7'

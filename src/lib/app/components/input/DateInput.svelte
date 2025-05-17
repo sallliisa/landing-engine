@@ -7,10 +7,14 @@
     value = $bindable(),
     label,
     required,
+    helperMessage = null, // New prop
+    errorMessage = null,         // New prop
   }: {
     value: Date | null | undefined,
     label?: string
     required?: boolean
+    helperMessage?: string | null // New prop
+    errorMessage?: string | null         // New prop
   } = $props();
 
   function dateToCalendarDate(date: Date | null | undefined): CalendarDate | undefined {
@@ -69,6 +73,11 @@
         </DatePicker.Trigger>
       {/snippet}
     </DatePicker.Input>
+    {#if errorMessage}
+      <p class="text-xs text-error">{errorMessage}</p>
+    {:else if helperMessage}
+      <p class="text-xs text-muted-foreground">{helperMessage}</p>
+    {/if}
     <DatePicker.Content sideOffset={6} class="z-50">
       <DatePicker.Calendar class="outline outline-outline-variant bg-surface rounded-lg p-4">
         {#snippet children({ months, weekdays })}

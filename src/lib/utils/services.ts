@@ -16,9 +16,10 @@ export const api = new Apostle({
     onSuccess: async () => {
     },
     onError: async (error) => {
-      if (error instanceof Error) error = error.message
-      else if (error instanceof Response) error = (await error.json()).message || error.statusText
+      if (error instanceof Error) error = error
+      else if (error instanceof Response) error = (await error.json()) || error
       console.error('EXTERNAL REQUEST FAILED:', error)
+      throw error
     }
   },
   interceptor: (init) => {
