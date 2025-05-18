@@ -110,8 +110,13 @@ export default {
     fieldsForeign: {
       translations: {
         fields: ['name', 'language']
-      },
+      }
     },
+    lifecycle: {
+      post: async (data) => {
+        return data
+      }
+    }
   },
 
   detail: {
@@ -144,7 +149,7 @@ export default {
     },
     lifecycle: {
       async post(data) {
-          return {...data, has_page: !!data.page[0]}
+        return {...data, has_page: !!data.page[0]}
       },
     }
   },

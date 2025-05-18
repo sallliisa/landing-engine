@@ -45,7 +45,7 @@
 		></div>
 	{/if}
 	{@render children()}
-	<div class="mt-[400px]"></div>
+	<!-- <div class="mt-[400px]"></div>
 	<div class="w-full flex items-center justify-center">
 		<div class="w-full max-w-screen-2xl flex flex-col gap-12">
 			{JSON.stringify(testValue)}
@@ -57,6 +57,6 @@
 			<FileInput bind:value={testValue.input5}/>
 			<ImageInput bind:value={testValue.input5}/>
 		 </div>
-	</div>
+	</div> -->
 	<Footer/>
 </div>
