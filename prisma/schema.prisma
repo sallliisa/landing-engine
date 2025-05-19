@@ -340,7 +340,7 @@ model Article {
   article_category_id String?
   category            ArticleCategory?     @relation(fields: [article_category_id], references: [id])
   translations        ArticleTranslation[]
-}
+} 
 
 model ArticleTranslation {
   id         String   @id @default(cuid())
