@@ -42,7 +42,7 @@ export async function DELETE({params, request}) {
     // Handle file deletions using top-level types config
     if (config.types)
       for (const field of Object.keys(config.types))
-        if (config.types[field] === 'file' && previousData?.[field])
+        if (config.types[field]?.type === 'file' && previousData?.[field])
           await deleteFile(previousData[field])
 
     const data = await (prisma as any)[params.model].delete({

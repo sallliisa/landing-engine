@@ -14,7 +14,7 @@
     <div class="flex flex-col gap-16 max-w-screen-xl px-12 w-full justify-center pt-8 lg:pt-0">
       <div class="flex flex-col items-center justify-center gap-8">
         <div class="flex flex-col gap-4 max-w-[680px]">
-          <p class="text-sm">{formatDate(new Date(data.article.created_at).toJSON())} • {data.article.category?.name}</p>
+          <p class="text-sm">{formatDate(new Date(data.article.created_at).toJSON())} • {data.article.categories?.map(category => category.name).join(', ')}</p>
           <p class="text-3xl lg:text-4xl font-semibold font-title">{data.article.title}</p>
           <p class="text-muted">{data.article?.excerpt}</p>
         </div>

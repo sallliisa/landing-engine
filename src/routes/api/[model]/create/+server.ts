@@ -37,10 +37,21 @@ export async function POST({params, request}) {
     }
 
     // Handle file uploads
-    if (config.types)
-      for (const field of Object.keys(config.types))
-        if (config.types[field] === 'file' && body[field])
+    if (config.types) {
+      for (const field of Object.keys(config.types)) {
+        if (config.types[field]?.type === 'file' && body[field]) {
           body[field] = await saveFileFromTemp(body[field])
+        } else if (config.types[field]?.type === 'multi' && body[field]?.length) {
+          const by = config.types[field].params.by
+          body[field] = {
+            connect: body[field].map((item: any) => ({
+              [by]: item[by]
+            }))
+          }
+        }
+      }
+    }
+      
 
     // Lifecycle hooks
     if (config.create?.lifecycle?.pre)

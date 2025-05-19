@@ -6,6 +6,10 @@ type StructureItem = {
   order: number;
   config: {
     fields?: string[];
+    info?: {
+      name?: string;
+      description?: string;
+    }
     meta?: Record<string, any>;
     structure?: StructureItem[];
     sectionGroupStructure?: StructureItem[];
@@ -43,7 +47,7 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
         if (item.config.structure) {
           const childSection = await prisma.section.create({
             data: {
-              name: `Child of ${parentSection.name}`,
+              name: item.config.info?.name || `Child of ${parentSection.name}`,
               order: item.order,
               parent_section_id: parentSection.id,
             }

@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "ContentMediaType" AS ENUM ('image', 'video', 'panorama', 'viruma');
+CREATE TYPE "ContentMediaType" AS ENUM ('image', 'video', 'panorama', 'embed');
 
 -- CreateEnum
 CREATE TYPE "Language" AS ENUM ('id', 'en');

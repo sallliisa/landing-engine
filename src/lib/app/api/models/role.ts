@@ -8,8 +8,12 @@ export default {
   
   // Type definitions moved to top level
   types: {
-    id: "number",
-    role_group_id: "number",
+    id: {
+      type: "number"
+    },
+    role_group_id: {
+      type: "number"
+    },
   },
 
   create: {

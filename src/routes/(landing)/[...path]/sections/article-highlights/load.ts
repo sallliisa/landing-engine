@@ -7,7 +7,9 @@ export async function load(section: any) {
       where: {section_id: section.id}
     }),
     prisma.article.findMany({
-      where: section.meta.article_category_id ? {article_category_id: section.meta.article_category_id} : undefined,
+      where: section.meta.article_categories && Array.isArray(section.meta.article_categories)
+        ? { categories: { some: { id: { in: section.meta.article_categories.map((item: any) => item.id) } } } }
+        : undefined,
       take: 3,
       orderBy: {
         created_at: 'desc'
@@ -21,7 +23,7 @@ export async function load(section: any) {
             thumbnail: true,
           }
         },
-        category: {
+        categories: {
           select: {
             translations: {
               where: {language: getLocale()},
@@ -38,12 +40,11 @@ export async function load(section: any) {
     content,
     article: article.map(article => ({
       ...article,
-      title: article.translations[0].title,
-      content: article.translations[0].content,
-      thumbnail: article.translations[0].content,
-      category_name: article.category?.translations[0].name,
+      title: article.translations[0]?.title,
+      content: article.translations[0]?.content,
+      thumbnail: article.translations[0]?.thumbnail,
+      categories: article.categories.map(category => category.translations[0]?.name),
       translations: undefined,
-      category: undefined
     }))
   }
 }

@@ -13,7 +13,7 @@ enum ContentMediaType {
   image
   video
   panorama
-  viruma
+  embed
 }
 
 enum Language {
@@ -166,6 +166,10 @@ model Content {
   title       String?
   subtitle    String?
   description String?
+  label       String?
+  content     String?
+  blurb       String?
+  media_type  ContentMediaType?
   order       Int
   section_id  String?
   url         String?
@@ -321,7 +325,7 @@ model ArticleCategory {
   created_at   DateTime                     @default(now())
   updated_at   DateTime                     @updatedAt
   translations ArticleCategoryTranslation[]
-  articles     Article[]
+  articles     Article[]                    @relation("ArticleToCategories")
 }
 
 model ArticleCategoryTranslation {
@@ -337,8 +341,7 @@ model Article {
   id                  String               @id @default(cuid())
   created_at          DateTime             @default(now())
   updated_at          DateTime             @updatedAt
-  article_category_id String?
-  category            ArticleCategory?     @relation(fields: [article_category_id], references: [id])
+  categories          ArticleCategory[]    @relation("ArticleToCategories")
   translations        ArticleTranslation[]
 } 
 

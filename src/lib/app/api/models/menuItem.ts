@@ -6,7 +6,9 @@ export default {
   allow: true,
   fields: ['id', 'parent_id', 'primary', 'visible', 'level', 'order', 'menu_item_type', 'url', 'slug'],
   types: {
-    order: 'number'
+    order: {
+      type: 'number'
+    }
   },
 
   create: {

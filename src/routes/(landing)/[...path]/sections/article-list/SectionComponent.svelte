@@ -9,35 +9,36 @@
   let articles = $state<any[]>([]); // Initialize with an empty array and specify type if known
   let rawSearchInput = $state(''); // For direct input binding
 
-  // Initialize urlSearchParameters, potentially with category from section data
+  // Initialize urlSearchParameters, now using article_category_ids as an array
   let urlSearchParameters = $state<{
-    search?: string, // Changed to match API parameter
-    article_category_id?: string,
+    search?: string,
+    article_category_ids?: string[], // <-- changed to array
     page?: number,
     limit?: number,
   }>({
-    article_category_id: section.data?.articleCategory?.id, // Pre-fill category if available
+    article_category_ids: section.data?.articleCategory?.id ? [section.data.articleCategory.id] : undefined,
     page: 1,
-    limit: 10, // Default limit
+    limit: 10,
   });
 
   const fetchArticles = async () => {
     loading = true;
     try {
       // Construct query parameters, filtering out undefined values
-      const params: Record<string, string | number | undefined> = {};
+      const params: Record<string, string | number | (string[]) | undefined> = {};
       if (urlSearchParameters.search) params.search = urlSearchParameters.search;
-      if (urlSearchParameters.article_category_id) params.article_category_id = urlSearchParameters.article_category_id;
+      if (urlSearchParameters.article_category_ids && urlSearchParameters.article_category_ids.length > 0) {
+        // For array params, append each as article_category_ids[]
+        params["article_category_ids[]"] = urlSearchParameters.article_category_ids;
+      }
       if (urlSearchParameters.page) params.page = urlSearchParameters.page;
       if (urlSearchParameters.limit) params.limit = urlSearchParameters.limit;
 
       const response = await api.get({path: '/api/public/article/list', query: params as any});
-      // Assuming the API returns { data: items, total: count, page: num, limit: num }
-      articles = response.data || []; // Access the actual array of articles
-      // Potentially store total, page, limit from response.data if needed for pagination controls
+      articles = response.data || [];
     } catch (error) {
       console.error("Failed to fetch articles:", error);
-      articles = []; // Reset or handle error appropriately
+      articles = [];
     } finally {
       loading = false;
     }
@@ -73,6 +74,35 @@
 </script>
 
 <div>
+  <!-- Category Filter List -->
+  <div class="mb-4 flex flex-wrap gap-2">
+    {#each section.data.articleCategory as category (category.id)}
+      <button
+        type="button"
+        class="px-3 py-1 rounded border transition
+          {urlSearchParameters.article_category_ids && urlSearchParameters.article_category_ids.includes(category.id)
+            ? 'bg-primary text-white border-primary'
+            : 'bg-white text-black border-gray-300'}"
+        onclick={() => {
+          // Toggle category selection
+          if (!urlSearchParameters.article_category_ids) {
+            urlSearchParameters.article_category_ids = [category.id];
+          } else if (urlSearchParameters.article_category_ids.includes(category.id)) {
+            urlSearchParameters.article_category_ids = urlSearchParameters.article_category_ids.filter(id => id !== category.id);
+            // If none selected, set to undefined to remove from query
+            if (urlSearchParameters.article_category_ids.length === 0) {
+              urlSearchParameters.article_category_ids = undefined;
+            }
+          } else {
+            urlSearchParameters.article_category_ids = [...urlSearchParameters.article_category_ids, category.id];
+          }
+          urlSearchParameters.page = 1; // Reset to first page on filter change
+        }}
+      >
+        {category.name}
+      </button>
+    {/each}
+  </div>
   <input
     type="text"
     placeholder="Search articles..."
@@ -90,8 +120,8 @@
       <a href="/article/{article.slug}">
         <li class="mb-2 p-2 border rounded">
           <h3 class="text-lg font-semibold">{article.title}</h3>
-          {#if article.category}
-            <p class="text-sm text-gray-600">Category: {article.category.name}</p>
+          {#if article.categories?.length}
+            <p class="text-sm text-gray-600">Category: {article.categories.join(', ')}</p>
           {/if}
           <p class="text-sm">{article.excerpt}</p>
           <small>{new Date(article.created_at).toLocaleDateString()}</small>

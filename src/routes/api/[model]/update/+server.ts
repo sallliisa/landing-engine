@@ -47,14 +47,24 @@ export async function PUT({params, request, fetch}) {
 
     if (!previousData) throw Error(MESSAGE.MODEL.RECORD.NOT_FOUND)
 
-    if (config.types)
-      for (const field of Object.keys(config.types))
-        if (config.types[field] === 'file') {
+    if (config.types) {
+      for (const field of Object.keys(config.types)) {
+        if (config.types[field]?.type === 'file') {
           if (isValidUrl(body[field])) {
             if (body[field]) body[field] = await saveFileFromTemp(body[field])
             else if (previousData[field]) await deleteFile(previousData[field])
           }
+        } else if (config.types[field]?.type === 'multi' && body[field]?.length) {
+          const by = config.types[field].params.by
+          body[field] = {
+            set: body[field].map((item: any) => ({
+              [by]: item[by]
+            }))
+          }
         }
+      }
+    }
+      
 
     if (config.update?.lifecycle?.pre)
       body = await config.update.lifecycle.pre(body)

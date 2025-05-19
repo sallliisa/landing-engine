@@ -8,6 +8,7 @@
     placeholder = '',
     helperMessage = null, // New prop
     errorMessage = null,         // New prop
+    icon,
     ...restProps
   }: {
     value?: string | number | undefined | null,
@@ -28,9 +29,10 @@
     </Label.Root>
   {/if}
   <div class="px-4 py-3 rounded-sm outline outline-outline-variant focus-within:outline-outline select-none flex flex-row items-center justify-between text-sm tracking-[0.01em]">
+    {@render icon?.()}
     <input
       bind:value={value}
-      class="p-0 w-full border-none bg-transparent outline-none focus:ring-0 focus:ring-offset-0"
+      class="p-0 w-full border-none bg-transparent outline-none focus:ring-0 focus:ring-offset-0 {icon ? 'pl-2' : ''}"
       {placeholder}
       {...restProps}
     />

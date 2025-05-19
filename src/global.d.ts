@@ -22,8 +22,23 @@ declare global {
     OR?: Condition<T>[]
     NOT?: Condition<T>[]
   }
-  type FieldType = 'file' | 'number' | 'string'
+  type FieldType = 'file' | 'number' | 'string' | 'multi'
 
+  type FieldTypeConfig =
+    | {
+        type: 'multi'
+        params: {
+          by: string
+          [key: string]: any
+        }
+      }
+    | {
+        type: Exclude<FieldType, 'multi'>
+        params?: {
+          [key: string]: any
+        }
+      }
+  
   type CustomFieldConfig = {
     name: string,        // Name of the field
     generator: (data: Record<string, any>) => any // Handler function to process the data
@@ -177,7 +192,7 @@ declare global {
     //          to the "age" field which has type of number.
     //          So make sure to type fields that are not of type string
     //          properly.
-    types?: {[K in keyof T]?: FieldType},
+    types?: {[K in keyof T]?: FieldTypeConfig},
     create?: CreateConfig<T>,
     update?: UpdateConfig<T>,
     list?: ListConfig<T>,

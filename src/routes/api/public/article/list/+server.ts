@@ -4,21 +4,22 @@ import { exception, success } from '$lib/utils/response'
 import { getLocale } from '$lib/paraglide/runtime.js';
 import { withPagination } from '$lib/utils/pagination'; // Assuming this utility exists and handles page/limit
 import type { Prisma } from '@prisma/client';
+import qs from 'qs'
 
 export async function GET({ url }) {
   try {
     const locale = getLocale();
-    const queryParams = parseSearchParams(url.searchParams);
-
-    const articleCategoryId = queryParams.article_category_id as string | undefined;
+    const queryParams = qs.parse(url.searchParams.toString());
+    // Get array of category IDs from search params (e.g., article_category_ids[]=id1&article_category_ids[]=id2)
+    const articleCategoryIds = queryParams.article_category_ids as string[] | undefined;
     const searchQuery = queryParams.search as string | undefined;
     // 'page' and 'limit' from queryParams will be used by withPagination
-
     const paginatedData = await withPagination(async (skip, take) => {
       const whereClause: Prisma.ArticleWhereInput = {
-        // Filter by category if provided
-        ...(articleCategoryId && { article_category_id: articleCategoryId }),
-
+        // Filter by categories if provided (many-to-many)
+        ...(articleCategoryIds && articleCategoryIds.length > 0
+          ? { categories: { some: { id: { in: articleCategoryIds } } } }
+          : {}),
         // Articles must have a translation for the current locale.
         // If searchQuery is present, the title of that translation must match.
         translations: {
@@ -43,7 +44,6 @@ export async function GET({ url }) {
           translations: {
             where: {
               language: locale,
-              // If searching, ensure the included translation is the one that matched
               ...(searchQuery && {
                 title: {
                   contains: searchQuery,
@@ -52,7 +52,7 @@ export async function GET({ url }) {
               }),
             }
           },
-          category: {
+          categories: {
             include: {
               // Include only the category translation for the current locale
               translations: {
@@ -73,27 +73,22 @@ export async function GET({ url }) {
       // Format articles to simplify frontend usage
       const formattedArticles = articles.map(article => {
         const currentTranslation = article.translations[0]; // Should be the single translation for the locale
-        const category = article.category;
-        const currentCategoryTranslation = category?.translations[0]; // Single category translation for the locale
+        const categoryNames = (article.categories || [])
+          .map(cat => cat.translations?.[0]?.name)
+          .filter(Boolean);
 
         return {
           id: article.id,
           created_at: article.created_at,
           updated_at: article.updated_at,
-          article_category_id: article.article_category_id,
           // Fields from the specific locale's article translation
           title: currentTranslation?.title,
           slug: currentTranslation?.slug,
           excerpt: currentTranslation?.excerpt,
           thumbnail: currentTranslation?.thumbnail,
-          // Optionally include content if needed for previews, otherwise omit for list views
-          // content: currentTranslation?.content, 
-          // Category details with its specific locale's translation
-          category: category ? {
-            id: category.id,
-            name: currentCategoryTranslation?.name,
-            description: currentCategoryTranslation?.description,
-          } : null,
+          // Array of category names (strings)
+          categories: categoryNames,
+          content: currentTranslation?.content,
         };
       });
 
