@@ -1,7 +1,6 @@
 <script lang="ts">
   import SearchBar from "$lib/app/components/input/SearchBar.svelte";
   import { Accordion } from "bits-ui";
-  import ImagePreview from "$lib/app/components/ui/ImagePreview.svelte";
   import ListView from "./_layouts/ListView.svelte";
   import GalleryView from "./_layouts/GalleryView.svelte";
 
@@ -9,86 +8,92 @@
 
   let searchQuery = $state('')
 
-  // Create an array of all childSection values (id or name)
   const allItemValues = section.data.childSections.map((cs: any) => cs.id || cs.name);
   let openItems = $state(allItemValues);
 
-  // Filter sections and contents based on search query
-  $effect(() => {
+  let filteredChildSections = $derived(getFilteredChildSections());
+
+  function getFilteredChildSections() {
     if (!searchQuery) {
-      // If search is empty, keep original state
-      openItems = allItemValues;
-      return;
+      return section.data.childSections.map((cs: any) => ({ ...cs, filteredContents: cs.contents }));
     }
 
     const query = searchQuery.toLowerCase();
-    const matchingSectionIds = section.data.childSections
-      .filter((childSection: any) => {
-        // Check if any content in this section matches the search
-        const hasMatchingContent = childSection.contents.some((content: any) => 
+    return section.data.childSections
+      .map((childSection: any) => {
+        const filteredContents = childSection.contents.filter((content: any) => 
           content.title?.toLowerCase().includes(query)
         );
-        return hasMatchingContent;
+        return { ...childSection, filteredContents };
       })
-      .map((section: any) => section.id || section.name);
+      .filter((childSection: any) => childSection.filteredContents.length > 0);
+  }
 
-    // Update openItems to only include sections with matching content
-    openItems = matchingSectionIds;
+  $effect(() => {
+    if (!searchQuery) {
+      openItems = allItemValues;
+      return;
+    }
+    openItems = filteredChildSections.map((cs: any) => cs.id || cs.name);
   });
 
-  // Filter content items based on search
-  function filterContent(contents: any[]) {
-    if (!searchQuery) return contents;
-    
-    const query = searchQuery.toLowerCase();
-    return contents.filter(content => 
-      content.title?.toLowerCase().includes(query)
-    );
-  }
 </script>
 
 <div class="w-full flex items-center justify-center">
   <Accordion.Root type="multiple" bind:value={openItems} class="w-full {section.meta.type === 'list' ? 'max-w-screen-lg' : 'max-w-screen-xl'} flex flex-col {section.meta.title ? 'gap-lg' : 'gap-base'} py-3 px-12">
-    {#if section.meta.searchable}
+    {#if section.meta.searchable || section.meta.title}
       <div class="flex flex-row items-center justify-between">
         {#if section.meta.title}<p class="text-xl font-bold">{section.meta.title}</p>{/if}
-        <div class="{section.meta.title ? 'max-w-[284px]' : 'w-full'}">
-          <SearchBar bind:value={searchQuery}/>
-        </div>
+        {#if section.meta.searchable}
+          <div class="{section.meta.title ? 'max-w-[284px]' : 'w-full'}">
+            <SearchBar bind:value={searchQuery}/>
+          </div>
+        {/if}
       </div>
     {/if}
-    {#each section.data.childSections as childSection (childSection.id || childSection.name)}
-      {@const filteredContents = filterContent(childSection.contents)}
-      {#if !searchQuery || filteredContents.length > 0}
-        <Accordion.Item value={childSection.id || childSection.name} class="flex flex-col gap-base">
+
+    {#if section.data.childSections.length === 0}
+      <div class="text-center text-gray-500 py-10">
+        <p>No data available.</p>
+      </div>
+    {:else if filteredChildSections.length === 0 && searchQuery}
+      <div class="text-center text-gray-500 py-10">
+        <p>No results found for "{searchQuery}".</p>
+      </div>
+    {:else}
+      {#each filteredChildSections as childSection (childSection.id || childSection.name)}
+        <Accordion.Item value={childSection.id || childSection.name} class="flex flex-col">
           {#if section.data.childSections?.length > 1 || section.meta.collapsible}
-            <Accordion.Header class="w-full flex flex-row items-center justify-center gap-sm">
-              <p class="font-bold min-w-max">{childSection.name}</p>
-              <div class="w-full h-[1px] bg-outline"></div>
-              {#if section.meta.collapsible}
-                <Accordion.Trigger class="data-[state=open]:rotate-180">
-                  <i class="ri-arrow-down-s-line"></i>
-                </Accordion.Trigger>
-              {/if}
+            <Accordion.Header>
+              <Accordion.Trigger disabled={!section.meta.collapsible} class="w-full flex flex-row items-center justify-center gap-sm">
+                <p class="font-bold min-w-max">{childSection.name}</p>
+                <div class="w-full h-[1px] bg-outline"></div>
+                {#if section.meta.collapsible}
+                  <div class="data-[state=open]:rotate-180 transition-all">
+                    <i class="ri-arrow-down-s-line"></i>
+                  </div>
+                {/if}
+              </Accordion.Trigger>
             </Accordion.Header>
           {/if}
           <Accordion.Content class="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden">
+            <div class="h-4 w-full"></div>
             {#if section.meta.type === 'list' || !section.meta.type}
               <div class="flex flex-col gap-sm">
-                {#each filteredContents as content}
+                {#each childSection.filteredContents as content}
                   <ListView {content}/>
                 {/each}
               </div>
             {:else if section.meta.type === 'gallery'}
               <div class="flex flex-row gap-6 flex-wrap">
-                {#each filteredContents as content}
+                {#each childSection.filteredContents as content}
                   <GalleryView {content}/>
                 {/each}
               </div>
             {/if}
           </Accordion.Content>
         </Accordion.Item>
-      {/if}
-    {/each}
+      {/each}
+    {/if}
   </Accordion.Root>
 </div>
