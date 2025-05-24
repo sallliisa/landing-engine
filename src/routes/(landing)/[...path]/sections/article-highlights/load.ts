@@ -21,6 +21,8 @@ export async function load(section: any) {
             title: true,
             content: true,
             thumbnail: true,
+            excerpt: true,
+            slug: true
           }
         },
         categories: {
@@ -40,7 +42,9 @@ export async function load(section: any) {
     content,
     article: article.map(article => ({
       ...article,
+      slug: article.translations[0]?.slug,
       title: article.translations[0]?.title,
+      excerpt: article.translations[0]?.excerpt,
       content: article.translations[0]?.content,
       thumbnail: article.translations[0]?.thumbnail,
       categories: article.categories.map(category => category.translations[0]?.name),

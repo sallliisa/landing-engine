@@ -79,6 +79,7 @@ const main = async () => {
           slug: parseSlug('Beranda'),
           order: 1,
           primary: true,
+          visible: false,
           translations: {
             createMany: {
               data: [

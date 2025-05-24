@@ -24,5 +24,5 @@
     <p class="text-xl font-bold group-hover:underline">{title}</p>
     <p class="text-outline group-hover:underline">{excerpt}</p>
   </div>
-  <img src="{thumbnail}" class="w-[160px] aspect-video rounded-sm object-center object-cover" alt="{title} - {excerpt}"/>
+  <img src="{thumbnail}" class="w-[160px] aspect-video rounded-sm object-center object-cover outline outline-outline-variant" alt="{title} - {excerpt}"/>
 </a>
