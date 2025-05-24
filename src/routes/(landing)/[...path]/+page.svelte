@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { onMount } from 'svelte';
   import { sectionComponents } from './sections/index.js'
 
   export let data;
@@ -16,8 +17,8 @@
   }
 </script>
 
-<div class="flex flex-col gap-6">
-  {#each data.sections as section, index}
+<div class="flex flex-col gap-6 col-span-4">
+  {#each data.sections as section, index (section.id)}
     {#if section?.section_type_code}
       {@const sectionComponentPromise = getSectionComponent(section.section_type_code)}
       {#if sectionComponentPromise}
@@ -31,6 +32,4 @@
       {/if}
     {/if}
   {/each}
-  <!-- <div class="h-[400px]"></div> -->
-  <!-- <p>{JSON.stringify(data.sections)}</p> -->
 </div>

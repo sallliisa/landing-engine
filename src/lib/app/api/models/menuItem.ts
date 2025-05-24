@@ -4,7 +4,7 @@ import type { Language, MenuItem, Prisma } from "@prisma/client";
 
 export default {
   allow: true,
-  fields: ['id', 'parent_id', 'primary', 'visible', 'level', 'order', 'menu_item_type', 'url', 'slug'],
+  fields: ['id', 'parent_id', 'primary', 'visible', 'level', 'order', 'menu_item_type', 'show_submenu_below_navbar', 'url', 'slug'],
   types: {
     order: {
       type: 'number'
@@ -65,7 +65,7 @@ export default {
 
   update: {
     by: ['id'],
-    fields: ['visible', 'primary'],
+    fields: ['visible', 'primary', 'show_submenu_below_navbar'],
     validation: {
       order: [
         {

@@ -6,11 +6,19 @@
   import { slide, blur, fade } from "svelte/transition";
   import { debounce } from "$lib/utils/common";
   import { index } from "mathjs";
+  import { cubicIn } from "svelte/easing";
 
   let windowScrollY = $state(0);
+  let windowHeight = $state(0);
   let isMenuExpanded = $state(false)
   let activeLevel1Index = $state<number | null>(null)
   let activeLevel2Index = $state<number | null>(null)
+
+  let [currentLevel1Menu, currentLevel2Menu] = $derived.by(() => {
+    const l1 = page.data.menu.find((item: any) => item.slug === page.url.pathname.split('/').filter(Boolean)[0])
+    const l2 = l1?.children.find((item: any) => item.slug === page.url.pathname.split('/').filter(Boolean)[1])
+    return [l1, l2]
+  })
 
   const debouncedMenuExpandMouseHover = debounce((index: number, mode: 'expand' | 'shrink') => {
     if (mode === 'expand') {
@@ -25,12 +33,12 @@
   }, 100)
 </script>
 
-<svelte:window bind:scrollY={windowScrollY}/>
+<svelte:window bind:scrollY={windowScrollY} bind:outerHeight={windowHeight}/>
 {#if isMenuExpanded}
   <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed backdrop-blur-md"></div>
 {/if}
 <div class="lg:flex flex-col hidden">
-  <div class="w-full flex flex-row items-center justify-center fixed z-[50] box-border transition-all border-b {(windowScrollY != 0 && !isMenuExpanded) ? 'bg-surface border-b-outline-variant' : 'border-transparent'}">
+  <div class="w-full flex flex-col items-center justify-center fixed z-[50] box-border transition-all border-b {(windowScrollY != 0 && !isMenuExpanded) ? 'bg-surface border-b-outline-variant' : 'border-transparent'}">
     <div class="flex flex-row items-center justify-between w-full px-12 py-6 max-w-screen-xl">
       <a href="{page.data.primaryMenuPath}">
         <img src="/assets/logo/hkr.svg" class="w-[64px] h-[27px]" alt="HK Realtindo"/>
@@ -75,6 +83,13 @@
       </div>
     </div>
   </div>
+  {#if currentLevel1Menu.show_submenu_below_navbar && !isMenuExpanded}
+    <div transition:blur={{duration: 150}} class="w-full z-[51] py-1.5 flex flex-row items-center justify-center gap-4 fixed top-[88px] border-y transition-all {(windowScrollY != 0) ? 'bg-surface border-y-outline-variant mt-0' : 'border-transparent -mt-4'}">
+      {#each currentLevel1Menu.children as menu}
+        <a href="/{currentLevel1Menu.slug}/{menu.slug}" class="text-start text-sm {menu.slug === currentLevel2Menu.slug ? 'font-semibold underline' : ''}">{menu.translations[0].name}</a>
+      {/each}
+    </div>
+  {/if}
   {#if isMenuExpanded && activeLevel1Index != null}
     <div
       role="menu"

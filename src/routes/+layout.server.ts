@@ -31,6 +31,7 @@ export async function load({params, url, untrack}) {
         visible: true,
         url: true,
         slug: true,
+        show_submenu_below_navbar: true,
         translations: {
           where: {
             language: getLocale(),
@@ -64,6 +65,7 @@ export async function load({params, url, untrack}) {
             visible: true,
             url: true,
             slug: true,
+            show_submenu_below_navbar: true,
             translations: {
               where: {
                 language: getLocale(),
@@ -97,6 +99,7 @@ export async function load({params, url, untrack}) {
                 visible: true,
                 url: true,
                 slug: true,
+                show_submenu_below_navbar: true,
                 translations: {
                   where: {
                     language: getLocale(),

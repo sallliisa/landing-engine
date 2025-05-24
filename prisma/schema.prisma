@@ -97,6 +97,7 @@ model MenuItem {
   visible        Boolean               @default(true)
   primary        Boolean               @default(false)
   slug           String
+  show_submenu_below_navbar Boolean @default(false)
   url            String?
   order          Int // For ordering among siblings
   translations   MenuItemTranslation[]

@@ -2,6 +2,7 @@ import { getLocale } from "$lib/paraglide/runtime"
 import prisma from "$lib/utils/prisma"
 
 export async function load(section: any) {
+  console.log('ARTICLE HIGHLIGHT RUN')
   const [content, article] = await Promise.all([
     prisma.content.findFirst({
       where: {section_id: section.id}
