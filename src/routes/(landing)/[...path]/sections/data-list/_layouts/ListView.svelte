@@ -2,7 +2,7 @@
   const {content} = $props()
 </script>
 
-<div class="outline outline-outline-variant rounded-lg p-4 flex flex-row gap-8 items-center justify-center">
+<div class="border border-outline-variant rounded-lg p-4 flex flex-row gap-8 items-center justify-center">
   {#if content.media}<img src={content.media} alt={content.title ?? ''} class="w-[96px] aspect-square rounded-sm"/>{/if}
   <div class="w-full flex flex-col gap-sm">
     <div class="flex flex-col gap-xs">

@@ -72,7 +72,7 @@
               {/if}
             </Accordion.Header>
           {/if}
-          <Accordion.Content>
+          <Accordion.Content class="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden">
             {#if section.meta.type === 'list' || !section.meta.type}
               <div class="flex flex-col gap-sm">
                 {#each filteredContents as content}
