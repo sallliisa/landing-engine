@@ -78,7 +78,7 @@
       <ImagePreview src={value} {alt} title="" description="" class="h-full w-full"/>
       <button 
         onclick={clearImage} 
-        class="absolute top-2 right-2 bg-black/60 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 focus:opacity-100"
+        class="absolute top-2 right-2 bg-black/60 aspect-square flex items-center justify-center text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 focus:opacity-100"
         aria-label="Remove image"
       >
         <i class="ri-close-line text-base leading-none"></i>
@@ -133,6 +133,6 @@
   {#if errorMessage}
     <p class="text-xs text-error">{errorMessage}</p>
   {:else if helperMessage}
-    <p class="text-xs text-muted-foreground">{helperMessage}</p>
+    <p class="text-xs text-outline">{helperMessage}</p>
   {/if}
 </div>

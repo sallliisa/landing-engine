@@ -2,6 +2,7 @@ import prisma from '$lib/utils/prisma.js'
 import { error } from '@sveltejs/kit'
 import {sectionLoaders} from './sections/index.js'
 import { getLocale } from '$lib/paraglide/runtime.js';
+import { parseSearchParams } from '$lib/utils/common.js';
 
 export async function load({ params, parent, url }) {
   const slugs = url.pathname.split('/').slice(1).filter(Boolean);
@@ -64,6 +65,8 @@ export async function load({ params, parent, url }) {
     }
   });
 
+  const currentPageSearchParams = parseSearchParams(url.searchParams);
+
   if (!pageSectionGroup) throw error(500, 'Section group not found');
 
   const sectionsWithData = await Promise.all(
@@ -73,7 +76,7 @@ export async function load({ params, parent, url }) {
       let data = null
       if (loader) {
         try {
-           data = await loader(section);
+          data = await loader(section);
         } catch (loaderError) {
            console.error(`Error loading data for section ${section.id} (${section.section_type_code}):`, loaderError);
            data = null;
@@ -82,11 +85,10 @@ export async function load({ params, parent, url }) {
       // return data !== null ? data : section;
       return {
         ...section,
-        data
+        data,
       }
     })
   );
 
-
-  return { sections: sectionsWithData };
+  return { sections: sectionsWithData, currentPageSearchParams };
 }

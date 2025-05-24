@@ -3,7 +3,7 @@ const dataModules = import.meta.glob('./*/load.ts');
 // Updated glob pattern to match .svelte files
 const svelteModules = import.meta.glob('./*/SectionComponent.svelte');
 
-type SectionDataLoader = (section: Record<string, any>) => Promise<any>;
+type SectionDataLoader = (section: Record<string, any>, url?: any) => Promise<any>;
 
 const sectionLoaders: Record<string, SectionDataLoader> = {};
 const sectionComponents: Record<string, () => Promise<any>> = {};

@@ -31,20 +31,22 @@
 	})
 </script>
 
-<div class="bg-surface text-on-surface">
-	{#if wInnerWidth >= 1024}
-		<NavbarDesktop/>
-	{:else}
-		<NavbarMobile/>
-	{/if}
-	{#if navigating.complete}
-		<div
-			in:fade={{ duration: 200 }}
-			out:fade={{ duration: 200 }}
-			class="fixed top-0 z-[48] w-full min-h-screen h-screen backdrop-blur-md"
-		></div>
-	{/if}
-	{@render children()}
+<div class="bg-surface text-on-surface min-h-screen flex flex-col justify-between">
+	<div class="flex flex-col w-full">
+		{#if wInnerWidth >= 1024}
+			<NavbarDesktop/>
+		{:else}
+			<NavbarMobile/>
+		{/if}
+		{#if navigating.complete}
+			<div
+				in:fade={{ duration: 200 }}
+				out:fade={{ duration: 200 }}
+				class="fixed top-0 z-[48] w-full min-h-screen h-screen backdrop-blur-md"
+			></div>
+		{/if}
+		{@render children()}
+	</div>
 	<!-- <div class="mt-[400px]"></div>
 	<div class="w-full flex items-center justify-center">
 		<div class="w-full max-w-screen-2xl flex flex-col gap-12">

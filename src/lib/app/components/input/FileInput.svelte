@@ -111,7 +111,7 @@
     role="button"
     aria-label={label || 'File input'}
   >
-    <span class:text-muted-foreground={!value && !selectedFile && placeholder === displayFileName} class="truncate">
+    <span class:text-outline={!value && !selectedFile && placeholder === displayFileName} class="truncate">
       {displayFileName}
     </span>
     <input
@@ -132,6 +132,6 @@
   {#if errorMessage}
     <p class="text-xs text-error">{errorMessage}</p>
   {:else if helperMessage}
-    <p class="text-xs text-muted-foreground">{helperMessage}</p>
+    <p class="text-xs text-outline">{helperMessage}</p>
   {/if}
 </div>

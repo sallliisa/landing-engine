@@ -16,8 +16,8 @@
 </script>
 
 {#if viewIndex === 0}
-  <div class="flex flex-col gap-4">
-    <div class="grid grid-cols-12 gap-4">
+  <div class="flex flex-col items-center justify-center gap-4">
+    <div class="grid grid-cols-12 gap-4 max-w-screen-xl w-full">
       {#each section.data.calculatorType.fields as calculatorField}
         {@const InputComponent = componentTypeMap[calculatorField.type]}
         <div class="flex flex-col gap-4" style="grid-column: span {calculatorField.col_span} / span {calculatorField.col_span};">

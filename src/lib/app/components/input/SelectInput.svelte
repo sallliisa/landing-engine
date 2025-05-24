@@ -8,7 +8,7 @@
     data = [],
     pick = 'id',
     view = 'name',
-    placeholder = 'Select an item',
+    placeholder = 'Pilih',
     helperMessage = null, // New prop
     errorMessage = null,         // New prop
   }: {
@@ -50,13 +50,13 @@
       class="px-4 py-3 rounded-sm outline outline-outline-variant focus-within:outline-outline select-none flex flex-row items-center justify-between text-sm tracking-[0.01em]"
       aria-label={placeholder}
     >
-      <p class={value ? '' : 'text-muted-foreground'}>{selectedLabel}</p>
+      <p class={value ? '' : 'text-outline'}>{selectedLabel}</p>
       <i class="ri-expand-up-down-line text-lg"></i>
     </Select.Trigger>
     {#if errorMessage}
       <p class="text-xs text-error">{errorMessage}</p>
     {:else if helperMessage}
-      <p class="text-xs text-muted-foreground">{helperMessage}</p>
+      <p class="text-xs text-outline">{helperMessage}</p>
     {/if}
     <Select.Portal>
       <Select.Content

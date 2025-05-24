@@ -19,6 +19,6 @@ export async function load(section: Record<string, any>) {
     formDataTemplate: {
       form_type_id: section.meta.form_type_id,
       data: data?.fields.map(field => ({...field, value: null}))
-    }
+    },
   }
 }

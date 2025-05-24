@@ -74,7 +74,7 @@ export default {
         });
 
         body.order = (maxOrderItem?.order ?? 0) + 1;
-        body.code = parseSlug(body.label)
+        body.code = parseCode(body.label)
         return body;
       }
     },
@@ -122,6 +122,6 @@ export default {
   // Reorder operation config
   reorder: {
     allow: true,
-    fields: ['order']
+    axis: ['form_type_id']
   }
 } satisfies ModelConfig<Prisma.FormFieldGetPayload<{include: {formType: true}}>>;

@@ -173,6 +173,8 @@ model Content {
   order       Int
   section_id  String?
   url         String?
+  attachment  String?
+  status      Boolean?
   section     Section? @relation(fields: [section_id], references: [id], onDelete: Cascade)
   gallery_id  String?
   gallery     Gallery? @relation(fields: [gallery_id], references: [id], onDelete: Cascade)

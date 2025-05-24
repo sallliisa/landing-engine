@@ -53,7 +53,7 @@
         {#each segments as { part, value }}
           <div class="inline-block select-none">
             {#if part === "literal"}
-              <DatePicker.Segment {part} class="text-muted-foreground p-1">
+              <DatePicker.Segment {part} class="text-outline p-1">
                 {value}
               </DatePicker.Segment>
             {:else}
@@ -76,7 +76,7 @@
     {#if errorMessage}
       <p class="text-xs text-error">{errorMessage}</p>
     {:else if helperMessage}
-      <p class="text-xs text-muted-foreground">{helperMessage}</p>
+      <p class="text-xs text-outline">{helperMessage}</p>
     {/if}
     <DatePicker.Content sideOffset={6} class="z-50">
       <DatePicker.Calendar class="outline outline-outline-variant bg-surface rounded-lg p-4">
@@ -154,13 +154,13 @@
         {#each segments as { part, value }}
           <div class="inline-block select-none">
             {#if part === "literal"}
-              <DatePicker.Segment {part} class="text-muted-foreground p-1">
+              <DatePicker.Segment {part} class="text-outline p-1">
                 {value}
               </DatePicker.Segment>
             {:else}
               <DatePicker.Segment
                 {part}
-                class="rounded-5px hover:bg-muted focus:bg-muted focus:text-foreground aria-[valuetext=Empty]:text-muted-foreground focus-visible:ring-0! focus-visible:ring-offset-0! px-1 py-1"
+                class="rounded-5px hover:bg-muted focus:bg-muted focus:text-foreground aria-[valuetext=Empty]:text-outline focus-visible:ring-0! focus-visible:ring-offset-0! px-1 py-1"
               >
                 {value}
               </DatePicker.Segment>
@@ -203,7 +203,7 @@
                   <DatePicker.GridRow class="mb-1 flex w-full justify-between">
                     {#each weekdays as day}
                       <DatePicker.HeadCell
-                        class="text-muted-foreground font-normal! w-10 rounded-md text-xs"
+                        class="text-outline font-normal! w-10 rounded-md text-xs"
                       >
                         <div>{day.slice(0, 2)}</div>
                       </DatePicker.HeadCell>
@@ -220,7 +220,7 @@
                           class="p-0! relative size-10 text-center text-sm"
                         >
                           <DatePicker.Day
-                            class="rounded-9px text-foreground hover:border-foreground data-selected:bg-foreground data-disabled:text-foreground/30 data-selected:text-background data-unavailable:text-muted-foreground data-disabled:pointer-events-none data-outside-month:pointer-events-none data-selected:font-medium data-unavailable:line-through group relative inline-flex size-10 items-center justify-center whitespace-nowrap border border-transparent bg-transparent p-0 text-sm font-normal transition-all"
+                            class="rounded-9px text-foreground hover:border-foreground data-selected:bg-foreground data-disabled:text-foreground/30 data-selected:text-background data-unavailable:text-outline data-disabled:pointer-events-none data-outside-month:pointer-events-none data-selected:font-medium data-unavailable:line-through group relative inline-flex size-10 items-center justify-center whitespace-nowrap border border-transparent bg-transparent p-0 text-sm font-normal transition-all"
                           >
                             <div
                               class="bg-foreground group-data-selected:bg-background group-data-today:block absolute top-[5px] hidden size-1 rounded-full transition-all"

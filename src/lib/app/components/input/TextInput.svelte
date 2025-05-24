@@ -21,7 +21,7 @@
   } = $props();
 </script>
 
-<div class="flex flex-col gap-xs">
+<div class="flex flex-col gap-xs w-full">
   {#if label}
     <Label.Root class="font-medium text-xs">
       {label}
@@ -40,6 +40,6 @@
   {#if errorMessage}
     <p class="text-xs text-error">{errorMessage}</p>
   {:else if helperMessage}
-    <p class="text-xs text-muted-foreground">{helperMessage}</p>
+    <p class="text-xs text-outline">{helperMessage}</p>
   {/if}
 </div>

@@ -6,23 +6,15 @@
 
   let {
     value = $bindable(),
-    label = null,
-    required = false,
-    placeholder = '',
-    helperMessage = null,
-    errorMessage = null,
     icon,
+    placeholder = 'Cari...',
     debounce = true, // New prop, defaults to true
     debounceMs = 300, // Optional: allow customizing debounce time
     ...restProps
   }: {
     value?: string | number | undefined | null,
-    label?: string | null,
-    required?: boolean,
-    placeholder?: string,
-    helperMessage?: string | null,
-    errorMessage?: string | null,
     debounce?: boolean, // New prop
+    placeholder?: string,
     debounceMs?: number,
     [key: string]: any;
   } = $props();
@@ -47,7 +39,7 @@
   }
 </script>
 
-<TextInput bind:value={getValue, setValue} {...restProps}>
+<TextInput bind:value={getValue, setValue} {...restProps} {placeholder}>
   {#snippet icon()}
     <i class="{icon ?? 'ri-search-line'}"></i>
   {/snippet}

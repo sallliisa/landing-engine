@@ -2,11 +2,16 @@
   import { api } from "$lib/utils/services";
   import { onMount } from "svelte"; // Added afterUpdate for $effect in Svelte 4
   import { debounce } from "$lib/utils/common";
+  import SearchBar from "$lib/app/components/input/SearchBar.svelte";
+  import ArticleItem from "$lib/app/components/app/ArticleItem.svelte";
+  import Spinner from "$lib/app/components/ui/Spinner.svelte";
+  import Button from "$lib/app/components/ui/Button.svelte";
 
   const {section} = $props()
 
   let loading = $state(false);
   let articles = $state<any[]>([]); // Initialize with an empty array and specify type if known
+  let articleListMeta = $state<any>({}); // Initialize with an empty object and specify type if known
   let rawSearchInput = $state(''); // For direct input binding
 
   // Initialize urlSearchParameters, now using article_category_ids as an array
@@ -36,6 +41,7 @@
 
       const response = await api.get({path: '/api/public/article/list', query: params as any});
       articles = response.data || [];
+      articleListMeta = response.meta || {};
     } catch (error) {
       console.error("Failed to fetch articles:", error);
       articles = [];
@@ -73,8 +79,91 @@
 
 </script>
 
-<div>
-  <!-- Category Filter List -->
+<div class="flex justify-center w-full">
+  <div class="grid grid-cols-3 max-w-screen-xl">
+    <div class="border-r border-outline-variant col-span-1 p-12 flex flex-col gap-6">
+      <SearchBar bind:value={urlSearchParameters.search}/>
+      <div class="flex flex-row flex-wrap gap-3">
+        {#each section.data.articleCategory as category (category.id)}
+          <button
+            type="button"
+            class="px-3 py-1.5 rounded border transition
+              {urlSearchParameters.article_category_ids && urlSearchParameters.article_category_ids.includes(category.id)
+                ? 'bg-primary text-white border-primary'
+                : 'bg-transparent text-on-surface border-outline-variant'}"
+            onclick={() => {
+              if (!urlSearchParameters.article_category_ids) {
+                urlSearchParameters.article_category_ids = [category.id];
+              } else if (urlSearchParameters.article_category_ids.includes(category.id)) {
+                urlSearchParameters.article_category_ids = urlSearchParameters.article_category_ids.filter(id => id !== category.id);
+                if (urlSearchParameters.article_category_ids.length === 0) {
+                  urlSearchParameters.article_category_ids = undefined;
+                }
+              } else {
+                urlSearchParameters.article_category_ids = [...urlSearchParameters.article_category_ids, category.id];
+              }
+              urlSearchParameters.page = 1;
+            }}
+          >
+            {category.name}
+          </button>
+        {/each}
+      </div>
+    </div>
+    <div class="flex flex-col col-span-2 px-12 pb-12 pt-6 items-center">
+      {#if loading}
+        <Spinner/>
+      {:else}
+        {#if articles.length === 0}
+          <p class="text-outline">No articles found.</p>
+        {:else}
+          <div class="flex flex-col gap-8">            
+            <div class="flex flex-col gap-3 divide-y divide-outline-variant items-center">
+              {#each articles as article (article.id)}
+                <ArticleItem
+                  title={article.title}
+                  excerpt={article.excerpt}
+                  created_at={new Date(article.created_at).toLocaleDateString()}
+                  categories={article.categories}
+                  thumbnail={article.thumbnail}
+                  slug={article.slug}      
+                />
+              {/each}
+            </div>
+            <div class="flex justify-between items-center">
+              <Button
+                onclick={() => {
+                  if (urlSearchParameters.page && urlSearchParameters.page > 1) {
+                    urlSearchParameters.page -= 1;
+                  }
+                }}
+                disabled={urlSearchParameters.page === 1 || loading}
+                variant="text"
+                aria-label="Previous"
+              >
+                <i class="ri-arrow-left-s-line"></i>
+              </Button>
+              <p>{urlSearchParameters.page} <span class="text-outline-variant"> / {articleListMeta.totalPages}</p>
+              <Button
+                onclick={() => {
+                  if (urlSearchParameters.page) {
+                     urlSearchParameters.page += 1;
+                  }
+                }}
+                disabled={Number(articleListMeta?.totalPages) <= Number(urlSearchParameters.page) || loading} 
+                variant="text"
+                aria-label="Next"
+              >
+                <i class="ri-arrow-right-s-line"></i>
+              </Button>
+            </div>
+          </div>
+        {/if}
+      {/if}
+    </div>
+  </div>
+</div>
+<!-- <div>
   <div class="mb-4 flex flex-wrap gap-2">
     {#each section.data.articleCategory as category (category.id)}
       <button
@@ -84,19 +173,17 @@
             ? 'bg-primary text-white border-primary'
             : 'bg-white text-black border-gray-300'}"
         onclick={() => {
-          // Toggle category selection
           if (!urlSearchParameters.article_category_ids) {
             urlSearchParameters.article_category_ids = [category.id];
           } else if (urlSearchParameters.article_category_ids.includes(category.id)) {
             urlSearchParameters.article_category_ids = urlSearchParameters.article_category_ids.filter(id => id !== category.id);
-            // If none selected, set to undefined to remove from query
             if (urlSearchParameters.article_category_ids.length === 0) {
               urlSearchParameters.article_category_ids = undefined;
             }
           } else {
             urlSearchParameters.article_category_ids = [...urlSearchParameters.article_category_ids, category.id];
           }
-          urlSearchParameters.page = 1; // Reset to first page on filter change
+          urlSearchParameters.page = 1;
         }}
       >
         {category.name}
@@ -129,7 +216,6 @@
       </a>
     {/each}
   </ul>
-  <!-- Basic pagination example (needs more logic for page numbers, disabling buttons) -->
   <div class="mt-4 flex justify-between">
     <button
       onclick={() => {
@@ -145,7 +231,6 @@
     <span>Page {urlSearchParameters.page}</span>
     <button
       onclick={() => {
-        // Need total count from API to determine if there's a next page
         if (urlSearchParameters.page) {
            urlSearchParameters.page += 1;
         }
@@ -158,9 +243,4 @@
   </div>
 {:else}
   <p>No articles found.</p>
-{/if}
-
-<!-- Debugging -->
-<!-- <pre>Raw Search Input: {rawSearchInput}</pre> -->
-<!-- <pre>URL Search Parameters: {JSON.stringify(urlSearchParameters, null, 2)}</pre> -->
-<!-- <pre>Section Data: {JSON.stringify(section.data, null, 2)}</pre> -->
+{/if} -->
