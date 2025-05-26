@@ -8,6 +8,7 @@
   import TextareaInput from "$lib/app/components/input/TextareaInput.svelte";
   import TextInput from "$lib/app/components/input/TextInput.svelte";
   import Button from "$lib/app/components/ui/Button.svelte";
+  import { parseSearchParams } from "$lib/utils/common";
   import { formatData } from "$lib/utils/format";
   import { mathjs } from "$lib/utils/math";
   import { api } from "$lib/utils/services";
@@ -18,9 +19,10 @@
 
   onMount(() => {
     // loop through formData, and if "code" is found in page.data.currentPageSearchParams, set the value of the form field to the value of the search param
-    for (const key in page.data.currentPageSearchParams) {
-      if (Object.prototype.hasOwnProperty.call(page.data.currentPageSearchParams, key)) {
-        const element = page.data.currentPageSearchParams[key];
+    const searchParams = parseSearchParams(page.url.searchParams)
+    for (const key in searchParams) {
+      if (Object.prototype.hasOwnProperty.call(searchParams, key)) {
+        const element = searchParams[key];
         const formField = formData.data.find((formField: any) => formField.code === key)
         if (formField) {
           formField.value = element

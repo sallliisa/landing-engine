@@ -5,10 +5,10 @@
 </script>
 
 <div class="flex flex-col items-center justify-center">
-  <div class="flex flex-col w-full items-center justify-center max-w-screen-xl gap-base py-3">
+  <div class="flex flex-col w-full items-center justify-center max-w-screen-xl gap-base py-3 px-6 lg:px-12">
     <div class="flex flex-col gap-xs items-center justify-center">
-      <p>{section.data.content.subtitle}</p>
-      <p class="text-2xl font-bold">{section.data.content.title}</p>
+      <p class="text-center">{section.data.content.subtitle}</p>
+      <p class="text-2xl font-bold text-center">{section.data.content.title}</p>
     </div>
     <div class="flex flex-row flex-wrap items-start justify-center gap-6">
       {#each section.data.gallery as item}
@@ -30,7 +30,7 @@
               class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80"
             />
             <Dialog.Content class="bg-surface rounded-lg text-on-surface data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] w-[800px] max-w-[95vw] max-h-[95vh] flex">
-              <div class="relative flex flex-row w-full">
+              <div class="relative flex lg:flex-row flex-col w-full">
                 <Dialog.Close class="absolute top-6 right-6">
                   <i class="ri-close-line"></i>
                 </Dialog.Close>

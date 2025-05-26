@@ -3,7 +3,7 @@
 </script>
 
 <div class="flex items-center justify-center w-full">
-  <div class="w-full max-w-screen-md flex flex-col gap-6 pt-3 pb-6">
+  <div class="w-full max-w-screen-md flex flex-col gap-6 pt-3 pb-6 px-6 lg:px-12">
     {#if section.data.content.title || section.data.content.subtitle}
       <div class="flex flex-col gap-4">
         {#if section.data.content.title || section.data.content.subtitle}
@@ -15,12 +15,12 @@
       </div>
     {/if}
     {#if section.data.gallery?.length}
-      <div class="grid grid-cols-2 gap-6">
+      <div class="grid sm:grid-cols-2 grid-cols-1 gap-6">
         {#each section.data.gallery as item, i}
-          <div class="flex flex-col gap-sm rounded-lg p-6 relative h-[200px] items-center outline outline-outline-variant" style="overflow: hidden; background: radial-gradient(circle at {i % 3 === 0 ? 'bottom right' : i % 3 === 1 ? 'center' : 'top left'}, {i % 3 === 0 ? 'rgba(251,191,36,0.15)' : i % 3 === 1 ? 'rgba(167,139,250,0.15)' : 'rgba(234,88,12,0.15)'}, {i % 3 === 0 ? 'rgba(234,88,12,0.08)' : i % 3 === 1 ? 'rgba(251,146,60,0.08)' : 'rgba(167,139,250,0.08)'} 50%, transparent 100%), linear-gradient(135deg, {i % 3 === 0 ? 'rgba(167,139,250,0.05)' : i % 3 === 1 ? 'rgba(251,191,36,0.05)' : 'rgba(234,88,12,0.05)'} 0%, {i % 3 === 0 ? 'rgba(251,146,60,0.1)' : i % 3 === 1 ? 'rgba(167,139,250,0.1)' : 'rgba(251,191,36,0.1)'} 100%), repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 10px);">
+          <div class="flex flex-col gap-sm rounded-lg p-4 relative h-[200px] items-center outline outline-outline-variant" style="overflow: hidden; background: radial-gradient(circle at {i % 3 === 0 ? 'bottom right' : i % 3 === 1 ? 'center' : 'top left'}, {i % 3 === 0 ? 'rgba(251,191,36,0.15)' : i % 3 === 1 ? 'rgba(167,139,250,0.15)' : 'rgba(234,88,12,0.15)'}, {i % 3 === 0 ? 'rgba(234,88,12,0.08)' : i % 3 === 1 ? 'rgba(251,146,60,0.08)' : 'rgba(167,139,250,0.08)'} 50%, transparent 100%), linear-gradient(135deg, {i % 3 === 0 ? 'rgba(167,139,250,0.05)' : i % 3 === 1 ? 'rgba(251,191,36,0.05)' : 'rgba(234,88,12,0.05)'} 0%, {i % 3 === 0 ? 'rgba(251,146,60,0.1)' : i % 3 === 1 ? 'rgba(167,139,250,0.1)' : 'rgba(251,191,36,0.1)'} 100%), repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 10px);">
             <div class="w-full text-center z-[5] {item.title.length <= 36 ? 'max-w-[60%]' : ''}">
               {#if item.title && item.title.length > 0}
-                <p class="text-lg font-bold">{item.title}</p>
+                <p class="text font-bold">{item.title}</p>
               {/if}
             </div>
             <!-- <div class="absolute inset-0 z-[3]" style="background: linear-gradient(to bottom, transparent 80%, rgba(255, 249, 245, 1) 100%);"></div> -->

@@ -90,5 +90,5 @@ export async function load({ params, parent, url }) {
     })
   );
 
-  return { sections: sectionsWithData, currentPageSearchParams, };
+  return { sections: sectionsWithData, };
 }

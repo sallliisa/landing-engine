@@ -35,11 +35,15 @@
     </div>
     <div class="flex flex-col gap-base">
       <p class="font-bold text-xl">Subsidiaries</p>
-      <!-- <p>{page.data.companyProfile.address}</p> -->
+      {#each page.data.companyProfile.subsidiaries as subsidiary}
+        <a class="underline" href={subsidiary.type === 'external' ? subsidiary.url : subsidiary.slug} target={subsidiary.type === 'external' ? '_blank' : undefined}>{subsidiary.name}</a>
+      {/each}
     </div>
     <div class="flex flex-col gap-base">
       <p class="font-bold text-xl">Offerings</p>
-      <!-- <p>{page.data.companyProfile.address}</p> -->
+      {#each page.data.companyProfile.product_categories as category}
+        <a class="underline" href={category.type === 'external' ? category.url : category.slug} target={category.type === 'external' ? '_blank' : undefined}>{category.name}</a>
+      {/each}
     </div>
   </div>
 </div>

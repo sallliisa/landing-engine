@@ -3,7 +3,7 @@
 </script>
 
 <div class="flex items-center justify-center w-full">
-  <div class="w-full max-w-screen-md flex flex-col gap-6 py-3">
+  <div class="w-full max-w-screen-md flex flex-col gap-6 py-3 px-6 lg:px-12">
     {#if section.data.content.media}
       <img src={section.data.content.media} alt={section.data.content.title} class="rounded-lg outline outline-outline-variant"/>
     {/if}
