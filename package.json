@@ -38,6 +38,7 @@
 		"@prisma/client": "^6.5.0",
 		"bcrypt": "^5.1.1",
 		"bits-ui": "^1.4.8",
+		"embla-carousel-svelte": "^8.6.0",
 		"mathjs": "^14.4.0",
 		"mime-types": "^3.0.1",
 		"remixicon": "^4.6.0",

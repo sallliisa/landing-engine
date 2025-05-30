@@ -18,10 +18,10 @@
   
   const classMap: any = {
     variant: {
-      filled: 'bg-primary text-on-primary after:bg-white/10 after:active:bg-white/15 disabled:bg-outline-variant',
-      tonal: 'bg-primary-container text-on-primary-container after:bg-black/5 after:active:bg-black/10 disabled:bg-outline-variant',
-      outlined: 'border border-black/20 after:bg-black/5 after:active:bg-black/10 disabled:bg-outline-variant',
-      text: 'after:hover:bg-black/5 after:active:bg-black/50 disabled:text-outline-variant',
+      filled: 'bg-primary text-on-primary before:bg-surface/10 active:before:bg-surface/20 disabled:bg-outline-variant',
+      tonal: 'bg-primary-container text-on-primary-container before:bg-on-surface/5 active:before:bg-on-surface/10 disabled:bg-outline-variant',
+      outlined: 'border border-black/20 before:bg-on-surface/5 active:before:bg-on-surface/10 disabled:bg-outline-variant',
+      text: 'before:hover:bg-black/5 active:before:bg-black/50 disabled:text-outline-variant',
     },
     size: {
       square: 'p-3',

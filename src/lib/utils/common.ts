@@ -116,6 +116,8 @@ export function isValidUrl (url: string) {
   }
 }
 
+export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };
+
 export function resolveCustomField(data: any, path: string[], arrayStrategy?: ArrayStrategy): any {
   let value = data;
   for (const segment of path) {

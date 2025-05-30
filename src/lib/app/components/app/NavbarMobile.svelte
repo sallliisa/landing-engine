@@ -116,7 +116,17 @@
             {#each page.data.menu[activeLevel1Index].children as level2Child}
               {#if level2Child.children?.length}
                 <div class="flex flex-col gap-xs">
-                  <p class="text-xl font-bold">{level2Child.name}</p>
+                  {#if level2Child.page}
+                    <a
+                      href="/{page.data.menu[activeLevel1Index].slug}/{level2Child.slug}"
+                      class="text-xl font-bold text-start"
+                      onclick="{() => isMenuExpanded = false}"
+                    >
+                      {level2Child.name}
+                    </a>
+                  {:else}
+                    <p class="text-xl font-bold">{level2Child.name}</p>
+                  {/if}
                   <div class="flex flex-col gap-xs">
                     {#each level2Child.children as level3Child}
                       <a

@@ -20,15 +20,17 @@
 <div class="flex flex-col gap-6 col-span-4">
   {#each data.sections as section, index (section.id)}
     {#if section?.section_type_code}
-      {@const sectionComponentPromise = getSectionComponent(section.section_type_code)}
-      {#if sectionComponentPromise}
-        {#await sectionComponentPromise then SectionComponent}
-          <SectionComponent {section}/>
-        {/await}
-      {:else}
-        <div class="h-[20vh] bg-primary flex items-center justify-center">
-          <p class="text-4xl font-bold">Section Missing</p>
-        </div>
+      {#if section.visible}
+        {@const sectionComponentPromise = getSectionComponent(section.section_type_code)}
+        {#if sectionComponentPromise}
+          {#await sectionComponentPromise then SectionComponent}
+            <SectionComponent {section}/>
+          {/await}
+        {:else}
+          <div class="h-[20vh] bg-primary flex items-center justify-center">
+            <p class="text-4xl font-bold">Section Missing</p>
+          </div>
+        {/if}
       {/if}
     {/if}
   {/each}

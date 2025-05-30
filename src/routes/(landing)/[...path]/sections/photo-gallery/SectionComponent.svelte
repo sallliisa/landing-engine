@@ -27,9 +27,9 @@
           </Dialog.Trigger>
           <Dialog.Portal>
             <Dialog.Overlay
-              class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80"
+              class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-[100] bg-black/80"
             />
-            <Dialog.Content class="bg-surface rounded-lg text-on-surface data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] w-[800px] max-w-[95vw] max-h-[95vh] flex">
+            <Dialog.Content class="bg-surface rounded-lg text-on-surface data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed left-[50%] top-[50%] z-[100] translate-x-[-50%] translate-y-[-50%] w-[800px] max-w-[95vw] max-h-[95vh] flex">
               <div class="relative flex lg:flex-row flex-col w-full">
                 <Dialog.Close class="absolute top-6 right-6">
                   <i class="ri-close-line"></i>

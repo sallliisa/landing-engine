@@ -16,18 +16,54 @@
   --gap-base: 1rem;
   --gap-lg: 2rem;
   --gap-xl: 4rem;
+  --colors-surface: #FFF9F5;
+  --colors-on-surface: #111F55;
 }
+
+
 
 @layer base {
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+
+  .overlay {
+    position: relative;
+  }
+
+  .overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* background-color: rgb(88, 88, 224); */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s;
+    z-index: 0;
+    border-radius: inherit;
+  }
+
+  .overlay:hover::before {
+    opacity: 1;
+  }
+
+  .overlay > * {
+    position: relative;
+    z-index: 10;
+  }
 }
 
 @layer components {
-  .overlay {
-    @apply relative after:absolute after:bottom-0 after:left-0 after:right-0 after:top-0 after:hidden after:rounded-[inherit] hover:after:flex;
+  /* .overlay {
+    position: relative;
   }
+  .overlay::before {
+    content: '';
+    @apply absolute inset-0 bg-black/20 opacity-0 transition duration-300 pointer-events-none;
+  }
+  .overlay:hover::before {
+    opacity: 1;
+  } */
   
   hr {
     @apply border-black/[20%] dark:border-black/[20%] w-full;

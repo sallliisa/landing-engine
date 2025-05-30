@@ -3,6 +3,12 @@
 const plugin = require('tailwindcss/plugin')
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
+  variants: {
+    extend: {
+      backgroundColor: ['before', 'before:hover', 'before:active'],
+      opacity: ['before', 'before:hover', 'before:active'],
+    },
+  },
   theme: {
     // fontFamily: ['Montserrat'],
     extend: {
