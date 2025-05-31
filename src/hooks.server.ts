@@ -1,7 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { sequence } from '@sveltejs/kit/hooks';
-import { addCorsHeaders, handleCorsPreflightRequest, handleProtectedRoute, isProtectedRoute, validateToken } from '$lib/utils/routing';
+import { addCorsHeaders, handleCorsPreflightRequest, handleProtectedRoute, isProtectedRoute } from '$lib/utils/routing';
 
 const handleParaglide: Handle = ({ event, resolve }) => paraglideMiddleware(event.request, ({ request, locale }) => {
 	event.request = request;
@@ -12,7 +12,7 @@ const handleParaglide: Handle = ({ event, resolve }) => paraglideMiddleware(even
 });
 
 export const customHandle: Handle = async ({ resolve, event }) => {
-  const { url, request } = event
+  const { url, request, locals } = event
   
   // Handle API routes
   if (url.pathname.startsWith('/api')) {
@@ -20,8 +20,12 @@ export const customHandle: Handle = async ({ resolve, event }) => {
     if (request.method === 'OPTIONS') return handleCorsPreflightRequest()
     // Check authentication for protected routes
     if (isProtectedRoute(url.pathname)) {
-      const response = await handleProtectedRoute(request)
-      if (response) return response
+      try {
+        const user = await handleProtectedRoute(request)
+        if (user) event.locals.user = user
+      } catch (err) {
+        return (err as Response)
+      }
     }
   }
 

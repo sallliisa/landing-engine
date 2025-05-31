@@ -1,8 +1,10 @@
+import { RequestEvent } from "@sveltejs/kit"
+
 export {}
 
 declare global {
   declare module 'svelte-recaptcha-v2'
-  type Operator = 'equals' | 'not' | 'in' | 'notIn' | 'lt' | 'lte' | 'gt' | 'gte' | 'contains' | 'startsWith' | 'endsWith' | 'isNull'
+  type Operator = 'equals' | 'not' | 'in' | 'notIn' | 'lt' | 'lte' | 'gt' | 'gte' | 'contains' | 'some' | 'startsWith' | 'endsWith' | 'isNull'
 
   type Condition<T> = {
     field: keyof T
@@ -95,15 +97,15 @@ declare global {
     // Prepare data before the main update operation
     // Field data augmentation, value derivation, etc.
     // body: Raw data body
-    pre?: (urlSearchParams: Record<string, any>) => Promise<Record<string, any>>,
+    pre?: (urlSearchParams: Record<string, any>, locals?: Record<string, any>) => Promise<Record<string, any>>,
     // Main update operation
     // Ex. use case: Different fields to assign depending on a value of a field
     // body: What's returned by pre
-    main?: (where: Record<string, any>, skip?: number, take?: number) => Promise<Record<string, any>>,
+    main?: (where: Record<string, any>, skip?: number, take?: number, locals?: Record<string, any>) => Promise<Record<string, any>>,
     // What to do after the main operation
     // Ex. use case: Create on another model depending on the value of what's being returned from main
     // body: What's returned by main
-    post?: (data: Record<string, any>[], total?: number) => Promise<Record<string, any>>
+    post?: (data: Record<string, any>[], total?: number, locals?: Record<string, any>) => Promise<Record<string, any>>
   }
 
   type TransactionLifecycleConfig = {
@@ -126,6 +128,7 @@ declare global {
     allow?: boolean,
     // Fields that will be operated in the database
     fields?: (keyof T)[],
+    permission?: string
     // Additional conditions for filtering records
     // Supports complex logical operations (AND, OR, NOT) with various operators
     // Ex. where: {
@@ -138,7 +141,7 @@ declare global {
     //     { field: 'subpage_id', operator: 'equals', value: 2 }
     //   ]
     // }
-    where?: WhereConfig<T>,
+    where?: (event: RequestEvent) => WhereConfig<T> | undefined,
     // Which fields are used to identify a specific record when performing the update operation
     by?: (keyof T)[],
   }

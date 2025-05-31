@@ -102,6 +102,7 @@ model MenuItem {
   order          Int // For ordering among siblings
   translations   MenuItemTranslation[]
   page           Page[]
+  allowedRoles   Role[]         @relation("MenuItemAccess")
 }
 
 model MenuItemTranslation {
@@ -218,7 +219,6 @@ model FormType {
   id           String           @id @default(cuid())
   name         String
   description  String?
-  success_message String
   fields       FormField[]
   submissions  FormSubmission[]
   // Many-to-many relation to Role for access control.
@@ -308,6 +308,7 @@ model Role {
   users               User[]
   // Access control for forms: which form types are accessible to this role.
   accessibleFormTypes FormType[]   @relation("FormTypeAccess")
+  accessibleMenuItem  MenuItem[]  @relation("MenuItemAccess")
 }
 
 model Permission {

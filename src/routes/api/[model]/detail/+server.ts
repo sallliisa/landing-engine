@@ -15,7 +15,8 @@ function mergeDetailConfigs<T>(base: ModelConfig<T>, operation?: DetailConfig<T>
   }
 }
 
-export async function GET({params, url}) {
+export async function GET(event) {
+  const {params, url} = event
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND)
     if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND)
@@ -31,12 +32,14 @@ export async function GET({params, url}) {
       urlSearchParams = await config.detail?.lifecycle.pre(urlSearchParams);
     }
 
+    const customWhereObject = mergedConfig.where ? mergedConfig.where(event) : undefined
+
     const whereClause = {
       ...Object.fromEntries((mergedConfig.by ?? []).map(field => {
         if (!urlSearchParams[field]) return
         return [field, urlSearchParams[field]]
       }).filter(item => !!item)),
-      ...(mergedConfig.where ? buildWhereClause(mergedConfig.where) : {})
+      ...(customWhereObject ? buildWhereClause(customWhereObject) : undefined)
     };
 
     let data: Record<string, any>;

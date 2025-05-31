@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid'; // Use UUID for session token
 import { exception, success } from '$lib/utils/response.js';
 
-export async function POST({ request }) {
+export async function POST({ request, cookies }) {
   const { email, password } = await request.json();
 
   try {

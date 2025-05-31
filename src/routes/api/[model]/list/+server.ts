@@ -16,7 +16,8 @@ function mergeListConfigs<T>(base: ModelConfig<T>, operation?: ListConfig<T>): L
   }
 }
 
-export async function GET({ params, url }) {
+export async function GET(event) {
+  const { request, params, url, locals } = event
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND);
     if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND);
@@ -30,8 +31,10 @@ export async function GET({ params, url }) {
 
     // Lifecycle hook - pre
     if (config.list?.lifecycle?.pre) {
-      urlSearchParams = await config.list.lifecycle.pre(urlSearchParams);
+      urlSearchParams = await config.list.lifecycle.pre(urlSearchParams, locals);
     }
+
+    const customWhereObject = mergedConfig.where ? mergedConfig.where(event) : undefined
 
     // Build where clause
     const whereClause = {
@@ -55,7 +58,7 @@ export async function GET({ params, url }) {
             )
           : undefined
       ),
-      ...(mergedConfig.where ? buildWhereClause(mergedConfig.where) : undefined)
+      ...(customWhereObject ? buildWhereClause(customWhereObject) : undefined)
     };
 
     const paginatedData = await withPagination(async (skip, take) => {
@@ -63,7 +66,7 @@ export async function GET({ params, url }) {
       
       // Lifecycle hook - main
       if (config.list?.lifecycle?.main) {
-        data = await config.list?.lifecycle.main(whereClause, skip, take);
+        data = await config.list?.lifecycle.main(whereClause, skip, take, locals);
       } else {
         data = await (prisma as any)[params.model].findMany({
           orderBy: config.list?.orderBy,
@@ -83,7 +86,7 @@ export async function GET({ params, url }) {
 
       // Lifecycle hook - post
       if (config.list?.lifecycle?.post) {
-        data = await config.list?.lifecycle.post(data, total);
+        data = await config.list?.lifecycle.post(data, total, locals);
       }
 
       // Process custom fields

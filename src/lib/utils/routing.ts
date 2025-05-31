@@ -1,3 +1,4 @@
+import type { User } from "@prisma/client"
 import prisma from "./prisma"
 import { exception } from "./response"
 
@@ -27,19 +28,32 @@ export function isProtectedRoute(pathname: string): boolean {
   return !publicPaths.some(path => pathname.startsWith(path))
 }
 
-export async function validateToken(token?: string): Promise<boolean> {
-  if (!token) return false;
+export async function findUser(token?: string): Promise<App.Locals['user'] | null> {
+  if (!token) return null
   
   const session = await prisma.session.findUnique({
     where: { token },
+    include: {
+      user: {
+        include: {
+          role: {
+            include: {
+              permissions: true
+            }
+          },
+        }
+      },
+    }
   });
-
-  return !!session;
+  if (!session) return null
+  return session.user;
 }
 
-export async function handleProtectedRoute(request: Request): Promise<Response | undefined> {
+export async function handleProtectedRoute(request: Request): Promise<App.Locals['user']> {
   const token = request.headers.get('Authorization')?.split(' ')[1]
-  if (!(await validateToken(token))) {
-    return exception('Unauthorized', 401)
-  } 
+  const user = await findUser(token) 
+  if (!user) {
+    throw exception('Unauthorized', 401)
+  }
+  return user
 }

@@ -13,7 +13,8 @@ function mergeDeleteConfigs<T>(base: BaseOperationConfig<T>, operation?: BaseOpe
   }
 }
 
-export async function DELETE({params, request}) {
+export async function DELETE(event) {
+  const {params, request} = event
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND)
     if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND)
@@ -25,12 +26,14 @@ export async function DELETE({params, request}) {
     if (!mergedConfig?.allow) throw Error(MESSAGE.MODEL.OPERATION_FORBIDDEN)
     const body = await request.json()
 
+    const customWhereObject = mergedConfig.where ? mergedConfig.where(event) : undefined
+
     // Build where clause with both 'by' fields and additional where conditions
     const whereClause = {
       ...Object.fromEntries(
         (mergedConfig.by ?? []).map(key => [key, body[key] as string | number])
       ),
-      ...(mergedConfig.where ? buildWhereClause(mergedConfig.where) : {})
+      ...(customWhereObject ? buildWhereClause(customWhereObject) : undefined)
     } as any
 
     const previousData = await (prisma as any)[params.model].findFirst({

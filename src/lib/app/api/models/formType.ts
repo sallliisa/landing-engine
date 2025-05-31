@@ -1,3 +1,5 @@
+import { buildWhereClause } from '$lib/utils/common';
+import prisma from '$lib/utils/prisma';
 import type { FormType, Prisma } from '@prisma/client';
 
 export default {
@@ -17,7 +19,19 @@ export default {
     allow: true,
     searchableBy: ['name', 'description'],
     orderBy: { name: 'asc' },
-    filterableBy: ['id']
+    filterableBy: ['id'],
+    where: ({locals}) => {
+      if (locals.user?.role.role_group_id === 1) return undefined
+      return {
+        AND: [
+          {
+            field: 'allowedRoles',
+            operator: 'some',
+            value: {id: locals.user?.role_id}
+          }
+        ]
+      }
+    }
   },
 
   // Detail operation config

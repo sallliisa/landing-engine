@@ -20,7 +20,8 @@ function mergeUpdateConfigs<T>(base: ModelConfig<T>, create?: CreateConfig<T>, u
   }
 }
 
-export async function PUT({params, request, fetch}) {
+export async function PUT(event) {
+  const {params, request, fetch} = event
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND)
     if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND)
@@ -36,9 +37,11 @@ export async function PUT({params, request, fetch}) {
       await validateFields(body, mergedConfig.validation)
     }
 
+    const customWhereObject = mergedConfig.where ? mergedConfig.where(event) : undefined
+
     const whereClause = {
       ...Object.fromEntries((mergedConfig.by ?? []).map(key => [key, body[key] as string | number])) as any,
-      ...(mergedConfig.where ? buildWhereClause(mergedConfig.where) : undefined)
+      ...(customWhereObject ? buildWhereClause(customWhereObject) : undefined)
     }
 
     const previousData = await (prisma as any)[params.model].findFirst({
