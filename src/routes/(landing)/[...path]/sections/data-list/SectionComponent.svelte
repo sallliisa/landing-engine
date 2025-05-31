@@ -3,13 +3,14 @@
   import { Accordion } from "bits-ui";
   import ListView from "./_layouts/ListView.svelte";
   import GalleryView from "./_layouts/GalleryView.svelte";
+  import ContentView from "./_layouts/ContentView.svelte";
 
   const {section} = $props()
 
   let searchQuery = $state('')
 
   const allItemValues = section.data.childSections.map((cs: any) => cs.id || cs.name);
-  let openItems = $state(allItemValues);
+  let openItems = $state(section.meta.closed_on_initial ? [] : allItemValues);
 
   let filteredChildSections = $derived(getFilteredChildSections());
 
@@ -31,7 +32,7 @@
 
   $effect(() => {
     if (!searchQuery) {
-      openItems = allItemValues;
+      openItems = section.meta.closed_on_initial ? [] : allItemValues;
       return;
     }
     openItems = filteredChildSections.map((cs: any) => cs.id || cs.name);
@@ -58,7 +59,7 @@
       </div>
     {:else if filteredChildSections.length === 0 && searchQuery}
       <div class="text-center text-gray-500 py-10">
-        <p>No results found for "{searchQuery}".</p>
+        <p>Tidak ada hasil untuk "{searchQuery}".</p>
       </div>
     {:else}
       {#each filteredChildSections as childSection (childSection.id || childSection.name)}
@@ -70,25 +71,32 @@
                 <div class="w-full h-[1px] bg-outline"></div>
                 {#if section.meta.collapsible}
                   <div class="data-[state=open]:rotate-180 transition-all">
-                    <i class="ri-arrow-down-s-line"></i>
+                    <i class="ri-arrow-down-s-line text-outline"></i>
                   </div>
                 {/if}
               </Accordion.Trigger>
             </Accordion.Header>
           {/if}
           <Accordion.Content class="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden">
-            <div class="h-4 w-full"></div>
             {#if section.meta.type === 'list' || !section.meta.type}
+              <div class="h-4 w-full"></div>
               <div class="flex flex-col gap-sm">
                 {#each childSection.filteredContents as content}
                   <ListView {content}/>
                 {/each}
               </div>
             {:else if section.meta.type === 'gallery'}
+              <div class="h-4 w-full"></div>
               <div class="flex flex-row gap-6 flex-wrap">
                 {#each childSection.filteredContents as content}
                   <GalleryView {content}/>
                 {/each}
+              </div>
+            {:else if section.meta.type === 'content'}
+              <div class="flex flex-row gap-8 flex-wrap">
+                <ContentView childSection={childSection.filteredContents}/>
+                <!-- {#each childSection.filteredContents as content} -->
+                <!-- {/each} -->
               </div>
             {/if}
           </Accordion.Content>

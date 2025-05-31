@@ -10,16 +10,19 @@
       <p class="text-center">{section.data.content.subtitle}</p>
       <p class="text-2xl font-bold text-center">{section.data.content.title}</p>
     </div>
-    <div class="flex flex-row flex-wrap items-start justify-center gap-6">
+    <div class="flex flex-row flex-wrap gap-6">
       {#each section.data.gallery as item}
         <Dialog.Root>
-          <Dialog.Trigger>
-            <div class="group flex flex-col items-center gap-base p-12 w-full max-w-[350px] hover:outline-outline-variant outline outline-transparent transition-all duration-100 rounded-lg relative">
-              <div class="relative">
+          <Dialog.Trigger class="w-[275px] min-h-full grow">
+            <div class="group flex flex-col items-center gap-base pb-12 hover:outline-outline-variant outline outline-transparent transition-all duration-100 rounded-lg relative h-full">
+              <!-- <div class="relative">
                 <div class="absolute inset-[-5%] opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500 ease-in-out origin-center blur-2xl bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.25)_0%,rgba(234,88,12,0.12)_40%,transparent_80%),linear-gradient(135deg,rgba(167,139,250,0.1)_0%,rgba(251,146,60,0.2)_50%,transparent_100%)]"></div>
                 <img src={item.media} class="w-[180px] aspect-[3/4] object-center object-cover relative z-10" alt={item.title}/>
+              </div> -->
+              <div class="w-full h-[366px] px-6 pt-12 flex items-end justify-center bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.15),rgba(234,88,12,0.08)_50%,transparent_100%),linear-gradient(135deg,rgba(167,139,250,0.05)_0%,rgba(251,146,60,0.1)_100%),repeating-linear-gradient(45deg,rgba(255,255,255,0.03)_0px,rgba(255,255,255,0.03)_1px,transparent_1px,transparent_10px)]">
+                <img src={item.media} alt={item.title} class="w-full object-center object-cover"/>
               </div>
-              <div class="flex flex-col gap-sm items-center justify-center">
+              <div class="flex flex-col gap-sm items-center justify-center max-w-full">
                 <p class="font-semibold text-xl">{item.title}</p>
                 <p class="text-outline">{item.subtitle}</p>
               </div>

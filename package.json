@@ -36,9 +36,11 @@
 	"dependencies": {
 		"@inlang/paraglide-js": "^2.0.0",
 		"@prisma/client": "^6.5.0",
+		"@types/jsonwebtoken": "^9.0.9",
 		"bcrypt": "^5.1.1",
 		"bits-ui": "^1.4.8",
 		"embla-carousel-svelte": "^8.6.0",
+		"jsonwebtoken": "^9.0.2",
 		"mathjs": "^14.4.0",
 		"mime-types": "^3.0.1",
 		"remixicon": "^4.6.0",

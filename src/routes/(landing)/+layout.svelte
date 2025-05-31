@@ -29,6 +29,12 @@
 	let testValue = $state<Record<string, any>>({
 		input5: "http://localhost:5173/storage/temp/private/1747495836045-6578b26fa3462e7291e1aa87_contact-texture.png"
 	})
+	
+	$effect(() => {
+		if (navigating.complete) {
+			console.log('nav', navigating.from, 'to', navigating.to)
+		}
+	})
 </script>
 
 <div class="bg-surface text-on-surface min-h-screen flex flex-col justify-between">
