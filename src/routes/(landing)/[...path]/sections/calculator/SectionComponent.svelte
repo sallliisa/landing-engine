@@ -1,55 +1,39 @@
 <script lang="ts">
-  import SelectInput from "$lib/app/components/input/SelectInput.svelte";
-  import TextInput from "$lib/app/components/input/TextInput.svelte";
   import { formatData } from "$lib/utils/format";
   import { mathjs } from "$lib/utils/math";
+  import { setContext } from "svelte";
+  import CalculatorView from "./_layouts/CalculatorView.svelte";
+  import ResultView from "./_layouts/ResultView.svelte";
 
   const {section} = $props();
-  let formData = $state<Record<string, any>>({})
-
+  setContext('section', section)
+  let formData = $state({})
   let viewIndex = $state<0 | 1>(0)
-
-  const componentTypeMap: Record<string, any> = {
-    text: TextInput,
-    select: SelectInput
-  }
 </script>
 
-{#if viewIndex === 0}
-  <div class="flex flex-col items-center justify-center gap-4">
-    <div class="grid grid-cols-12 gap-4 max-w-screen-xl w-full">
-      {#each section.data.calculatorType.fields as calculatorField}
-        {@const InputComponent = componentTypeMap[calculatorField.type]}
-        <div class="flex flex-col gap-4" style="grid-column: span {calculatorField.col_span} / span {calculatorField.col_span};">
-          <InputComponent
-            placeholder={calculatorField.placeholder}
-            label={calculatorField.label}
-            required={calculatorField.required}
-            helperMessage={calculatorField.helper_message}
-            bind:value={formData[calculatorField.code]}
-            data={calculatorField.data}
-            pick="value"
-            view="label"
-          />
+<div class="flex w-full items-center justify-center">
+  <div class="w-full max-w-screen-xl grid grid-cols-1 md:grid-cols-2 gap-x-xl gap-y-lg py-3 px-6 lg:px-12">
+    {#if section.data.content.subtitle || section.data.content.title || section.data.content.description}
+      <div class="flex flex-col gap-base w-full">
+        <div class="flex flex-col gap-xs">
+          {#if section.data.content.subtitle}<p>{section.data.content.subtitle}</p>{/if}
+          {#if section.data.content.title}<p class="text-3xl md:text-4xl font-bold">{section.data.content.title}</p>{/if}
         </div>
-      {/each}
+        {#if section.data.content.description}<p class="rtf-content m-base">{@html section.data.content.description}</p>{/if}
+      </div>
+    {/if}
+    <div class="flex flex-col">
+      {#if viewIndex === 0}
+        <CalculatorView
+          {formData}
+          onCalculate={() => viewIndex = 1}
+        />
+      {:else}
+        <ResultView
+          onPrevious={() => viewIndex = 0}
+          {formData}
+        />
+      {/if}
     </div>
-    <button onclick={() => viewIndex = 1}>next</button>
   </div>
-{:else}
-  <div>
-    <p>{JSON.stringify(formData)}</p>
-    <table>
-        <tbody>
-        {#each section.data.calculatorType.details as detailField}
-          <tr>
-            <td class="text-sm w-[1%] whitespace-nowrap">{detailField.label}</td>
-            <td class="text-sm w-[1%] px-2">:</td>
-            <td>{formatData(mathjs.evaluate(detailField.formula, formData), detailField.type)} {detailField.unit}</td>
-          </tr>
-        {/each}
-      </tbody>
-    </table>
-    <!-- <p>{mathjs.evaluate(section.data.calulatorDetailField.formula, formData)}</p> -->
-  </div>
-{/if}
+</div>

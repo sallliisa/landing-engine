@@ -37,7 +37,8 @@ export async function POST({request}) {
         name: sectionName,
         order: (maxOrderSection?.order ?? 0) + 1,
         section_group_id: body.section_group_id,
-        section_type_code: body.config.info?.code
+        section_type_code: body.config.info?.code,
+        meta: body.config.meta?.defaultValues
         // Remove section_type_code entirely
       }
     })

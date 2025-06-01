@@ -33,7 +33,7 @@
 
 <Button.Root
   {...restProps}
-  class="rounded-sm flex items-center justify-center overlay {restProps.class} {classMap.variant[variant]} {classMap.size[size]}"
+  class="rounded-sm flex items-center justify-center {!restProps.disabled ? 'overlay' : ''} {restProps.class} {classMap.variant[variant]} {classMap.size[size]}"
 >
   {@render children()}
 </Button.Root>

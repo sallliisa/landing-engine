@@ -101,14 +101,18 @@ export default {
     searchableBy: ['id'],
     filterableBy: ['parent_id', "level"],
     orderBy: { order: 'asc' },
-    // where: {
-    //   AND: [
-    //     {
-    //       field: 'parent_id',
-    //       operator: 'isNull',
-    //     }
-    //   ]
-    // },
+    where: ({locals}) => {
+      if (locals.user?.role.role_group_id === 1) return undefined
+      return {
+        AND: [
+          {
+            field: 'allowedRoles',
+            operator: 'some',
+            value: {id: locals.user?.role_id}
+          }
+        ]
+      }
+    },
     fieldsForeign: {
       translations: {
         fields: ['name', 'language']
@@ -166,4 +170,4 @@ export default {
     axis: ['parent_id'],
     by: ['id']
   }
-} as ModelConfig<Prisma.MenuItemGetPayload<{include: {page: true}}>>;
+} as ModelConfig<Prisma.MenuItemGetPayload<{include: {allowedRoles: true, page: true}}>>;

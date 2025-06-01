@@ -5,7 +5,7 @@ import { withPagination } from '$lib/utils/pagination';
 
 export async function GET({url}) {
   let urlSearchParams = parseSearchParams(url.searchParams);
-  if (!urlSearchParams.form_type_id) return exception('form_type_id is required');
+  if (!urlSearchParams.menu_item_id) return exception('menu_item_id is required');
   
   try {
     const paginatedData = await withPagination(async (skip, take) => {
@@ -15,8 +15,8 @@ export async function GET({url}) {
         select: {
           id: true,
           name: true,
-          accessibleFormTypes: {
-            where: { id: String(urlSearchParams.form_type_id) },
+          accessibleMenuItem: {
+            where: { id: String(urlSearchParams.menu_item_id) },
             select: { id: true },
           },
         },
@@ -27,7 +27,7 @@ export async function GET({url}) {
       const formattedData = allRoles.map((role) => ({
         id: role.id,
         name: role.name,
-        active: role.accessibleFormTypes.length > 0,
+        active: role.accessibleMenuItem.length > 0,
       }));
 
       return { data: formattedData, total };

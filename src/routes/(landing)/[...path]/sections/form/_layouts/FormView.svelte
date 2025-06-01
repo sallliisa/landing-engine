@@ -45,8 +45,31 @@
 
   let formError: Record<string, any> = $state({})
 
+  let isFormClientValid = $derived.by(() => {
+    return formData.data.every((field: any) => {
+      // If field is not required, it's always valid
+      if (!field.required) return true;
+      
+      // Get the field value
+      const value = field.value;
+      
+      // Check if the value exists and is not empty
+      if (value === undefined || value === null || value === '') {
+        return false;
+      }
+      
+      // For arrays, check if it has at least one item
+      if (Array.isArray(value) && value.length === 0) {
+        return false;
+      }
+      
+      return true;
+    });
+  });
+
   async function submitForm(e: any) {
     e.preventDefault()
+    if (!isFormClientValid) return
     try {
       const {data} = await api.post({path: '/api/public/formSubmission/submit'}, formData)
       await onSubmit()
@@ -80,10 +103,10 @@
       {/each}
     </div>
     <div class="flex flex-row items-center justify-end w-full">
-      <Button type="submit">Kirim <i class="ml-2 ri-arrow-right-line"></i></Button>
+      <Button disabled={!isFormClientValid} type="submit">Kirim <i class="ml-2 ri-arrow-right-line"></i></Button>
     </div>
   </form>
-  {#if section.meta.show_hkr_contact_detail}
+  <!-- {#if section.meta.show_hkr_contact_detail}
     <div class="col-span-2 outline outline-outline-variant p-6 flex flex-col gap-lg">
       <div class="flex flex-col gap-sm">
         <p class="text-xl font-bold">Detail Kontak</p>
@@ -106,5 +129,5 @@
         </div>
       </div>
     </div>
-  {/if}
+  {/if} -->
 </div>

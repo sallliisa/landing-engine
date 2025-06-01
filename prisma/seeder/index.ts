@@ -12,6 +12,98 @@ function parseSlug(text: string) {
     .replace(/-+/g, "-"); // Replace multiple hyphens with a single hyphen
 }
 
+const permissionList = [
+  'create-article',
+  'delete-article',
+  'detail-article',
+  'view-article',
+  'update-article',
+
+  'create-articleCategory',
+  'delete-articleCategory',
+  'detail-articleCategory',
+  'view-articleCategory',
+  'update-articleCategory',
+
+  'create-calculatorDetailField',
+  'delete-calculatorDetailField',
+  'view-calculatorDetailField',
+  'update-calculatorDetailField',
+
+  'create-calculatorField',
+  'delete-calculatorField',
+  'view-calculatorField',
+  'update-calculatorField',
+
+  'create-calculatorType',
+  'delete-calculatorType',
+  'detail-calculatorType',
+  'view-calculatorType',
+  'update-calculatorType',
+
+  'view-companyProfile',
+  'update-companyProfile',
+
+  'create-formField',
+  'delete-formField',
+  'view-formField',
+  'update-formField',
+
+  'delete-formSubmission',
+  'detail-formSubmission',
+  'view-formSubmission',
+
+  'create-formType',
+  'delete-formType',
+  'detail-formType',
+  'view-formType',
+  'update-formType',
+
+  'create-menuItem',
+  'delete-menuItem',
+  'detail-menuItem',
+  'view-menuItem',
+  'update-menuItem',
+
+  'create-page',
+  'delete-page',
+  'view-page',
+
+  'view-permission',
+
+  'create-role',
+  'delete-role',
+  'detail-role',
+  'view-role',
+  'update-role',
+
+  'create-roleGroup',
+  'delete-roleGroup',
+  'detail-roleGroup',
+  'view-roleGroup',
+  'update-roleGroup',
+
+  'create-section',
+  'delete-section',
+  'view-section',
+  'update-section',
+
+  'create-user',
+  'delete-user',
+  'detail-user',
+  'view-user',
+  'update-user',
+
+  'list-mappingPermissionRole',
+  'toggle-mappingPermissionRole',
+
+  'list-mappingRoleFormType',
+  'toggle-mappingRoleFormType',
+
+  'list-mappingRoleMenuItem',
+  'toggle-mappingRoleMenuItem',
+]
+
 const prisma = new PrismaClient();
 
 const main = async () => {
@@ -44,6 +136,18 @@ const main = async () => {
         role_id: developerRole.id,
       },
     });
+
+    // Create permissions
+    const permissions = await prisma.permission.createMany({
+      data: permissionList.map(permission => {
+        const splittedPermission = permission.split('-')
+        return {
+          code: permission,
+          name: splittedPermission.join(' '),
+          description: `Melakukan ${splittedPermission[0]} terhadap ${splittedPermission[1]}`
+        }
+      })
+    })
 
     // create instance of CompanyProfile
     const companyProfile = await prisma.companyProfile.create({

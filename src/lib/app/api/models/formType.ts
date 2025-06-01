@@ -43,7 +43,7 @@ export default {
   // Create operation config
   create: {
     allow: true,
-    fields: ['name', 'description', 'success_message'],
+    fields: ['name', 'description'],
     validation: {
       name: [
         {

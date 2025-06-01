@@ -13,7 +13,6 @@ export async function GET({url}) {
         skip,
         take,
         select: {
-          id: true,
           code: true,
           name: true,
           description: true,
@@ -27,7 +26,6 @@ export async function GET({url}) {
       const total = await prisma.permission.count();
       
       const formattedData = allPermissions.map((p) => ({
-        id: p.id,
         code: p.code,
         name: p.name,
         description: p.description,

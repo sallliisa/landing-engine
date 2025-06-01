@@ -3,7 +3,7 @@ import type { ArticleTranslation } from "@prisma/client";
 
 export default {
   allow: true,
-  fields: ['id', 'article_id', 'language', 'title'],
+  // fields: ['id', 'article_id', 'language', 'title'],
 
   create: {
     allow: false,

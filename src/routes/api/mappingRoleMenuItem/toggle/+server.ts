@@ -3,14 +3,14 @@ import { json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
 	try {
-		const { form_type_id, role_id, active } = await request.json();
+		const { menu_item_id, role_id, active } = await request.json();
 
-		if (!role_id || !form_type_id) {
-			return json({ error: 'form_type_id and role_id are required' }, { status: 400 });
+		if (!role_id || !menu_item_id) {
+			return json({ error: 'menu_item_id and role_id are required' }, { status: 400 });
 		}
 
-		await prisma.formType.update({
-			where: { id: form_type_id },
+		await prisma.menuItem.update({
+			where: { id: menu_item_id },
 			data: {
 				allowedRoles: active ? { connect: { id: role_id } } : { disconnect: { id: role_id } }
 			}

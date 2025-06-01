@@ -50,6 +50,7 @@ export async function buildSectionStructure(parentSection: Section, config: Sect
               name: item.config.info?.name || `Child of ${parentSection.name}`,
               order: item.order,
               parent_section_id: parentSection.id,
+              meta: item.config.meta?.defaultValues
             }
           });
           // Recursively build children with new config structure

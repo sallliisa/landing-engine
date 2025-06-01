@@ -3,7 +3,7 @@ import type { Permission } from '@prisma/client'
 export default {
   // Base configuration
   allow: true,
-  fields: ['id', 'name', 'code', 'description'],
+  fields: ['name', 'code', 'description'],
 
   // Create operation configuration
   create: {
@@ -27,7 +27,7 @@ export default {
   // Update operation configuration
   update: {
     fields: ['name', 'code', 'description'],
-    by: ['id'],
+    by: ['code'],
     validation: {
       name: [
         {
@@ -46,20 +46,20 @@ export default {
 
   // List operation configuration
   list: {
-    fields: ['id', 'name', 'code', 'description'],
+    fields: ['name', 'code', 'description'],
     searchableBy: ['name', 'code', 'description'],
-    filterableBy: ['id', 'code'],
-    orderBy: { id: 'asc' }
+    filterableBy: ['code'],
+    orderBy: { code: 'asc' }
   },
 
   // Detail operation configuration
   detail: {
-    fields: ['id', 'name', 'code', 'description'],
-    by: ['id']
+    fields: ['name', 'code', 'description'],
+    by: ['code']
   },
 
   // Delete operation configuration
   delete: {
-    by: ['id']
+    by: ['code']
   }
 } as ModelConfig<Permission>

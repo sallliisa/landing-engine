@@ -41,7 +41,7 @@ export default {
         fields: ["name"],
       },
       permissions: {
-        fields: ["id", "name", "code", "description"],
+        fields: ["name", "code", "description"],
       },
     },
   },
