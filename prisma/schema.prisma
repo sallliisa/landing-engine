@@ -177,6 +177,8 @@ model Content {
   url         String?
   attachment  String?
   status      Boolean?
+  collection  Json      @default("[]")
+  meta        Json      @default("{}")
   section     Section? @relation(fields: [section_id], references: [id], onDelete: Cascade)
   gallery_id  String?
   gallery     Gallery? @relation(fields: [gallery_id], references: [id], onDelete: Cascade)

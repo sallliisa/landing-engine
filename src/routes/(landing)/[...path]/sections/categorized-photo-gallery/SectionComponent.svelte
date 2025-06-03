@@ -1,5 +1,7 @@
 <script lang="ts">
   import Button from "$lib/app/components/ui/Button.svelte";
+  import TabItem from "$lib/app/components/ui/tabs/TabItem.svelte";
+  import Tabs from "$lib/app/components/ui/tabs/Tabs.svelte";
   import { Dialog } from "bits-ui";
 
   const {section} = $props()
@@ -8,15 +10,21 @@
 
 <div class="flex items-center justify-center w-full">
   <div class="max-w-screen-xl flex flex-col gap-12">
-    <div class="flex flex-row flex-wrap items-center justify-center gap-sm">
-      {#each section.data.childSections as childSection, activeChildSectionIndex (childSection.id || childSection.name)}
-        <Button
+    <div class="flex flex-row flex-wrap items-center justify-center">
+      <!-- {#each section.data.childSections as childSection, activeChildSectionIndex (childSection.id || childSection.name)} -->
+        <!-- <Button
           onclick={() => activeTabIndex = activeChildSectionIndex}
           variant={activeTabIndex === activeChildSectionIndex ? 'tonal' : 'text'}
         >
           {childSection.name}
-        </Button>
-      {/each}
+        </Button> -->
+        <!-- <TabItem onclick={() => activeTabIndex = activeChildSectionIndex} active={activeChildSectionIndex === activeTabIndex}>{childSection.name}</TabItem> -->
+      <!-- {/each} -->
+      <Tabs data={section.data.childSections} bind:activeTabIndex={activeTabIndex}>
+        {#snippet tabItem(tabItem: any)}
+          {tabItem.name}
+        {/snippet}
+      </Tabs>
     </div>
     <div class="flex flex-col gap-lg">
       <div class="flex flex-col gap-xs items-center justify-center">

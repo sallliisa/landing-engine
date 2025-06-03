@@ -11,8 +11,11 @@
   <div class="w-full max-w-screen-xl flex flex-col py-3 gap-6 px-6 lg:px-12">
     <div class="gap-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
       <div class="flex flex-col gap-sm">
-        <p>{section.data.content.subtitle}</p>
-        <p class="text-3xl md:text-4xl font-bold">{section.data.content.title}</p>
+        <div class="flex flex-col gap-xs">
+          <p>{section.data.content.subtitle}</p>
+          <p class="text-3xl md:text-4xl font-bold">{section.data.content.title}</p>
+        </div>
+        {#if section.data.content.description}<p class="rtf-content m-base text-sm text-outline">{@html section.data.content.description}</p>{/if}
       </div>
       {#if section.data.content.url}
         <div class="flex flex-row items-center gap-sm flex-shrink-0">
@@ -28,7 +31,7 @@
           <div class="flex flex-col gap-sm w-full">
             <p class="text-sm sm:text-base group-hover:underline">{formatDate(section.data.article[0].created_at)} • {section.data.article[0].categories.join(', ')}</p>
             <p class="text-lg sm:text-xl font-bold group-hover:underline">{section.data.article[0].title}</p>
-            <p class="text-sm sm:text-base text-outline group-hover:underline">{section.data.article[0].excerpt}</p>
+            <p class="text-sm text-outline group-hover:underline">{section.data.article[0].excerpt}</p>
           </div>
         </a>
         <div class="flex flex-col gap-sm col-span-1 md:col-span-1 lg:col-span-6 lg:-mt-6">

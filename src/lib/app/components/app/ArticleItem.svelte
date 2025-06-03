@@ -27,6 +27,6 @@
   <div class="flex flex-col gap-sm w-full md:flex-1 order-2 md:order-1">
     <p class="group-hover:underline text-sm">{formatDate(created_at)} • {categories.join(', ')}</p>
     <p class="text-xl font-bold group-hover:underline">{title}</p>
-    <p class="text-outline group-hover:underline">{excerpt}</p>
+    <p class="text-outline text-sm group-hover:underline">{excerpt}</p>
   </div>
 </a>

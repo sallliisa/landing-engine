@@ -7,12 +7,20 @@
 <div class="flex items-center justify-center w-full">
   <div class="w-full flex flex-col items-center justify-center gap-8 pt-3 pb-6">
     {#if section.data.content.subtitle || section.data.content.title || section.data.content.description}
-      <div class="flex max-w-screen-xl flex-col gap-base w-full items-center justify-center px-6 lg:px-12">
-        <div class="flex flex-col gap-xs items-center">
-          {#if section.data.content.subtitle}<p class="text-center">{section.data.content.subtitle}</p>{/if}
-          {#if section.data.content.title}<p class="text-2xl md:text-3xl font-bold text-center">{section.data.content.title}</p>{/if}
+      <div class="flex flex-row items-center justify-between max-w-screen-xl w-full px-6 lg:px-12">
+        <div class="flex flex-col gap-base {section.data.content.url ? '' : 'items-center justify-center text-center'}">
+          <div class="flex flex-col gap-xs">
+            {#if section.data.content.subtitle}<p class="">{section.data.content.subtitle}</p>{/if}
+            {#if section.data.content.title}<p class="text-2xl md:text-3xl font-bold ">{section.data.content.title}</p>{/if}
+          </div>
+          {#if section.data.content.description}<p class="rtf-content m-base text-sm">{@html section.data.content.description}</p>{/if}
         </div>
-        {#if section.data.content.description}<p class="rtf-content m-base text-center">{@html section.data.content.description}</p>{/if}
+        {#if section.data.content.url}
+          <div class="flex flex-row items-center gap-sm flex-shrink-0">
+            <a href={section.data.content.url} class="font-semibold underline">Lebih Banyak</a>
+            <i class="ri-arrow-right-line"></i>
+          </div>
+        {/if}
       </div>
     {/if}
     <Carousel.Root
@@ -24,18 +32,61 @@
       <Carousel.Content>
         {#each section.data.gallery as item, i (item.id || `carousel-${i}`)}
           <Carousel.Item 
-            class="md:basis-1/3 basis-[85%] flex flex-col gap-base p-8 items-start justify-end text-surface h-[450px] ml-4 bg-center bg-cover" 
+            class="md:basis-1/3 basis-[80%] h-[450px] ml-4 bg-center bg-cover p-0 before:bg-white/5 active:before:bg-white/10 {item.url ? 'overlay' : ''}" 
             style="background-image: linear-gradient(rgba(0, 0, 0, 0.33), rgba(0, 0, 0, 0.33)), linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 50%), url({item.media});"
           >
-            <div class="flex flex-col gap-xs">
-              <p class="font-bold">{item.subtitle}</p>
-              <p class="text-3xl md:text-4xl font-bold">{item.title}</p>
-            </div>
-            <div class="rtf-content m-base">{@html item.description}</div>
+            {#if item.url}
+              <a
+                href={item.url}
+                class="flex flex-col gap-base p-8 items-start justify-between text-surface h-full w-full"
+              >
+                <div class="flex flex-col gap-base">
+                  <div class="flex flex-col gap-xs">
+                    <p class="text-2xl md:text-3xl font-bold">{item.title}</p>
+                    <p class="font-bold text-xl">{item.subtitle}</p>
+                  </div>
+                  <div class="flex flex-row gap-lg">
+                    {#each item.collection as collectionItem}
+                      <div class="flex flex-row items-center gap-sm">
+                        <i class={collectionItem.media}></i>
+                        <p>{collectionItem.title}</p>
+                      </div>
+                    {/each}
+                  </div>
+                </div>
+                <div class="rtf-content m-base">{@html item.description}</div>
+              </a>
+            {:else}
+              <div class="flex flex-col gap-base p-8 items-start justify-between text-surface h-full w-full">
+                <div class="flex flex-col gap-base">
+                  <div class="flex flex-col gap-xs">
+                    <p class="text-2xl md:text-3xl font-bold">{item.title}</p>
+                    <p class="font-bold text-xl">{item.subtitle}</p>
+                  </div>
+                  <div class="flex flex-row gap-lg">
+                    {#each item.collection as collectionItem}
+                      <div class="flex flex-row items-center gap-sm">
+                        <i class={collectionItem.media}></i>
+                        <p>{collectionItem.title}</p>
+                      </div>
+                    {/each}
+                  </div>
+                </div>
+                <div class="rtf-content m-base">{@html item.description}</div>
+              </div>
+            {/if}
           </Carousel.Item>
         {/each}
       </Carousel.Content>
-      <Carousel.Navigation/>
+      <Carousel.Navigation>
+        <!-- {#snippet navigation({scrollPrev, handleClick, scrollNext, currentIndex}: any)}
+          <div class="flex items-center justify-center space-x-2 p-4">
+            {#each section.data.gallery as item, i}
+              <button onclick={() => handleClick(i)} class="{currentIndex === i ? 'text-on-surface font-semibold' : 'text-outline'}">{item.title}</button>
+            {/each}
+          </div>
+        {/snippet} -->
+      </Carousel.Navigation>
     </Carousel.Root>
   </div>
 </div>

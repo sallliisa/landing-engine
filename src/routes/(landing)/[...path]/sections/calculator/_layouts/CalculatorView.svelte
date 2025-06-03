@@ -47,9 +47,9 @@
       </div>
     {/each}
   </div>
-  <div class="flex flex-row items-center justify-end w-full">
+  <!-- <div class="flex flex-row items-center justify-end w-full">
     <Button type="submit" disabled={!isFormValid}>
       Hitung <i class="ml-2 ri-arrow-right-line"></i>
     </Button>
-  </div>
+  </div> -->
 </form>

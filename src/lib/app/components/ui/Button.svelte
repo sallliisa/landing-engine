@@ -11,7 +11,7 @@
     ...restProps
   } = $props<{
     size?: 'wide' | 'square',
-    variant?: 'filled' | 'tonal' | 'outlined' | 'text',
+    variant?: 'filled' | 'tonal' | 'outlined' | 'text' | 'tab',
     type?: HTMLButtonAttributes['type'],
     [key: string]: any;
   }>();
