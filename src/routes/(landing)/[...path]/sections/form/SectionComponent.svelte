@@ -23,7 +23,7 @@
           <div class="flex flex-col gap-base w-full">
             <div class="flex flex-col gap-xs">
               {#if section.data.content.subtitle}<p>{section.data.content.subtitle}</p>{/if}
-              {#if section.data.content.title}<p class="text-3xl md:text-4xl font-bold">{section.data.content.title}</p>{/if}
+              {#if section.data.content.title}<p class="text-2xl md:text-3xl font-bold">{section.data.content.title}</p>{/if}
             </div>
             {#if section.data.content.description}<p class="rtf-content m-base">{@html section.data.content.description}</p>{/if}
           </div>

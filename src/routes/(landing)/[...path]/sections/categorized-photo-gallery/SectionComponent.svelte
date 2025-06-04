@@ -29,7 +29,7 @@
     <div class="flex flex-col gap-lg">
       <div class="flex flex-col gap-xs items-center justify-center">
         <p class="text-center">{section.data.childSections[activeTabIndex].content.subtitle}</p>
-        <p class="text-2xl font-bold text-center">{section.data.childSections[activeTabIndex].content.title}</p>
+        <p class="text-xl md:text-2xl font-bold text-center">{section.data.childSections[activeTabIndex].content.title}</p>
       </div>
       <div class="flex flex-row flex-wrap justify-center gap-6">
         {#each section.data.childSections[activeTabIndex].gallery as item}

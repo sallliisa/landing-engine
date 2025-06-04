@@ -13,21 +13,18 @@
       <div class="flex flex-col gap-sm">
         <div class="flex flex-col gap-xs">
           <p>{section.data.content.subtitle}</p>
-          <p class="text-3xl md:text-4xl font-bold">{section.data.content.title}</p>
+          <p class="text-2xl md:text-3xl font-bold">{section.data.content.title}</p>
         </div>
         {#if section.data.content.description}<p class="rtf-content m-base text-sm text-outline">{@html section.data.content.description}</p>{/if}
       </div>
       {#if section.data.content.url}
-        <div class="flex flex-row items-center gap-sm flex-shrink-0">
-          <a href={section.data.content.url} class="font-semibold underline">Lebih Banyak</a>
-          <i class="ri-arrow-right-line"></i>
-        </div>
+        <a href={section.data.content.url} class="font-semibold underline">{section.data.content.url_text}<i class="ri-arrow-right-line"></i></a>
       {/if}
     </div>
     <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-lg">
       {#if section.data.article && section.data.article.length > 0}
         <a href={`/article/${section.data.article[0].slug}`} class="col-span-1 md:col-span-1 lg:col-span-6 flex flex-col gap-base group">
-          <img src="{section.data.article[0].thumbnail}" class="w-full h-[240px] sm:h-[320px] rounded-lg object-center object-cover outline outline-outline-variant" alt={section.data.article[0].title}/>
+          <img src="{section.data.article[0].thumbnail}" class="w-full h-[240px] sm:h-[320px] object-center object-cover outline outline-outline-variant" alt={section.data.article[0].title}/>
           <div class="flex flex-col gap-sm w-full">
             <p class="text-sm sm:text-base group-hover:underline">{formatDate(section.data.article[0].created_at)} • {section.data.article[0].categories.join(', ')}</p>
             <p class="text-lg sm:text-xl font-bold group-hover:underline">{section.data.article[0].title}</p>

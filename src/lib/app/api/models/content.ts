@@ -12,7 +12,7 @@ export default {
   },
   create: {
     allow: true,
-    fields: ['media', 'title', 'subtitle', 'description', 'label', 'content', 'blurb', 'media_type', 'attachment', 'status', 'order', 'gallery_id', 'url', 'collection', 'meta'],
+    fields: ['media', 'title', 'subtitle', 'description', 'label', 'content', 'blurb', 'media_type', 'attachment', 'status', 'order', 'gallery_id', 'url', 'url_text', 'url_type', 'amount', 'collection', 'meta'],
     lifecycle: {
       pre: async (body) => {
         const maxOrderItem = await prisma.content.findFirst({
@@ -31,7 +31,7 @@ export default {
   update: {
     allow: true,
     by: ['id'],
-    fields: ['media', 'title', 'subtitle', 'description', 'label', 'content', 'blurb', 'media_type', 'attachment', 'status', 'order', 'url', 'collection', 'meta'],
+    fields: ['media', 'title', 'subtitle', 'description', 'label', 'content', 'blurb', 'media_type', 'attachment', 'status', 'order', 'url', 'url_text', 'url_type', 'amount', 'collection', 'meta'],
   },
   delete: {
     allow: true,

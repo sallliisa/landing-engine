@@ -6,6 +6,8 @@
 
 </script>
 
-{#each data as item, index}
-  <TabItem onclick={() => activeTabIndex = index} active={index === activeTabIndex}>{@render tabItem(item)}</TabItem>
-{/each}
+<div class="w-full flex flex-row items-center">
+  {#each data as item, index}
+    <TabItem onclick={() => activeTabIndex = index} active={index === activeTabIndex}>{@render tabItem(item)}</TabItem>
+  {/each}
+</div>

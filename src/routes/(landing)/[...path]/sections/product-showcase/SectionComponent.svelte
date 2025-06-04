@@ -1,0 +1,137 @@
+<script lang="ts">
+  import * as Carousel from "$lib/app/components/ui/carousel";
+  import ImagePreview from "$lib/app/components/ui/ImagePreview.svelte";
+  import Tabs from "$lib/app/components/ui/tabs/Tabs.svelte";
+
+  const {section} = $props()
+
+  let activeProductTypeIndex = $state(0)
+  let activeProductTypeDetailMenuIndex = $state(0)
+</script>
+
+<div class="flex items-center justify-center">
+  <div class="w-full max-w-screen-xl py-3 px-6 md:px-12 grid grid-cols-4">
+    <div class="col-span-1 flex flex-col gap-lg border-r border-outline-variant">
+      <div class="flex flex-col gap-base">
+        <div class="flex flex-col gap-xs">
+          <p>{section.data.content.subtitle}</p>
+          <p class="text-2xl md:text-3xl font-bold">{section.data.content.title}</p>
+        </div>
+        {#if section.data.content.description}<p class="m-base rtf-content text-sm text-outline">{@html section.data.content.description}</p>{/if}
+      </div>
+      <div class="flex flex-col gap-base">
+        {#each section.data.productType as productType, index}
+          <button class="flex flex-row items-center gap-sm" onclick={() => activeProductTypeIndex = index}>
+            <p class="text-lg min-w-max {activeProductTypeIndex === index ? 'font-semibold' : 'text-outline'}">{productType.name}</p>
+            {#if activeProductTypeIndex === index}
+              <div class="w-full h-[1px] bg-outline-variant"></div>
+            {/if}
+          </button>
+        {/each}
+      </div>
+    </div>
+    <div class="col-span-3 flex flex-col gap-lg border-r border-outline-variant">
+      {#if section.data.productType[activeProductTypeIndex].sections.length > 0}
+        <Tabs data={section.data.productType[activeProductTypeIndex].sections} bind:activeTabIndex={activeProductTypeDetailMenuIndex}>
+          {#snippet tabItem(tabItem: any)}
+            <p>{tabItem.name}</p>
+          {/snippet}
+        </Tabs>
+      {/if}
+      {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex]}
+        <div class="flex flex-col gap-lg">
+          <div class="flex flex-col gap-base px-6">
+            <div class="flex flex-col gap-xs">
+              <p class="text-2xl md:text-3xl font-bold">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.title}</p>
+              {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}
+                <p class="font-medium text-lg">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}</p>
+              {/if}
+            </div>
+            {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.description}
+              <p class="rtf-content m-base">{@html section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.description}</p>
+            {/if}
+            {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.media}
+              {@const content = section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content}
+              {#if content.media_type === 'image'}
+                <img src={content.media} alt={content.title} class="w-full h-full object-cover object-center"/>
+              {:else if content.media_type === 'video'}
+                <video src={content.media} class="w-full h-full object-cover object-center">
+                  <track kind="captions" src="" srclang="id" label="Indonesia" />
+                </video>
+              {:else if content.media_type === 'embed'}
+                <div class="min-h-[300px] md:h-[450px]">
+                  <div class="embed-preview">
+                    <div class="h-full w-full">
+                      {@html content.media}
+                    </div>
+                  </div>
+                </div>
+              {/if}
+            {/if}
+          </div>
+          {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].feature.length > 0}
+            <div class="flex flex-row gap-xl flex-wrap items-center justify-center px-6r">
+              {#each section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].feature as feature}
+                <div class="flex flex-col gap-sm items-center justify-center">
+                  <i class={feature.media}></i>
+                  <p class="font-bold text-lg">{feature.title}</p>
+                  <p>{feature.subtitle}</p>
+                </div>
+              {/each}
+            </div>
+          {/if}
+          {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].gallery.length > 0}
+            <div class="w-full overflow-hidden">
+              <Carousel.Root
+                opts={{
+                  align: 'start',
+                  containScroll: false
+                }}
+                class="w-full"
+              >
+                <Carousel.Content class="py-4 ml-6">
+                  {#each section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].gallery as gallery, i}
+                    <ImagePreview src={gallery.media} title={gallery.title} description={gallery.description} class="h-full w-full">
+                      {#snippet trigger()}
+                        <Carousel.Item class="flex-shrink-0 overlay before:bg-surface/5 active:before:bg-surface/10 w-[192px] basis-[9/2] aspect-square bg-center ml-2 bg-cover" style="background-image: url({gallery.media});">
+                          <!-- <img class="object-center object-cover w-full h-full" src={gallery.media} alt={gallery.title} /> -->
+                        </Carousel.Item>
+                      {/snippet}
+                    </ImagePreview>
+                  {/each}
+                </Carousel.Content>
+                <Carousel.Navigation/>
+              </Carousel.Root>
+            </div>
+          {/if}
+        </div>
+      {/if}
+    </div>
+  </div>
+</div>
+
+<style>
+  .embed-preview {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+    height: 300px;
+  }
+  
+  @media (min-width: 768px) {
+    .embed-preview {
+      height: 100%;
+      min-height: auto;
+    }
+  }
+
+  .embed-preview :global(iframe) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 4px; /* Note: radius might be clipped by parent's overflow:hidden */
+  }
+</style>

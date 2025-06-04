@@ -52,24 +52,27 @@
               <a href={menu.url} class="">{menu.name}</a>
             {:else if menu.menu_item_type == 'page'}
               <div class="relative">
-                {#if menu.children?.length > 1}
-                  <button
+                {#if !menu.page}
+                  <div
                     onfocus="{() => {}}"
-                    onmouseover="{() => debouncedMenuExpandMouseHover(index, 'expand')}"
-                    class="flex flex-row gap-xs"
+                    role="menu"
+                    tabindex="{index}"
+                    onmouseover="{() => debouncedMenuExpandMouseHover(index, menu.children?.length > 1 ? 'expand' : 'shrink')}"
+                    class="flex flex-row gap-xs cursor-default"
                   >
                     <p>{menu.name}</p>
-                    <i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>
-                  </button>
+                    {#if menu.children?.length > 1}<i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>{/if}
+                  </div>
                 {:else}
                   <a
                     onfocus="{() => {}}"
-                    onmouseover="{() => debouncedMenuExpandMouseHover(index, 'shrink')}"
+                    onmouseover="{() => debouncedMenuExpandMouseHover(index, menu.children?.length > 1 ? 'expand' : 'shrink')}"
                     onclick="{() => isMenuExpanded = false}"
                     href="/{menu.slug}"
-                    class=""
-                  >
-                    {menu.name}
+                    class="flex flex-row gap-xs"
+                  > 
+                  <p>{menu.name}</p>
+                    {#if menu.children?.length > 1}<i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>{/if}
                   </a>
                 {/if}
               </div>
@@ -78,7 +81,7 @@
         {/each}
       </div>
       <div>
-        <button onclick="{() => getLocale() === 'id' ? setLocale('en') : setLocale('id')}" class="bg-surface outline outline-outline-variant flex flex-row items-center justify-between gap-sm px-3 py-2 rounded-sm">
+        <button onclick="{() => getLocale() === 'id' ? setLocale('en') : setLocale('id')}" class="bg-surface outline outline-outline-variant flex flex-row items-center justify-between gap-sm px-3 py-2">
           <img src="/assets/i18n/flags/{getLocale()}.svg" alt="{getLocale()}" class="rounded-full aspect-square w-4 outline outline-outline-variant object-center object-cover"/>
           <p class="font-bold uppercase text-on-surface">{getLocale()}</p>
         </button>
@@ -111,7 +114,6 @@
           </div>
           <div class="flex flex-col gap-base">
             {#each page.data.menu[activeLevel1Index].children as level2Child, level2Index}
-              <!-- {JSON.stringify(level2Child.page)} -->
               {#if !level2Child.page}
                 <div
                   onfocus="{() => {}}"

@@ -2,7 +2,7 @@
   const {content} = $props()
 </script>
 
-<div class="border border-outline-variant rounded-lg p-4 flex flex-col md:flex-row md:gap-4 items-center md:justify-center">
+<div class="border border-outline-variant p-4 flex flex-col md:flex-row md:gap-4 items-center md:justify-center">
   <!-- Row 1 (Mobile): Image and Title -->
   <div class="w-full flex flex-row items-center gap-4 md:w-auto md:contents">
     {#if content.media}

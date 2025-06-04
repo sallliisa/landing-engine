@@ -15,10 +15,10 @@
       <div class="flex flex-col items-center justify-center gap-8">
         <div class="flex flex-col gap-4 max-w-[680px]">
           <p class="text-sm">{formatDate(new Date(data.article.created_at).toJSON())} • {data.article.categories?.map(category => category.name).join(', ')}</p>
-          <p class="text-3xl lg:text-4xl font-semibold font-title">{data.article.title}</p>
+          <p class="text-2xl lg:text-3xl font-semibold font-title">{data.article.title}</p>
           <p class="text-muted">{data.article?.excerpt}</p>
         </div>
-        {#if data.article.thumbnail}<img src={data.article.thumbnail} alt={data.article.title} class="max-w-full rounded-lg outline outline-outline-variant"/>{/if}
+        {#if data.article.thumbnail}<img src={data.article.thumbnail} alt={data.article.title} class="max-w-full outline outline-outline-variant"/>{/if}
         <div class="rtf-content max-w-[60ch]">{@html data.article.content}</div>
       </div>
     </div>

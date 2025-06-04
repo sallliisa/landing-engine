@@ -39,7 +39,7 @@
 </script>
 
 <Select.Root type="single" bind:value={getValue, setValue} items={data}>
-  <div class="flex flex-col gap-xs">
+  <div class="flex flex-col gap-xs w-full">
     {#if label}
       <Label.Root class="font-medium text-xs">
         {label}
@@ -47,11 +47,11 @@
       </Label.Root>
     {/if}
     <Select.Trigger
-      class="px-4 py-3 rounded-sm outline outline-outline-variant focus-within:outline-outline select-none flex flex-row items-center justify-between text-sm tracking-[0.01em]"
+      class="px-4 py-3 rounded-sm outline w-full min-w-full outline-outline-variant focus-within:outline-outline select-none flex flex-row gap-2 items-center justify-between text-sm tracking-[0.01em]"
       aria-label={placeholder}
     >
       <p class={value ? '' : 'text-outline'}>{selectedLabel}</p>
-      <i class="ri-expand-up-down-line text-lg"></i>
+      <i class="ri-expand-up-down-line text-outline text-lg"></i>
     </Select.Trigger>
     {#if errorMessage}
       <p class="text-xs text-error">{errorMessage}</p>

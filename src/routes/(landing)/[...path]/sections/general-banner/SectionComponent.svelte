@@ -32,7 +32,7 @@
   >
     <div class="px-6 lg:px-12 {isEmptyDescription ? 'pb-12' : 'pt-12 lg:pt-24 pb-12'} flex {isEmptyDescription ? 'flex-col items-center text-center' : 'md:flex-row flex-col items-center'} gap-4 max-w-screen-xl w-full">
       <div class="w-full">
-        <p class="text-2xl md:text-4xl font-bold">{section.data.contents[0].title}</p>
+        <p class="text-2xl md:text-3xl font-bold">{section.data.contents[0].title}</p>
       </div>
       {#if !isEmptyDescription}
         <div class="w-full flex md:items-end md:justify-end">

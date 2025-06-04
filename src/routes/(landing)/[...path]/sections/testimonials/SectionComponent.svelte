@@ -8,7 +8,7 @@
       <div class="flex flex-col gap-base w-full items-center justify-center">
         <div class="flex flex-col gap-xs items-center">
           {#if section.data.content.subtitle}<p class="text-center">{section.data.content.subtitle}</p>{/if}
-          {#if section.data.content.title}<p class="text-3xl md:text-4xl font-bold text-center">{section.data.content.title}</p>{/if}
+          {#if section.data.content.title}<p class="text-2xl md:text-3xl font-bold text-center">{section.data.content.title}</p>{/if}
         </div>
         {#if section.data.content.description}<p class="rtf-content m-base text-center">{@html section.data.content.description}</p>{/if}
       </div>
