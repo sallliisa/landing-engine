@@ -9,17 +9,8 @@
 </script>
 
 <div class="flex items-center justify-center w-full">
-  <div class="max-w-screen-xl flex flex-col gap-12">
-    <div class="flex flex-row flex-wrap items-center justify-center">
-      <!-- {#each section.data.childSections as childSection, activeChildSectionIndex (childSection.id || childSection.name)} -->
-        <!-- <Button
-          onclick={() => activeTabIndex = activeChildSectionIndex}
-          variant={activeTabIndex === activeChildSectionIndex ? 'tonal' : 'text'}
-        >
-          {childSection.name}
-        </Button> -->
-        <!-- <TabItem onclick={() => activeTabIndex = activeChildSectionIndex} active={activeChildSectionIndex === activeTabIndex}>{childSection.name}</TabItem> -->
-      <!-- {/each} -->
+  <div class="max-w-screen-xl flex flex-col gap-12 w-full items-center justify-center px-6 lg:px-12 py-3">
+    <div class="w-fit max-w-full overflow-auto flex items-center justify-center">
       <Tabs data={section.data.childSections} bind:activeTabIndex={activeTabIndex}>
         {#snippet tabItem(tabItem: any)}
           {tabItem.name}
@@ -53,7 +44,7 @@
               <Dialog.Overlay
                 class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-[100] bg-black/80"
               />
-              <Dialog.Content class="bg-surface rounded-lg text-on-surface data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed left-[50%] top-[50%] z-[100] translate-x-[-50%] translate-y-[-50%] w-[800px] max-w-[95vw] max-h-[95vh] flex">
+              <Dialog.Content class="bg-surface max-h-[75vh] rounded-lg text-on-surface data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed left-[50%] top-[50%] z-[100] translate-x-[-50%] translate-y-[-50%] w-[800px] max-w-[95vw] flex">
                 <div class="relative flex lg:flex-row flex-col w-full">
                   <Dialog.Close class="absolute top-6 right-6">
                     <i class="ri-close-line"></i>
@@ -61,7 +52,7 @@
                   <div class="min-w-[320px] flex items-end justify-center bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.15),rgba(234,88,12,0.08)_50%,transparent_100%),linear-gradient(135deg,rgba(167,139,250,0.05)_0%,rgba(251,146,60,0.1)_100%),repeating-linear-gradient(45deg,rgba(255,255,255,0.03)_0px,rgba(255,255,255,0.03)_1px,transparent_1px,transparent_10px)]">
                     <img src={item.media} alt={item.title} class="aspect-[3/4] w-[240px] object-center object-cover"/>
                   </div>
-                  <div class="flex flex-col gap-base py-8 px-12 col-span-3 justify-center">
+                                    <div class="flex flex-col gap-base py-8 px-12 col-span-3 overflow-y-auto">
                     <div class="flex flex-col">
                       <p class="text-xl font-bold">{item.title}</p>
                       <p class="text-outline">{item.subtitle}</p>

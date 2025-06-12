@@ -7,7 +7,7 @@
 <div class="relative group aspect-square max-w-[320px]">
   <ImagePreview src={content.media} title={content.title} description={content.description} class="h-full w-full">
     {#snippet trigger()}
-      <div class="aspect-square w-[320px] text-white outline outline-outline-variant bg-center h-full bg-cover flex flex-col text-start items-start group/item justify-end p-6" style="background-image: {(content.title || content.description) ? `linear-gradient(to top, rgba(94, 76, 16, 0.7) 0%, rgba(123, 101, 61, 0) 75%), ` : ``} url('{content.media}');">
+      <div class="aspect-square w-[320px] text-white outline outline-outline-variant bg-center h-full bg-cover flex flex-col text-start items-start group/item justify-end p-6" style="background-image: {(content.title || content.description) ? `linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 75%), ` : ``} url('{content.media}');">
         <p class="font-semibold translate-y-5 group-hover/item:translate-y-0 transition-all">{content.title}</p>
         <p class="text-xs mt-2 opacity-0 translate-y-5 transition-all group-hover/item:opacity-100 group-hover/item:translate-y-0"><i class="ri-arrow-right-up-line"></i></p>
       </div>

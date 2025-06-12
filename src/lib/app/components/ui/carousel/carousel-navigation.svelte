@@ -46,7 +46,7 @@
 </script>
 
 {#if totalSlides > 0}
-	<div class="flex items-center justify-center space-x-2 p-4">
+	<div class="flex items-center justify-center space-x-2">
 		{#if !navigation}
 			<button
 				onclick={emblaCtx.scrollPrev}

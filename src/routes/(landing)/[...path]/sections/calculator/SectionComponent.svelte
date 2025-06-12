@@ -4,6 +4,7 @@
   import { setContext } from "svelte";
   import CalculatorView from "./_layouts/CalculatorView.svelte";
   import ResultView from "./_layouts/ResultView.svelte";
+  import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
 
   const {section} = $props();
   setContext('section', section)
@@ -16,13 +17,7 @@
   <div class="w-full max-w-screen-xl grid grid-cols-1 md:grid-cols-2 gap-lg py-3 px-6 lg:px-12">
     <div class="flex flex-col col-span-1">
       <div class="flex flex-col gap-lg">
-        <div class="flex flex-col gap-xs">
-          <div class="flex flex-col gap-xs">
-            {#if section.data.content.subtitle}<p class="text-xs md:text-sm">{section.data.content.subtitle}</p>{/if}
-            {#if section.data.content.title}<p class="text-lg md:text-xl font-bold">{section.data.content.title}</p>{/if}
-          </div>
-          {#if section.data.content.description}<p class="rtf-content m-base text-outline">{@html section.data.content.description}</p>{/if}
-        </div>
+        <SectionHeader header={section.data.content} defaultAlign="left" titleSize="xl"/>
         <CalculatorView
           {formData}
           onCalculate={() => viewIndex = 1}

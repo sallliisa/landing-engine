@@ -81,7 +81,7 @@
 
 {JSON.stringify(masterSearchQuery)}
 <div class="flex items-center justify-center">
-  <div class="flex flex-col gap-lg w-full max-w-screen-xl mx-auto px-6 md:px-12 py-3">
+  <div class="flex flex-col gap-lg w-full max-w-screen-xl mx-auto px-6 lg:px-12 py-3">
     <div class="flex flex-row items-center gap-4 justify-between">
       <div class="flex flex-row gap-base w-full">
         <div class="w-[160px]">

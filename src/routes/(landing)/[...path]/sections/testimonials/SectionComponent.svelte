@@ -1,8 +1,31 @@
 <script lang="ts">
+  import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
+
   const {section} = $props()
 </script>
 
 <div class="flex items-center justify-center w-full">
+  <div class="w-full max-w-screen-xl flex flex-col gap-6 pt-3 pb-6 px-6 lg:px-12">
+    <SectionHeader header={section.data.content} defaultAlign="center"/>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-base">
+      {#each section.data.gallery as item, i (item.id || `testimonial-${i}`)}
+        {@render testimonialItem(item)}
+      {/each}
+    </div>
+  </div>
+</div>
+
+{#snippet testimonialItem(data: any)}
+  <div class="h-full outline outline-outline-variant flex flex-col gap-6 justify-between p-8">
+    <p class="rtf-content m-base">{@html data.description}</p>
+    <div class="flex flex-row items-center gap-base">
+      <img src="{data.media}" class="w-[48px] rounded-full" alt="{data.title}"/>
+      <p>{data.title}</p>
+    </div>
+  </div>
+{/snippet}
+
+<!-- <div class="flex items-center justify-center w-full">
   <div class="w-full max-w-screen-xl flex flex-col gap-6 pt-3 pb-6 px-6 lg:px-12">
     {#if section.data.content.subtitle || section.data.content.title || section.data.content.description}
       <div class="flex flex-col gap-base w-full items-center justify-center">
@@ -14,11 +37,10 @@
       </div>
     {/if}
     {#if section.data.gallery?.length}
-      {@const itemsPerRowDesktop = 6} <!-- 3 cols * 2 items/col -->
-      {@const itemsPerRowTablet = 4}  <!-- 2 cols * 2 items/col -->
+      {@const itemsPerRowDesktop = 6}
+      {@const itemsPerRowTablet = 4} 
 
       <div class="flex flex-col gap-6">
-        <!-- Desktop: 3 columns, each with up to 2 items -->
         <div class="hidden lg:flex flex-col gap-6">
           {#each Array(Math.ceil(section.data.gallery.length / itemsPerRowDesktop)) as _, rowIndex}
             {@const rowItems = section.data.gallery.slice(rowIndex * itemsPerRowDesktop, (rowIndex + 1) * itemsPerRowDesktop)}
@@ -44,12 +66,11 @@
           {/each}
         </div>
 
-        <!-- Tablet: 2 columns, each with up to 2 items -->
         <div class="hidden md:flex lg:hidden flex-col gap-6">
           {#each Array(Math.ceil(section.data.gallery.length / itemsPerRowTablet)) as _, rowIndex}
             {@const rowItems = section.data.gallery.slice(rowIndex * itemsPerRowTablet, (rowIndex + 1) * itemsPerRowTablet)}
             <div class="flex flex-row gap-6">
-              {#each Array(2) as _, colIndex} <!-- Only 2 columns for tablet -->
+              {#each Array(2) as _, colIndex}
                 {@const colStartIndex = colIndex * 2}
                 {@const colItems = rowItems.slice(colStartIndex, colStartIndex + 2)}
                 {#if colItems.length > 0}
@@ -70,7 +91,6 @@
           {/each}
         </div>
 
-        <!-- Mobile: 1 column -->
         <div class="flex md:hidden flex-col gap-6">
           {#each section.data.gallery as item, i (item.id || `mobile-${i}`)}
             <div class="h-fit outline outline-outline-variant flex flex-col gap-6 p-8 rounded-lg">
@@ -85,4 +105,4 @@
       </div>
     {/if}
   </div>
-</div>
+</div> -->

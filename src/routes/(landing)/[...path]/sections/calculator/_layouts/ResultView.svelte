@@ -18,7 +18,7 @@
 </script>
 
 
-<div class="flex flex-col gap-base border-l border-outline-variant p-6">
+<div class="flex flex-col gap-base border-y md:border-y-0 md:border-l border-outline-variant p-6">
   {#if isFormValid}
     <div class="flex flex-col gap-base">
       <!-- <button class="text-sm text-start max-w-fit" onclick={onPrevious}><i class="ri-arrow-left-line"></i> <span class="underline">Kembali</span></button> -->

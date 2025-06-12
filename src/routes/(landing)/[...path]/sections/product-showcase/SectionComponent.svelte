@@ -1,5 +1,6 @@
 <script lang="ts">
-  import * as Carousel from "$lib/app/components/ui/carousel";
+  import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
+import * as Carousel from "$lib/app/components/ui/carousel";
   import ImagePreview from "$lib/app/components/ui/ImagePreview.svelte";
   import Tabs from "$lib/app/components/ui/tabs/Tabs.svelte";
 
@@ -10,27 +11,26 @@
 </script>
 
 <div class="flex items-center justify-center">
-  <div class="w-full max-w-screen-xl py-3 px-6 md:px-12 grid grid-cols-4">
-    <div class="col-span-1 flex flex-col gap-lg border-r border-outline-variant">
-      <div class="flex flex-col gap-base">
-        <div class="flex flex-col gap-xs">
-          <p>{section.data.content.subtitle}</p>
-          <p class="text-2xl md:text-3xl font-bold">{section.data.content.title}</p>
-        </div>
-        {#if section.data.content.description}<p class="m-base rtf-content text-sm text-outline">{@html section.data.content.description}</p>{/if}
+  <div class="w-full max-w-screen-xl py-3 px-6 lg:px-12 grid md:grid-cols-4 grid-cols-1 gap-y-lg md:gap-y-0">
+    <div class="col-span-1 flex flex-col gap-lg md:border-r md:border-outline-variant">
+      <div class="block md:hidden">
+        <SectionHeader header={section.data.content} defaultAlign="center"/>
       </div>
-      <div class="flex flex-col gap-base">
+      <div class="pr-4 hidden md:block">
+        <SectionHeader header={section.data.content} defaultAlign="left"/>
+      </div>
+      <div class="flex flex-row md:flex-col gap-base items-center justify-center md:items-start md:justify-start w-full">
         {#each section.data.productType as productType, index}
-          <button class="flex flex-row items-center gap-sm" onclick={() => activeProductTypeIndex = index}>
+          <button class="flex flex-row items-center gap-sm md:w-full" onclick={() => activeProductTypeIndex = index}>
             <p class="text-lg min-w-max {activeProductTypeIndex === index ? 'font-semibold' : 'text-outline'}">{productType.name}</p>
             {#if activeProductTypeIndex === index}
-              <div class="w-full h-[1px] bg-outline-variant"></div>
+              <div class="w-full h-[1px] hidden md:block bg-outline-variant"></div>
             {/if}
           </button>
         {/each}
       </div>
     </div>
-    <div class="col-span-3 flex flex-col gap-lg border-r border-outline-variant">
+    <div class="col-span-3 flex flex-col gap-lg md:border-r md:border-outline-variant">
       {#if section.data.productType[activeProductTypeIndex].sections.length > 0}
         <Tabs data={section.data.productType[activeProductTypeIndex].sections} bind:activeTabIndex={activeProductTypeDetailMenuIndex}>
           {#snippet tabItem(tabItem: any)}
@@ -40,7 +40,7 @@
       {/if}
       {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex]}
         <div class="flex flex-col gap-lg">
-          <div class="flex flex-col gap-base px-6">
+          <div class="flex flex-col gap-base md:px-6">
             <div class="flex flex-col gap-xs">
               <p class="text-2xl md:text-3xl font-bold">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.title}</p>
               {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}

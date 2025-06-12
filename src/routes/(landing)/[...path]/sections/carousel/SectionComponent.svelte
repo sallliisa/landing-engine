@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
   import * as Carousel from "$lib/app/components/ui/carousel";
 
   const {section} = $props()
@@ -6,23 +7,9 @@
 
 <div class="flex items-center justify-center w-full">
   <div class="w-full flex flex-col items-center justify-center gap-8 pt-3 pb-6">
-    {#if section.data.content.subtitle || section.data.content.title || section.data.content.description}
-      <div class="flex flex-row items-center justify-between max-w-screen-xl w-full px-6 lg:px-12">
-        <div class="flex flex-col gap-sm {section.data.content.url ? '' : 'items-center justify-center text-center'}">
-          <div class="flex flex-col gap-xs">
-            {#if section.data.content.subtitle}<p class="">{section.data.content.subtitle}</p>{/if}
-            {#if section.data.content.title}<p class="text-2xl md:text-3xl font-bold ">{section.data.content.title}</p>{/if}
-          </div>
-          {#if section.data.content.description}<p class="rtf-content m-base text-sm text-outline">{@html section.data.content.description}</p>{/if}
-        </div>
-        {#if section.data.content.url}
-          <div class="flex flex-row items-center gap-sm flex-shrink-0">
-            <a href={section.data.content.url} class="font-semibold underline">Lebih Banyak</a>
-            <i class="ri-arrow-right-line"></i>
-          </div>
-        {/if}
-      </div>
-    {/if}
+    <div class="w-full max-w-screen-xl px-6 lg:px-12">
+      <SectionHeader header={section.data.content}/>
+    </div>
     <Carousel.Root
       opts={{
         containScroll: false
@@ -46,7 +33,7 @@
 
 {#snippet carouselItem(item: any)}
   <Carousel.Item 
-    class="md:basis-1/3 basis-[80%] h-[450px] ml-4 bg-center bg-cover p-0 before:bg-white/5 active:before:bg-white/10 {item.url ? 'overlay' : ''}" 
+    class="2xl:basis-1/3 lg:basis-[67%] basis-[85%] h-[450px] ml-1 bg-center bg-cover p-0 before:bg-white/5 active:before:bg-white/10 {item.url ? 'overlay' : ''}" 
     style="background-image: linear-gradient(rgba(0, 0, 0, 0.33), rgba(0, 0, 0, 0.33)), linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 50%), url({item.media});"
   >
     {#if item.url}

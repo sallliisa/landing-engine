@@ -8,7 +8,7 @@
   let activeLevel1Index = $state<number | null>(null)
 </script>
 
-<div class="flex flex-col lg:hidden">
+<div class="flex flex-col lg:hidden fixed top-0 z-[50] w-full">
   <div class="w-full flex flex-row items-center bg-surface text-on-surface justify-center {isMenuExpanded ? 'border-transparent' : 'border-outline-variant'} transition-[border] duration-500 border-b z-[50]">
     <div class="flex flex-row items-center justify-between w-full px-6 py-3 max-w-screen-xl">
       {#if activeLevel1Index != null && isMenuExpanded}
@@ -36,7 +36,7 @@
         {#if isMenuExpanded}
           <button
             onclick={() => getLocale() === 'id' ? setLocale('en') : setLocale('id')}
-            class="bg-surface outline outline-outline-variant flex flex-row items-center justify-between gap-sm px-1.5 py-1 rounded-sm"
+            class="bg-surface outline outline-outline-variant flex flex-row items-center justify-between gap-sm px-1.5 py-1"
             transition:fade={{duration: 100, delay: 200}}
           >
             <img src="/assets/i18n/flags/{getLocale()}.svg" alt="{getLocale()}" class="rounded-full aspect-square w-3 outline outline-outline-variant object-center object-cover"/>

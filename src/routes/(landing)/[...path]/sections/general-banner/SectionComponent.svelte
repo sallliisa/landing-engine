@@ -27,10 +27,10 @@
 
 <div class="flex flex-col {section.meta.add_overlay ? 'text-surface' : 'text-on-surface'}">
   <div
-    class="h-fit md:h-[40vh] flex justify-center bg-cover bg-center border border-b border-outline-variant {isEmptyDescription ? 'items-end' : 'items-center'}"
+    class="h-fit lg:h-[50vh] flex justify-center bg-cover bg-center border border-b border-outline-variant {isEmptyDescription ? 'items-end' : 'items-center'}"
     style="background-image: {bgImage}"
   >
-    <div class="px-6 lg:px-12 {isEmptyDescription ? 'pb-12' : 'pt-12 lg:pt-24 pb-12'} flex {isEmptyDescription ? 'flex-col items-center text-center' : 'md:flex-row flex-col items-center'} gap-4 max-w-screen-xl w-full">
+    <div class="px-6 mt-[48px] lg:mt-0 lg:px-12 {isEmptyDescription ? 'pb-12 pt-24 lg:pt-0' : 'pt-12 lg:pt-24 pb-12'} flex {isEmptyDescription ? 'flex-col items-center text-center' : 'md:flex-row flex-col items-center'} gap-4 max-w-screen-xl w-full">
       <div class="w-full">
         <p class="text-2xl md:text-3xl font-bold">{section.data.contents[0].title}</p>
       </div>

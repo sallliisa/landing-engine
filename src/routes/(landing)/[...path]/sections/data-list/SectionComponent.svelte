@@ -87,7 +87,7 @@
               </div>
             {:else if section.meta.type === 'gallery'}
               <div class="h-4 w-full"></div>
-              <div class="flex flex-row gap-6 flex-wrap">
+              <div class="flex flex-row items-center justify-center sm:items-start sm:justify-start gap-6 flex-wrap">
                 {#each childSection.filteredContents as content}
                   <GalleryView {content}/>
                 {/each}

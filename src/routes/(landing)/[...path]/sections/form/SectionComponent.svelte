@@ -9,6 +9,7 @@
   import { onMount, setContext } from "svelte";
   import FormView from "./_layouts/FormView.svelte";
   import SuccessView from "./_layouts/SuccessView.svelte";
+  import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
 
   const {section} = $props();
   setContext('section', section)
@@ -19,15 +20,7 @@
   <div class="w-full max-w-screen-xl grid grid-cols-1 {section.meta.type === 'one-column' ? 'md:grid-cols-6 gap-lg' : 'md:grid-cols-2 gap-x-xl gap-y-lg'} py-3 px-6 lg:px-12">
     {#if section.meta.type === 'two-column'}
       <div class="flex flex-col gap-lg">
-        {#if section.data.content.subtitle || section.data.content.title || section.data.content.description}
-          <div class="flex flex-col gap-base w-full">
-            <div class="flex flex-col gap-xs">
-              {#if section.data.content.subtitle}<p>{section.data.content.subtitle}</p>{/if}
-              {#if section.data.content.title}<p class="text-2xl md:text-3xl font-bold">{section.data.content.title}</p>{/if}
-            </div>
-            {#if section.data.content.description}<p class="rtf-content m-base">{@html section.data.content.description}</p>{/if}
-          </div>
-        {/if}
+        <SectionHeader header={section.data.content}/>
         {#if section.data.contactDetail.visible}
           {@render contactDetail()}
         {/if}

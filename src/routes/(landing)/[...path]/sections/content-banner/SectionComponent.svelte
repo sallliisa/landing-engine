@@ -52,7 +52,7 @@
 </script>
 
 <div class="flex flex-col w-full bg-cover bg-center bg-no-repeat {section.meta.background_image ? 'text-surface' : 'text-on-surface'}" style="background-image: {bgImage}">
-  <div class="flex gap-lg px-6 md:px-12 lg:px-16 {section.data.gallery.length > 0 && section.meta.content_align === 'vertical' ? 'pt-6 md:pt-12 lg:pt-16' : 'p-6 md:p-12 lg:p-16'} {(contentAlignClassMap as any)[section.meta.content_align].container}">
+  <div class="flex gap-lg px-6 lg:px-12 {section.data.gallery.length > 0 && section.meta.content_align === 'vertical' ? 'pt-6 md:pt-12 lg:pt-16' : 'p-6 md:p-12 lg:p-16'} {(contentAlignClassMap as any)[section.meta.content_align].container}">
     <div class="flex flex-col gap-lg w-full {section.meta.content_align === 'horizontal' && section.data.gallery.length > 0 ? 'md:w-1/2' : 'w-full'} {section.data.gallery.length > 0 ? '' : 'pb-6 md:pb-0'} {(contentAlignClassMap as any)[section.meta.content_align].content.container}">
       <div class="flex flex-col gap-sm">
         <div class="flex flex-col gap-xs">
