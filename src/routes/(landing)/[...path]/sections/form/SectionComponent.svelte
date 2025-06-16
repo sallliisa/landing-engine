@@ -17,7 +17,7 @@
 </script>
 
 <div class="flex w-full items-center justify-center">
-  <div class="w-full max-w-screen-xl grid grid-cols-1 {section.meta.type === 'one-column' ? 'md:grid-cols-6 gap-lg' : 'md:grid-cols-2 gap-x-xl gap-y-lg'} py-3 px-6 lg:px-12">
+  <div class="w-full max-w-screen-xl grid grid-cols-1 {section.meta.type === 'one-column' ? 'md:grid-cols-6 gap-lg' : 'md:grid-cols-2 gap-x-xl gap-y-lg'} py-6 px-6 lg:px-12">
     {#if section.meta.type === 'two-column'}
       <div class="flex flex-col gap-lg">
         <SectionHeader header={section.data.content}/>
@@ -53,7 +53,7 @@
 {#snippet contactDetail()}
   <div class="col-span-2 outline outline-outline-variant p-6 flex flex-col gap-lg">
     {#if section.data.contactDetail.content.title || section.data.contactDetail.content.description}
-      <div class="flex flex-col gap-sm">
+      <div class="flex flex-col gap-xs">
         <p class="text-xl font-semibold">{section.data.contactDetail.content.title}</p>
         <p class="text-sm text-outline rtf-content m-base">{@html section.data.contactDetail.content.description}</p>
       </div>
@@ -62,9 +62,9 @@
       {#each section.data.contactDetail.contact as contactItem}
         <div class="flex flex-col gap-xs">
           <p class="text-xs text-outline">{contactItem.title}</p>
-          <div class="flex flex-row gap-sm">
+          <div class="flex flex-row items-center gap-sm">
             <i class={contactItem.media}></i>
-            <p>{contactItem.value}</p>
+            <a href={contactItem.url} class="{contactItem.url ? 'underline' : ''} text-sm">{contactItem.content}</a>
           </div>
         </div>
       {/each}

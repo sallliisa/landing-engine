@@ -18,7 +18,7 @@
 </script>
 
 
-<div class="flex flex-col gap-base border-y md:border-y-0 md:border-l border-outline-variant p-6">
+<div class="flex flex-col gap-base border-t md:border-t-0 md:border-l border-outline-variant px-0 sm:px-6 py-6">
   {#if isFormValid}
     <div class="flex flex-col gap-base">
       <!-- <button class="text-sm text-start max-w-fit" onclick={onPrevious}><i class="ri-arrow-left-line"></i> <span class="underline">Kembali</span></button> -->
@@ -39,7 +39,7 @@
       </tbody>
     </table>
   {:else}
-    <div class="flex flex-row items-center gap-sm text-outline">
+    <div class="flex flex-row items-center gap-base lg:gap-xs text-outline">
       <i class="ri-calculator-fill"></i>
       <p>Lengkapi formulir untuk mendapatkan simulasi kredit</p>
     </div>

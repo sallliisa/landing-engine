@@ -3,6 +3,7 @@
 import * as Carousel from "$lib/app/components/ui/carousel";
   import ImagePreview from "$lib/app/components/ui/ImagePreview.svelte";
   import Tabs from "$lib/app/components/ui/tabs/Tabs.svelte";
+  import { m } from "$lib/paraglide/messages";
 
   const {section} = $props()
 
@@ -11,7 +12,7 @@ import * as Carousel from "$lib/app/components/ui/carousel";
 </script>
 
 <div class="flex items-center justify-center">
-  <div class="w-full max-w-screen-xl py-3 px-6 lg:px-12 grid md:grid-cols-4 grid-cols-1 gap-y-lg md:gap-y-0">
+  <div class="w-full max-w-screen-xl py-6 px-6 lg:px-12 grid md:grid-cols-4 grid-cols-1 gap-y-lg md:gap-y-0">
     <div class="col-span-1 flex flex-col gap-lg md:border-r md:border-outline-variant">
       <div class="block md:hidden">
         <SectionHeader header={section.data.content} defaultAlign="center"/>
@@ -41,10 +42,20 @@ import * as Carousel from "$lib/app/components/ui/carousel";
       {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex]}
         <div class="flex flex-col gap-lg">
           <div class="flex flex-col gap-base md:px-6">
-            <div class="flex flex-col gap-xs">
-              <p class="text-2xl md:text-3xl font-bold">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.title}</p>
-              {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}
-                <p class="font-medium text-lg">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}</p>
+            <div class="flex flex-row items-start justify-between gap-base">
+              {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.title || section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}
+                <div class="flex flex-col gap-xs">
+                  <p class="text-2xl md:text-3xl font-bold">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.title}</p>
+                  {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}
+                    <p class="font-medium text-lg">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}</p>
+                  {/if}
+                </div>
+              {/if}
+              {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url}
+                <a href={section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url} class="flex flex-row items-center gap-sm flex-shrink-0">
+                  <p class="font-semibold underline">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url_text || m.learn_more()}
+                  <i class="ri-arrow-right-line"></i>
+                </a>
               {/if}
             </div>
             {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.description}
@@ -85,11 +96,12 @@ import * as Carousel from "$lib/app/components/ui/carousel";
               <Carousel.Root
                 opts={{
                   align: 'start',
-                  containScroll: false
+                  containScroll: false,
+                  dragFree: true
                 }}
                 class="w-full"
               >
-                <Carousel.Content class="py-4 ml-6">
+                <Carousel.Content class="py-4 ml-4">
                   {#each section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].gallery as gallery, i}
                     <ImagePreview src={gallery.media} title={gallery.title} description={gallery.description} class="h-full w-full">
                       {#snippet trigger()}

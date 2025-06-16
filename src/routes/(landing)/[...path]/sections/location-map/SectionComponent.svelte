@@ -7,8 +7,8 @@
 <div class="flex items-center justify-center">
   <div class="w-full max-w-screen-xl px-6 lg:px-12 py-3 flex flex-col gap-lg">
     <SectionHeader header={section.data.content}/>
-    <div class="flex flex-col md:grid md:grid-cols-4 outline outline-outline-variant min-h-[300px] md:h-[450px]">
-      <div class="embed-preview md:col-span-3">
+    <div class="flex flex-col md:grid md:grid-cols-3 lg:grid-cols-4 outline outline-outline-variant min-h-[300px] md:h-[450px]">
+      <div class="embed-preview md:col-span-2 lg:col-span-3">
         <div class="h-full w-full">
           {@html section.data.embed}
         </div>
@@ -18,7 +18,7 @@
           {#each section.data.childSections as childSection}
             <div class="flex flex-col gap-x-lg gap-y-base">
               <div class="flex flex-row items-center justify-center gap-sm pl-4 sticky left-0 ">
-                <p class="font-semibold min-w-max">{childSection.name}</p>
+                <p class="font-semibold whitespace-nowrap min-w-max">{childSection.name}</p>
                 <div class="h-[1px] flex-grow w-full bg-outline-variant"></div>
               </div>
               <div class="flex flex-row md:flex-col gap-sm gap-x-lg whitespace-nowrap min-w-max px-4">

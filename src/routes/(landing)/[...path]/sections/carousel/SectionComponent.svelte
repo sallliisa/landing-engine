@@ -8,13 +8,14 @@
 <div class="flex items-center justify-center w-full">
   <div class="w-full flex flex-col items-center justify-center gap-8 pt-3 pb-6">
     <div class="w-full max-w-screen-xl px-6 lg:px-12">
-      <SectionHeader header={section.data.content}/>
+      <SectionHeader header={section.data.content} defaultAlign="center"/>
     </div>
     <Carousel.Root
       opts={{
-        containScroll: false
+        containScroll: false,
+        dragFree: true
       }}
-      class="w-full"
+      class="w-full flex flex-col gap-8"
     >
       {#if section.meta.navigation_position == 'top'}
         {@render carouselNavigation()}
@@ -33,9 +34,17 @@
 
 {#snippet carouselItem(item: any)}
   <Carousel.Item 
-    class="2xl:basis-1/3 lg:basis-[67%] basis-[85%] h-[450px] ml-1 bg-center bg-cover p-0 before:bg-white/5 active:before:bg-white/10 {item.url ? 'overlay' : ''}" 
-    style="background-image: linear-gradient(rgba(0, 0, 0, 0.33), rgba(0, 0, 0, 0.33)), linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 50%), url({item.media});"
+    class="min-[124rem]:basis-1/3 2xl:basis-1/2 lg:basis-[67%] basis-[85%] h-[450px] ml-1 p-0 before:bg-white/5 active:before:bg-white/10 relative overflow-hidden {item.url ? 'overlay' : ''}"
   >
+    <div class="absolute inset-0 -z-10">
+      <img 
+        src={item.media} 
+        alt="" 
+        class="w-full h-full object-cover"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-black/33 to-black/33"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/33 to-transparent"></div>
+    </div>
     {#if item.url}
       <a
         href={item.url}
@@ -89,7 +98,7 @@
   {#if section.meta.use_title_as_navigation}
     <Carousel.Navigation>
       {#snippet navigation({scrollPrev, handleClick, scrollNext, currentIndex}: any)}
-        <div class="flex items-center justify-center space-x-2 p-4">
+        <div class="flex items-center justify-center space-x-4">
           {#each section.data.gallery as item, i}
             <button onclick={() => handleClick(i)} class="{currentIndex === i ? 'text-on-surface font-semibold' : 'text-outline'}">{item.title}</button>
           {/each}

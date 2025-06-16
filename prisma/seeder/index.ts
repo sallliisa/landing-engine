@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
 
 function parseSlug(text: string) {
   return text
@@ -1452,8 +1452,9 @@ const main = async () => {
         }
       }),
     ])
-
+    
   } catch (error) {
+    console.error('Error in seeder:', error);
     throw error;
   }
 };

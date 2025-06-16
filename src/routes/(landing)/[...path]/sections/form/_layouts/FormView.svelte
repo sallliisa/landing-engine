@@ -17,6 +17,8 @@
 
   let section = getContext<Record<string, any>>('section')
 
+  let isLoading = $state(false)
+
   let formData = $state<Record<string, any>>(section.data.formDataTemplate)
 
   const componentTypeMap: Record<string, any> = {
@@ -71,9 +73,12 @@
     e.preventDefault()
     if (!isFormClientValid) return
     try {
+      isLoading = true
       const {data} = await api.post({path: '/api/public/formSubmission/submit'}, formData)
+      isLoading = false
       await onSubmit()
     } catch (error: any) {
+      isLoading = false
       console.log('test2', error.error)
       formError = error.error
     }
@@ -103,7 +108,7 @@
       {/each}
     </div>
     <div class="flex flex-row items-center justify-end w-full">
-      <Button disabled={!isFormClientValid} type="submit">Kirim <i class="ml-2 ri-arrow-right-line"></i></Button>
+      <Button disabled={!isFormClientValid || isLoading} type="submit">Kirim <i class="ml-2 ri-arrow-right-line"></i></Button>
     </div>
   </form>
   <!-- {#if section.meta.show_hkr_contact_detail}

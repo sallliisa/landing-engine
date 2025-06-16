@@ -14,20 +14,22 @@
 
 
 <div class="flex w-full items-center justify-center">
-  <div class="w-full max-w-screen-xl grid grid-cols-1 md:grid-cols-2 gap-lg py-3 px-6 lg:px-12">
-    <div class="flex flex-col col-span-1">
-      <div class="flex flex-col gap-lg">
-        <SectionHeader header={section.data.content} defaultAlign="left" titleSize="xl"/>
-        <CalculatorView
-          {formData}
-          onCalculate={() => viewIndex = 1}
-        />
+  <div class="w-full max-w-screen-xl py-6 px-6 lg:px-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-lg w-full px-6 py-8 outline outline-outline-variant">
+      <div class="flex flex-col col-span-1">
+        <div class="flex flex-col gap-lg">
+          <SectionHeader header={section.data.content} defaultAlign="left" titleSize="xl"/>
+          <CalculatorView
+            {formData}
+            onCalculate={() => viewIndex = 1}
+          />
+        </div>
       </div>
+      <ResultView
+        onPrevious={() => viewIndex = 0}
+        {formData}
+      />
     </div>
-    <ResultView
-      onPrevious={() => viewIndex = 0}
-      {formData}
-    />
   </div>
 </div>
 

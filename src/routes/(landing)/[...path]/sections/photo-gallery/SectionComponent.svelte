@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-center">
-  <div class="flex flex-col w-full items-center justify-center max-w-screen-xl gap-base py-3 px-6 lg:px-12">
+  <div class="flex flex-col w-full items-center justify-center max-w-screen-xl gap-base py-6 px-6 lg:px-12">
     <div class="flex flex-col gap-xs items-center justify-center">
       <p class="text-center">{section.data.content.subtitle}</p>
       <p class="text-2xl font-bold text-center">{section.data.content.title}</p>

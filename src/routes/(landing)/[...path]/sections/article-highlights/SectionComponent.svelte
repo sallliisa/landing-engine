@@ -22,11 +22,11 @@
           </div>
         </a>
         <div class="flex flex-col gap-sm col-span-1 md:col-span-1 lg:col-span-6 lg:-mt-6">
-          {#each section.data.article.slice(1) as articleItem}, index (articleItem.id || index)}
+          {#each section.data.article.slice(1) as articleItem}
             <ArticleItem
               title={articleItem.title}
               excerpt={articleItem.excerpt}
-              created_at={formatDate(articleItem.created_at)}
+              created_at={new Date(articleItem.created_at).toJSON()}
               categories={articleItem.categories}
               thumbnail={articleItem.thumbnail}
               slug={articleItem.slug}

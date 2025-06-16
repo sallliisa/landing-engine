@@ -3,7 +3,7 @@
 </script>
 
 <div class="flex items-center justify-center w-full">
-  <div class="w-full max-w-screen-md flex flex-col gap-6 py-3 px-6 lg:px-12">
+  <div class="w-full max-w-screen-md flex flex-col gap-6 py-6 px-6 lg:px-12">
     {#if section.data.content.title || section.data.content.subtitle}
       <div class="flex flex-col gap-4">
         {#if section.data.content.title || section.data.content.subtitle}

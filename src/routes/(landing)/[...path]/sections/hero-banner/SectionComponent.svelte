@@ -141,7 +141,8 @@
         opts={{
           containScroll: false,
           align: 'center',
-          loop: true
+          loop: true,
+          dragFree: true
         }}
         class="w-full"
       >
@@ -171,7 +172,8 @@
       opts={{
         containScroll: false,
         align: 'center',
-        loop: true
+        loop: true,
+        dragFree: true
       }}
       class="w-full h-full"
     >
