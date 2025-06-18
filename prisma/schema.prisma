@@ -65,6 +65,12 @@ enum SectionTypeType {
   child
 }
 
+enum MenuItemRole {
+  home
+  document_request
+  help_center 
+}
+
 // MODELS
 model User {
   id       Int    @id @default(autoincrement())
@@ -100,7 +106,7 @@ model MenuItem {
   children       MenuItem[]            @relation("MenuItemChildren")
   menu_item_type MenuItemType          @default(page)
   visible        Boolean               @default(true)
-  primary        Boolean               @default(false)
+  role           MenuItemRole?         
   slug           String
   show_submenu_below_navbar Boolean @default(false)
   url            String?
@@ -391,7 +397,6 @@ model CompanyProfile {
   whatsapp  String?
   linkedin  String?
   logo      String?
-  brochure  String?
   subsidiaries Json[]
   product_categories Json[]
 

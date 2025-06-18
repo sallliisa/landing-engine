@@ -4,7 +4,7 @@ import type { Language, MenuItem, Prisma } from "@prisma/client";
 
 export default {
   allow: true,
-  fields: ['id', 'parent_id', 'primary', 'visible', 'level', 'order', 'menu_item_type', 'show_submenu_below_navbar', 'url', 'slug'],
+  fields: ['id', 'parent_id', 'role', 'visible', 'level', 'order', 'menu_item_type', 'show_submenu_below_navbar', 'url', 'slug'],
   types: {
     order: {
       type: 'number'
@@ -65,7 +65,7 @@ export default {
 
   update: {
     by: ['id'],
-    fields: ['visible', 'primary', 'show_submenu_below_navbar'],
+    fields: ['visible', 'role', 'show_submenu_below_navbar'],
     validation: {
       order: [
         {
@@ -76,17 +76,17 @@ export default {
     },
     lifecycle: {
       pre: async (body) => {
-        if (body.primary) {
+        if (body.role) {
           await prisma.menuItem.updateMany({
-            where: { primary: true },
-            data: { primary: false }
+            where: { role: body.role },
+            data: { role: null }
           });
         }
         if (body.visible == null) body.visible = false
         return body
       },
       post: async (body, data) => {
-        if (body.visible && body.primary) {
+        if (body.visible && body.role) {
           await prisma.menuItem.update({
             where: {id: body.id},
             data: {visible: false}
