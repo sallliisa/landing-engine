@@ -1,4 +1,4 @@
-import type { Handle } from '@sveltejs/kit';
+import { json, type Handle } from '@sveltejs/kit';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { sequence } from '@sveltejs/kit/hooks';
 import { addCorsHeaders, handleCorsPreflightRequest, handleProtectedRoute, isProtectedRoute } from '$lib/utils/routing';
@@ -24,7 +24,8 @@ export const customHandle: Handle = async ({ resolve, event }) => {
         const user = await handleProtectedRoute(request)
         if (user) event.locals.user = user
       } catch (err) {
-        return (err as Response)
+        console.error('Unhandled error in protected route:', err);
+        return json({ message: 'Internal Server Error' }, { status: 500 });
       }
     }
   }
