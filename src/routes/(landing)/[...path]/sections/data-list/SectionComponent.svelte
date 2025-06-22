@@ -40,7 +40,7 @@
 
 </script>
 <div class="w-full flex items-center justify-center">
-  <Accordion.Root type="multiple" bind:value={openItems} class="w-full {section.meta.type === 'list' ? 'max-w-screen-lg' : 'max-w-screen-xl'} flex flex-col {section.meta.title ? 'sm:gap-lg gap-sm' : 'gap-base'} py-6 px-6 lg:px-12">
+  <Accordion.Root type="multiple" bind:value={openItems} class="w-full {section.meta.type === 'list' ? 'max-w-screen-lg' : 'max-w-screen-xl'} flex flex-col {section.meta.title ? 'sm:gap-lg gap-sm' : 'gap-base'} py-6 lg:py-12 px-6 lg:px-12">
     {#if section.meta.searchable || section.meta.title}
       <div class="flex flex-col gap-base sm:flex-row items-center justify-between">
         {#if section.meta.title}<p class="text-xl font-bold whitespace-nowrap">{section.meta.title}</p>{/if}

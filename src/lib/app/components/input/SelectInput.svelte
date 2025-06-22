@@ -11,6 +11,7 @@
     placeholder = 'Pilih',
     helperMessage = null, // New prop
     errorMessage = null,         // New prop
+    ...restProps
   }: {
     value?: any,
     label?: string,
@@ -21,6 +22,7 @@
     placeholder?: string,
     helperMessage?: string | null, // New prop
     errorMessage?: string | null          // New prop
+    [key: string]: any;
   } = $props();
 
   const selectedLabel = $derived(
@@ -39,7 +41,7 @@
 </script>
 
 <Select.Root type="single" bind:value={getValue, setValue} items={data}>
-  <div class="flex flex-col gap-xs w-full">
+  <div class="flex flex-col gap-xs w-full {restProps.class}">
     {#if label}
       <Label.Root class="font-medium text-xs">
         {label}

@@ -410,3 +410,9 @@ model WebsiteVisit {
   user_agent String?
   visited_at DateTime @default(now())
 }
+
+model Collection {
+  name      String
+  code      String  @id @unique
+  data      Json[]  @default([])
+}

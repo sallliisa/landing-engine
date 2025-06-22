@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-center">
-  <div class="flex flex-col w-full items-center justify-center max-w-screen-xl gap-base py-6 px-6 lg:px-12">
+  <div class="flex flex-col w-full items-center justify-center max-w-screen-xl gap-base py-6 lg:py-12 px-6 lg:px-12">
     <div class="flex flex-col gap-xs items-center justify-center">
       <p class="text-center">{section.data.content.subtitle}</p>
       <p class="text-2xl font-bold text-center">{section.data.content.title}</p>
@@ -40,7 +40,7 @@
                 <div class="min-w-[320px] flex items-end justify-center bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.15),rgba(234,88,12,0.08)_50%,transparent_100%),linear-gradient(135deg,rgba(167,139,250,0.05)_0%,rgba(251,146,60,0.1)_100%),repeating-linear-gradient(45deg,rgba(255,255,255,0.03)_0px,rgba(255,255,255,0.03)_1px,transparent_1px,transparent_10px)]">
                   <img src={item.media} alt={item.title} class="aspect-[3/4] w-[240px] object-center object-cover"/>
                 </div>
-                <div class="flex flex-col gap-base py-8 px-12 col-span-3 justify-center">
+                <div class="flex flex-col gap-base py-6 lg:py-12 px-12 col-span-3 justify-center">
                   <div class="flex flex-col">
                     <p class="text-xl font-bold">{item.title}</p>
                     <p class="text-outline">{item.subtitle}</p>

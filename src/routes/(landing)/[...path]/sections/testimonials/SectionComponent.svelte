@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex items-center justify-center w-full">
-  <div class="w-full max-w-screen-xl flex flex-col gap-6 pt-3 pb-6 px-6 lg:px-12">
+  <div class="w-full max-w-screen-xl flex flex-col gap-6 py-6 lg:py-12 px-6 lg:px-12">
     <SectionHeader header={section.data.content} defaultAlign="center"/>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-base">
       {#each section.data.gallery as item, i (item.id || `testimonial-${i}`)}
@@ -19,14 +19,22 @@
   <div class="h-full outline outline-outline-variant flex flex-col gap-6 justify-between p-8">
     <p class="rtf-content m-base">{@html data.description}</p>
     <div class="flex flex-row items-center gap-base">
-      <img src="{data.media}" class="w-[48px] rounded-full" alt="{data.title}"/>
+      {#if data.media}
+        <img src="{data.media}" class="w-[48px] h-[48px] rounded-full object-cover" alt="{data.title}" />
+      {:else}
+        <div class="w-[48px] h-[48px] rounded-full bg-gray-200 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-gray-500">
+            <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+          </svg>
+        </div>
+      {/if}
       <p>{data.title}</p>
     </div>
   </div>
 {/snippet}
 
 <!-- <div class="flex items-center justify-center w-full">
-  <div class="w-full max-w-screen-xl flex flex-col gap-6 pt-3 pb-6 px-6 lg:px-12">
+  <div class="w-full max-w-screen-xl flex flex-col gap-6 py-6 lg:py-12 px-6 lg:px-12">
     {#if section.data.content.subtitle || section.data.content.title || section.data.content.description}
       <div class="flex flex-col gap-base w-full items-center justify-center">
         <div class="flex flex-col gap-xs items-center">

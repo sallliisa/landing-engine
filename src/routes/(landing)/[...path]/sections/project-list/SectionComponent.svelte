@@ -2,125 +2,133 @@
   import SearchBar from "$lib/app/components/input/SearchBar.svelte";
   import SelectInput from "$lib/app/components/input/SelectInput.svelte";
   import Tabs from "$lib/app/components/ui/tabs/Tabs.svelte";
+  import { getLocale } from "$lib/paraglide/runtime";
+  import { page } from "$app/stores";
+  import { onMount } from "svelte";
 
   const {section} = $props()
 
+  // State for search and filters
   let searchQuery = $state('')
-  let categorySearchQuery = $state<Record<string, any>>({})
-  let locationSearchQuery = $state<Record<string, any>>({})
   let categoryActiveTabIndex = $state(0)
   let locationActiveCode = $state('')
+
+  // Get initial values from URL query params
+  onMount(() => {
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+    
+    // Set initial category from URL
+    const categoryCode = params.get('category_code');
+    if (categoryCode) {
+      const allCategories = [{code: '', name_id: 'Semua Kategori'}, ...(section.data.filter.category || [])];
+      const categoryIndex = allCategories.findIndex(cat => cat.code === categoryCode);
+      if (categoryIndex !== -1) {
+        categoryActiveTabIndex = categoryIndex;
+      }
+    }
+    
+    // Set initial location from URL
+    const locationCode = params.get('location_code');
+    if (locationCode) {
+      locationActiveCode = locationCode;
+    }
+  });
   
-  // Sync categoryActiveTabIndex with categorySearchQuery
-  $effect(() => {
-    // Clear all categories first
-    Object.keys(categorySearchQuery).forEach(key => {
-      categorySearchQuery[key] = false;
-    });
-    
-    // Set the selected category to true
-    const selectedCategory = section.data.filter.category[categoryActiveTabIndex];
-    if (selectedCategory?.content) {
-      categorySearchQuery[selectedCategory.content] = true;
-    }
-  });
-
-  // Sync locationActiveCode with locationSearchQuery
-  $effect(() => {
-    // Clear all locations first
-    Object.keys(locationSearchQuery).forEach(key => {
-      locationSearchQuery[key] = false;
-    });
-    
-    // Set the selected location to true
-    const selectedLocation = section.data.filter.location.find((location: Record<string, any>) => location.content === locationActiveCode);
-    if (selectedLocation?.content) {
-      locationSearchQuery[selectedLocation.content] = true;
-    }
-  });
-
-  // Updated masterSearchQuery derivation
-  let masterSearchQuery = $derived.by<string[]>(() => {
-    const categoryKeywords = Object.entries(categorySearchQuery)
-      .filter(([_, value]) => value === true)
-      .map(([key]) => key.toLowerCase());
-
-    const locationKeywords = Object.entries(locationSearchQuery)
-      .filter(([_, value]) => value === true)
-      .map(([key]) => key.toLowerCase());
-
-    // Split the text from searchQuery into individual words
-    const textSearchKeywords = searchQuery
-      .toLowerCase()
-      .split(/\s+/) // Split by one or more whitespace characters
-      .filter(Boolean); // Remove any empty strings (e.g., from multiple spaces)
-
-    return [
-      ...categoryKeywords,
-      ...locationKeywords,
-      ...textSearchKeywords
-    ].filter(Boolean); // Ensures all keywords are non-empty strings
+  // Get the currently selected category code
+  const selectedCategoryCode = $derived.by(() => {
+    const allCategories = [{code: '', name_id: 'Semua Kategori'}, ...(section.data.filter.category || [])]
+    return allCategories[categoryActiveTabIndex]?.code || ''
   })
 
-  let filteredProjects = $derived.by<Record<string, any>[]>(() => {
+  // Filter projects based on search query, category, and location
+  const filteredProjects = $derived.by(() => {
+    if (!section.data.projects) return [];
+    
     return section.data.projects.filter((project: any) => {
-      const normalizedTitles = project.collection?.map((item: any) => 
-        item?.title ? item.title.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ").toLowerCase() : ""
-      ) || [];
-      const normalizedTitle = project.title
-        ? project.title.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ").toLowerCase()
-        : "";
+      // Filter by search query
+      const matchesSearch = searchQuery === '' || 
+        project.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        project.collection?.some((item: any) => 
+          item?.title?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
       
-      return masterSearchQuery.every(keyword => 
-        normalizedTitles.some((title: string) => title.includes(keyword)) || 
-        normalizedTitle.includes(keyword)
-      );
+      // Filter by category (if any category is selected)
+      const matchesCategory = !selectedCategoryCode || 
+        project.meta?.category === selectedCategoryCode
+      
+      // Filter by location (if any location is selected)
+      const matchesLocation = !locationActiveCode || 
+        project.meta?.location === locationActiveCode;
+      
+      return matchesSearch && matchesCategory && matchesLocation;
     });
+  })
+
+  let locale = $derived.by(getLocale)
+
+  const categoryFilterNameMap: Record<string, string> = $derived.by(() => {
+    return Object.fromEntries(section.data.filter.category?.map((item: any) => [item.code, locale === 'id' ? item.name_id : item.name_en]) || []);
+  })
+
+  const locationFilterNameMap: Record<string, string> = $derived.by(() => {
+    return Object.fromEntries(section.data.filter.location?.map((item: any) => [item.code, item.name]) || []);
   })
 </script>
 
-{JSON.stringify(masterSearchQuery)}
 <div class="flex items-center justify-center">
-  <div class="flex flex-col gap-lg w-full max-w-screen-xl mx-auto px-6 lg:px-12 py-3">
-    <div class="flex flex-row items-center gap-4 justify-between">
-      <div class="flex flex-row gap-base w-full">
-        <div class="w-[160px]">
-          <SelectInput data={section.data.filter.location} bind:value={locationActiveCode} view="title" pick="content" placeholder="Semua Lokasi"/>
-        </div>
-      </div>
-      <div class="w-[240px]">
-        <SearchBar bind:value={searchQuery}/>
-      </div>
+  <div class="flex flex-col gap-lg w-full max-w-screen-xl mx-auto px-6 lg:px-12 py-6 lg:py-12">
+    <div class="flex flex-col sm:flex-row items-center gap-4 justify-center sm:justify-between">
+      <SelectInput 
+        data={[{code: '', name: 'Semua Lokasi'}, ...(section.data.filter.location || [])]} 
+        bind:value={locationActiveCode} 
+        view="name" 
+        pick="code" 
+        placeholder="Semua Lokasi"
+        class="w-full sm:w-[280px]"
+      />
+      <SearchBar bind:value={searchQuery} placeholder="Cari proyek..." class="min-w-[280px] w-full sm:w-[280px]"/>
     </div>
-    <div class="w-full">
-      <Tabs data={section.data.filter.category} bind:activeTabIndex={categoryActiveTabIndex}>
+    <div class="w-full max-w-full overflow-auto flex items-center justify-center">
+      <Tabs data={[{code: '', name_id: 'Semua Kategori'}, ...(section.data.filter.category || [])]} bind:activeTabIndex={categoryActiveTabIndex}>
         {#snippet tabItem(item: Record<string, any>)}
-          <p>{item.title}</p>
+          <p>{item.name_id}</p>
         {/snippet}
       </Tabs>
     </div>
     {#if filteredProjects?.length}
-      {#each filteredProjects as project}
-        {@render projectItem(project)}
-      {/each}
+      <div class="flex flex-row flex-wrap items-center justify-center gap-sm">
+        {#each filteredProjects as project}
+          <a href={project.url} class="group/projectItem overlay before:bg-surface/5 active:before:bg-surface/10 flex flex-col p-6 items-start justify-end w-[290px] aspect-square bg-center bg-cover text-surface relative overflow-hidden" style="background-image: linear-gradient(rgba(0,0,0,0.24), rgba(0,0,0,0.24)), linear-gradient(to top, rgba(17,31,85,0.2) 0%, rgba(17,31,85,0) 50%), url('{project.media}');">
+            <div class="flex flex-col gap-xs z-10 w-full transition-all translate-y-[0px] group-hover/projectItem:translate-y-[-28px]">
+              <p class="text-lg font-bold">{project.title}</p>
+              <div class="flex flex-row items-center gap-base">
+                <div class="flex flex-row items-center gap-xs">
+                  <i class="ri-building-4-line"></i>
+                  <p class="text-sm">{categoryFilterNameMap[project.meta?.category]}</p>
+                </div>
+                <div class="flex flex-row items-center gap-xs">
+                  <i class="ri-map-pin-line"></i>
+                  <p class="text-sm">{locationFilterNameMap[project.meta?.location]}</p>
+                </div>
+              </div>
+            </div>
+            <div class="absolute bottom-6 left-6 right-6 flex flex-row items-center gap-2 text-sm font-medium opacity-0 group-hover/projectItem:opacity-100 translate-y-[28px] group-hover/projectItem:translate-y-0 transition-all">
+              <p>Lihat Selengkapnya</p>
+              <i class="ri-arrow-right-up-line"></i>
+            </div>
+          </a>
+        {/each}
+      </div>
     {:else}
-      <p class="text-outline">Proyek tidak ditemukan</p>
+      <p class="text-outline text-center py-6 lg:py-12">Proyek tidak ditemukan</p>
     {/if}
   </div>
 </div>
 
-{#snippet projectItem(project: Record<string, any>)}
-  <a href={project.url} class="overlay before:bg-surface/5 active:before:bg-surface/10 flex flex-col p-4 items-start justify-end w-[290px] aspect-square bg-center bg-cover text-surface" style="background-image: linear-gradient(rgba(0,0,0,0.24), rgba(0,0,0,0.24)), url({project.media});">
-    <div class="flex flex-col gap-xs">
-      <p class="text-lg font-bold">{project.title}</p>
-      <div class="flex flex-row items-center gap-base">
-        {#each project.collection as collectionItem}
-          <div class="flex flex-row items-center gap-xs">
-            <i class={collectionItem.media}></i>
-            <p>{collectionItem.title}</p>
-          </div>
-        {/each}
-      </div>
-    </div>
-  </a>
-{/snippet}
+<!-- {#each project.collection as collectionItem}
+  <div class="flex flex-row items-center gap-xs">
+    <i class={collectionItem.media}></i>
+    <p>{collectionItem.title}</p>
+  </div>
+{/each} -->

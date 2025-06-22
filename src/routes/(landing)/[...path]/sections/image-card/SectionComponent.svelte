@@ -28,8 +28,8 @@
 </div>
 
 {#snippet cardContent()}
-  <div class="flex flex-col gap-lg justify-between px-6 lg:px-8 py-6 w-full h-full">
-    <img class="max-w-[48px] aspect-square" src={section.data.content.media} alt={section.data.content.title}/>
+  <div class="flex flex-col gap-lg justify-between px-6 lg:px-8 py-6 lg:py-12 w-full h-full">
+    {#if section.data.content.media}<img class="max-w-[48px] aspect-square" src={section.data.content.media} alt={section.data.content.title}/>{/if}
     {#if section.data.content.title || section.data.content.subtitle || section.data.content.description}
       <div class="flex flex-col gap-sm translate-y-[16px] group-hover/carouselItem:translate-y-0 transition-all">
         <div class="flex flex-col gap-sm">

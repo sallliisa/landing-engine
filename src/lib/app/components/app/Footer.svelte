@@ -3,7 +3,7 @@
   import {page} from '$app/state';
 </script>
 
-<div class="h-[36px] w-full"></div>
+<!-- <div class="h-[36px] w-full"></div> -->
 <div
   class="w-full py-16 flex items-center justify-center border-t border-outline-variant bg-center bg-cover"
   style="background-image: linear-gradient(rgba(255, 249, 245, 0.52), rgba(255, 249, 245, 0.52)), url(/assets/image/background-texture.png);"

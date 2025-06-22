@@ -34,7 +34,7 @@
 </script>
 
 <div class="flex items-center justify-center w-full">
-  <div class="w-full {widthPresetClassMap[section.meta.width_preset]} flex flex-col gap-6 py-6 px-6 lg:px-12 {(contentAlignClassMap as any)[section.meta.content_align].container}">
+  <div class="w-full {widthPresetClassMap[section.meta.width_preset]} flex flex-col gap-6 py-6 lg:py-12 px-6 lg:px-12 {(contentAlignClassMap as any)[section.meta.content_align].container}">
     {#if section.data.content.media}
       <img src={section.data.content.media} alt={section.data.content.title} class="{!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
     {/if}
@@ -42,8 +42,8 @@
       <div class="flex flex-col gap-4 {(contentAlignClassMap as any)[section.meta.content_align].content.container}">
         {#if section.data.content.title || section.data.content.subtitle}
           <div class="flex flex-col gap-xs">
-            {#if section.data.content.subtitle}<p>{section.data.content.subtitle}</p>{/if}
-            {#if section.data.content.title}<p class="text-2xl font-bold">{section.data.content.title}</p>{/if}
+            {#if section.data.content.subtitle}<p class="{(contentAlignClassMap as any)[section.meta.content_align].content.content}">{section.data.content.subtitle}</p>{/if}
+            {#if section.data.content.title}<p class="text-2xl font-bold {(contentAlignClassMap as any)[section.meta.content_align].content.content}">{section.data.content.title}</p>{/if}
           </div>
         {/if}
         {#if section.data.content.description}

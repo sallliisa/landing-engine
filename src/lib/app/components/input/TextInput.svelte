@@ -21,7 +21,7 @@
   } = $props();
 </script>
 
-<div class="flex flex-col gap-xs w-full">
+<div class="flex flex-col gap-xs {restProps.class}">
   {#if label}
     <Label.Root class="font-medium text-xs">
       {label}
@@ -34,7 +34,6 @@
       bind:value={value}
       class="p-0 w-full border-none bg-transparent outline-none focus:ring-0 focus:ring-offset-0 {icon ? 'pl-2' : ''}"
       {placeholder}
-      {...restProps}
     />
   </div>
   {#if errorMessage}

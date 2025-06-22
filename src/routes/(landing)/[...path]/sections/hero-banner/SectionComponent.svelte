@@ -70,7 +70,7 @@
 <svelte:window bind:innerWidth={windowWidth} />
 
 <!-- Mobile Layout (hidden on md and up) -->
-<div class="md:hidden h-screen flex flex-col overflow-hidden bg-black/80 text-white">
+<div class="lg:hidden h-screen flex flex-col overflow-hidden bg-black/80 text-white">
   <!-- Combined Banner and Quick Access Section (80% height) -->
   <div class="h-4/5 relative">
     {#each section.data.banner as banner, i}
@@ -148,7 +148,7 @@
       >
         <Carousel.Content class="py-2">
           {#each section.data.quickAccess as quickAccess, i}
-            <Carousel.Item class="basis-[80%] pl-0">
+            <Carousel.Item class="basis-[80%] md:basis-[50%] pl-0">
               <a 
                 href={quickAccess.url}
                 class="w-full p-4 outline outline-outline bg-surface/90 backdrop-blur-sm text-on-surface flex items-center gap-3 transition-all duration-300 h-full"
@@ -179,7 +179,7 @@
     >
       <Carousel.Content class="h-full">
         {#each section.data.projectCategory as category, index}
-          <Carousel.Item class="basis-[80%] pl-0 h-full">
+          <Carousel.Item class="basis-[80%] md:basis-[50%] pl-0 h-full">
             <button
               class="h-full w-full flex flex-col justify-end p-3 relative overflow-hidden transition-all duration-300"
               style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url({category.media}); background-size: cover; background-position: center;"
@@ -202,7 +202,7 @@
 </div>
 
 <!-- Desktop Layout (hidden on mobile) -->
-<div class="hidden md:flex flex-col items-center justify-center">
+<div class="hidden lg:flex flex-col items-center justify-center">
   <div class="min-h-[80vh] h-[80vh] flex flex-col items-center justify-center bg-black/80 text-white w-full relative">
     <!-- Preload adjacent images -->
     {#each section.data.banner as banner, i}
@@ -261,7 +261,7 @@
         </div>
       {/each}
     </div>
-    <div class="md:px-6 px-12 py-6 flex flex-row items-center gap-base z-[10]">
+    <div class="md:px-6 px-12 py-6 lg:py-12 flex flex-row items-center gap-base z-[10]">
       {#each section.data.quickAccess as quickAccess}
         <a href={quickAccess.url} class="w-[384px] p-6 outline outline-outline bg-surface text-on-surface flex flex-row items-start gap-base overlay before:bg-on-surface/5 active:before:bg-on-surface/10">
           <i class="{quickAccess.media} text-lg"></i>
@@ -275,7 +275,8 @@
   </div>
   <div class="h-[20vh] w-full flex flex-row items-center gap-[0px]">
     {#each section.data.projectCategory as projectCategory, index}
-      <div
+      <a
+        href="{projectCategory.url}?category_code={projectCategory.url_text}"
         class="flex bg-center overlay before:bg-surface/5 active:before:bg-surface/10 relative bg-cover flex-col text-surface h-full items-start justify-end gap-xs {activeProjectCategoryIndex === index ? 'px-6 py-4' : 'px-1 py-1'} transition-all"
         style="
           background-image: linear-gradient(rgba(0,0,0,0.32), rgba(0,0,0,0.32)), linear-gradient(to top, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0) 100%), url({projectCategory.media});
@@ -307,7 +308,7 @@
               {projectCategory.title}
             </p>
           {/if}
-      </div>
+        </a>
     {/each}
   </div>
 </div>

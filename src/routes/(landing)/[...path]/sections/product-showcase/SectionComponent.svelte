@@ -12,7 +12,7 @@ import * as Carousel from "$lib/app/components/ui/carousel";
 </script>
 
 <div class="flex items-center justify-center">
-  <div class="w-full max-w-screen-xl py-6 px-6 lg:px-12 grid md:grid-cols-4 grid-cols-1 gap-y-lg md:gap-y-0">
+  <div class="w-full max-w-screen-xl py-6 lg:py-12 px-6 lg:px-12 grid md:grid-cols-4 grid-cols-1 gap-y-lg md:gap-y-0">
     <div class="col-span-1 flex flex-col gap-lg md:border-r md:border-outline-variant">
       <div class="block md:hidden">
         <SectionHeader header={section.data.content} defaultAlign="center"/>

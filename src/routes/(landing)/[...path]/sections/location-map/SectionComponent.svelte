@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex items-center justify-center">
-  <div class="w-full max-w-screen-xl px-6 lg:px-12 py-3 flex flex-col gap-lg">
+  <div class="w-full max-w-screen-xl px-6 lg:px-12 py-6 lg:py-12 flex flex-col gap-lg">
     <SectionHeader header={section.data.content}/>
     <div class="flex flex-col md:grid md:grid-cols-3 lg:grid-cols-4 outline outline-outline-variant min-h-[300px] md:h-[450px]">
       <div class="embed-preview md:col-span-2 lg:col-span-3">

@@ -6,8 +6,8 @@
 
   const isEmptyDescription = !section.data.contents[0].description || section.data.contents[0].description.trim() === '';
   const bgImage = section.meta.add_overlay 
-    ? `linear-gradient(rgba(0,0,0,0.33), rgba(0,0,0,0.33)), url(${section.meta.background_image})` 
-    : `url(${section.meta.background_image})`;
+    ? `linear-gradient(rgba(0,0,0,0.48), rgba(0,0,0,0.48)), url('${section.meta.background_image}')` 
+    : `url('${section.meta.background_image}')`;
 
   let initialNavbarTextColor = section.meta.add_overlay ? 'var(--colors-surface)' : 'var(--colors-on-surface)'; // Or your specific color values
 
@@ -27,7 +27,7 @@
 
 <div class="flex flex-col {section.meta.add_overlay ? 'text-surface' : 'text-on-surface'}">
   <div
-    class="h-fit lg:h-[50vh] flex justify-center bg-cover bg-center border border-b border-outline-variant {isEmptyDescription ? 'items-end' : 'items-center'}"
+    class="h-fit lg:h-[50vh] flex justify-center bg-cover bg-center border-b border-outline-variant {isEmptyDescription ? 'items-end' : 'items-center'}"
     style="background-image: {bgImage}"
   >
     <div class="px-6 mt-[48px] lg:mt-0 lg:px-12 {isEmptyDescription ? 'pb-12 pt-24 lg:pt-0' : 'pt-12 lg:pt-24 pb-12'} flex {isEmptyDescription ? 'flex-col items-center text-center' : 'md:flex-row flex-col items-center'} gap-4 max-w-screen-xl w-full">

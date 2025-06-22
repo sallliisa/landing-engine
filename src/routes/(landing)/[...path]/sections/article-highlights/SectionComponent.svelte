@@ -1,6 +1,7 @@
 <script lang="ts">
   import ArticleItem from "$lib/app/components/app/ArticleItem.svelte";
   import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
+  import { m } from "$lib/paraglide/messages";
   import { formatDate } from "$lib/utils/common";
 
   const {section} = $props()
@@ -9,7 +10,7 @@
 <div
   class="flex items-center justify-center bg-cover bg-center"
 >
-  <div class="w-full max-w-screen-xl flex flex-col py-3 gap-6 px-6 lg:px-12">
+  <div class="w-full max-w-screen-xl flex flex-col py-6 lg:py-12 gap-6 px-6 lg:px-12">
     <SectionHeader header={section.data.content}/>
     <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-lg">
       {#if section.data.article && section.data.article.length > 0}
@@ -34,7 +35,7 @@
           {/each}
         </div>
       {:else}
-        <p class="col-span-full text-center py-10">No articles to display.</p>
+        <p class="col-span-full text-start text-outline">{m.no_articles_to_display()}</p>
       {/if}
     </div>
   </div>

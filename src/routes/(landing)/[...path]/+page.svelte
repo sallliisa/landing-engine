@@ -17,7 +17,7 @@
   }
 </script>
 
-<div class="flex flex-col gap-6 col-span-4">
+<div class="flex flex-col col-span-4">
   {#each data.sections as section, index (section.id)}
     {#if section?.section_type_code}
       {#if section.visible}

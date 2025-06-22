@@ -6,14 +6,15 @@
 </script>
 
 <div class="flex items-center justify-center w-full">
-  <div class="w-full flex flex-col items-center justify-center gap-8 pt-3 pb-6">
+  <div class="w-full flex flex-col items-center justify-center gap-8 py-6 lg:py-12">
     <div class="w-full max-w-screen-xl px-6 lg:px-12">
       <SectionHeader header={section.data.content} defaultAlign="center"/>
     </div>
     <Carousel.Root
       opts={{
         containScroll: false,
-        dragFree: true
+        dragFree: true,
+        loop: true,
       }}
       class="w-full flex flex-col gap-8"
     >
@@ -66,7 +67,7 @@
         </div>
         <div class="flex flex-col gap-sm">
           <div class="rtf-content m-base translate-y-[28px] group-hover/carouselItem:translate-y-0 transition-all">{@html item.description}</div>
-          <div class="flex flex-row items-center gap-sm text-sm opacity-0 group-hover/carouselItem:opacity-100 translate-y-[28px] group-hover/carouselItem:translate-y-0 transition-all font-semibold">
+          <div class="flex flex-row items-center gap-sm text-sm opacity-0 group-hover/carouselItem:opacity-100 translate-y-[28px] group-hover/carouselItem:translate-y-0 transition-all">
             <p>Lebih Banyak</p>
             <i class="ri-arrow-right-up-line"></i>
           </div>

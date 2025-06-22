@@ -24,8 +24,8 @@ export const customHandle: Handle = async ({ resolve, event }) => {
         const user = await handleProtectedRoute(request)
         if (user) event.locals.user = user
       } catch (err) {
-        console.error('Unhandled error in protected route:', err);
-        return json({ message: 'Internal Server Error' }, { status: 500 });
+        console.error('No user:', err);
+        return json({ message: 'Forbidden' }, { status: 401 });
       }
     }
   }
