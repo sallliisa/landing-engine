@@ -292,13 +292,58 @@ export function parseSlug(text: string) {
 
 export function parseCode(text: string) {
   return text
-    .toLowerCase() // Convert to lowercase
-    .trim() // Remove leading and trailing whitespace
-    .normalize("NFD") // Normalize to decompose accents
-    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
-    .replace(/[^a-z0-9_\s]/g, "") // Remove non-alphanumeric characters (except spaces and underscores)
-    .replace(/\s+/g, "_") // Replace spaces with underscores
-    .replace(/_+/g, "_"); // Replace multiple underscores with a single underscore
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, ' ') // Replace multiple spaces with a single space
+    .trim()
+    .replace(/\s/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with a single hyphen
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+}
+
+export type ProcessFileUrlOptions = {
+  onTempFile?: (url: string) => Promise<string>;
+  onClearFile?: (url: string) => Promise<void>;
+  previousData?: Record<string, any>;
+};
+
+/**
+ * Recursively processes an object to handle file URLs.
+ * @param obj - The object to process
+ * @param options - Configuration options
+ * @returns A new object with processed file URLs
+ */
+export async function processFileUrls<T extends Record<string, any>>(
+  obj: T,
+  options: ProcessFileUrlOptions = {}
+): Promise<T> {
+  const { onTempFile, onClearFile, previousData } = options;
+  const result: Record<string, any> = Array.isArray(obj) ? [...obj] : { ...obj };
+
+  for (const [key, value] of Object.entries(result)) {
+    if (value === null || value === undefined) continue;
+
+    // Handle nested objects and arrays
+    if (typeof value === 'object') {
+      result[key] = await processFileUrls(value, options);
+      continue;
+    }
+
+    // Handle string values that might be file URLs
+    if (typeof value === 'string') {
+      if (isValidFileURL(value)) {
+        if (isValidTempFileURL(value) && onTempFile) {
+          // Process temp file URL
+          result[key] = await onTempFile(value);
+        } else if (!value && previousData?.[key] && onClearFile) {
+          // Handle file clearing
+          await onClearFile(previousData[key]);
+        }
+      }
+    }
+  }
+
+  return result as T;
 }
 
 export const debounce = (fn: Function, ms = 300) => {

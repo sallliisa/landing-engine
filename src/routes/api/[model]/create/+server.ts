@@ -1,6 +1,6 @@
 import { MESSAGE } from '$lib/app/api/constants.js'
 import { configs } from '$lib/app/api/models/_index.js'
-import { isValidFileURL, validateFields } from '$lib/utils/common'
+import { isValidFileURL, validateFields, processFileUrls } from '$lib/utils/common.js'
 import { saveFileFromTemp } from '$lib/utils/filestorage.js'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response'
@@ -36,12 +36,14 @@ export async function POST({params, request}) {
       await validateFields(body, mergedConfig.validation)
     }
 
-    // Handle file uploads and process fields
-    for (const field in body) {
-      // Process file URLs
-      if (typeof body[field] !== 'string') continue
-      if (isValidFileURL(body[field])) body[field] = await saveFileFromTemp(body[field])
-    }
+    // Process file uploads in the request body
+    body = await processFileUrls(body, {
+      onTempFile: async (url) => {
+        // If it's a temp file, move it to permanent storage
+        return await saveFileFromTemp(url);
+      }
+      // No need for onClearFile or previousData in create operation
+    });
 
     // Process config types (e.g., multi relationships)
     if (config.types) {
