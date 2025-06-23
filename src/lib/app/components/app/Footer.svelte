@@ -5,7 +5,6 @@
 </script>
 
 <!-- <div class="h-[36px] w-full"></div> -->
- {JSON.stringify()}
 <div
   class="w-full py-16 flex items-center justify-center border-t border-outline-variant bg-center bg-cover"
   style="background-image: linear-gradient(rgba(255, 249, 245, 0.52), rgba(255, 249, 245, 0.52)), url(/assets/image/background-texture.png);"
@@ -43,7 +42,7 @@
     </div>
     <div class="flex flex-col gap-base">
       <p class="font-bold text-xl">{m.products()}</p>
-      {#each page.data.collection.find(item => item.code === 'project-category')?.data as category}
+      {#each page.data.collection.find((item: any) => item.code === 'project-category')?.data as category}
         <a class="underline" href="/proyek?category_code={category.code}">{getLocale() === 'en' ? category.name_en : category.name_id}</a>
       {/each}
     </div>

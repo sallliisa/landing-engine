@@ -398,7 +398,6 @@ model CompanyProfile {
   linkedin  String?
   logo      String?
   subsidiaries Json[]
-  product_categories Json[]
 
   @@unique([id]) // Ensure only one record exists
   @@map("company_profile")

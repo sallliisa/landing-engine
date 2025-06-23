@@ -150,6 +150,21 @@ const main = async () => {
       }),
     });
 
+    const collection = await prisma.collection.createMany({
+      data: [
+        {
+          name: 'Kategori Proyek',
+          code: 'project-category',
+          data: [{"code":"apartment","name_en":"Apartment","name_id":"Apartemen"},{"code":"residential-housing","name_en":"Residential Housing","name_id":"Perumahan"},{"code":"hotel","name_en":"Hotel","name_id":"Hotel"},{"code":"property-management","name_en":"Building/Estate Management","name_id":"Building/Estate Management"},{"code":"rest-area","name_en":"Service Area","name_id":"Rest Area"}]
+        },
+        {
+          name: 'Lokasi Proyek',
+          code: 'project-location',
+          data: [{"code":"jakarta","name":"Jakarta"},{"code":"tangerang","name":"Tangerang"},{"code":"depok","name":"Depok"},{"code":"semarang","name":"Semarang"}]
+        }
+      ]
+    })
+
     const companyProfile = await prisma.companyProfile.create({
       data: {
         name: "HK Realtindo",

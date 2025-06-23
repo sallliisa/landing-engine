@@ -26,4 +26,7 @@ vite.config.ts.timestamp-*
 src/lib/paraglide
 
 # App
-/storage
+storage/private/*
+storage/public/*
+storage/temp/private/*
+storage/temp/public/*

@@ -6,14 +6,14 @@ export default {
   fields: [
     'id', 'name', 'slogan', 'address', 'email', 'phone',
     'facebook', 'instagram', 'twitter', 'youtube', 'whatsapp',
-    'subsidiaries', 'product_categories'
+    'subsidiaries'
   ],
 
   update: {
     fields: [
       'name', 'slogan', 'address', 'email', 'phone',
       'facebook', 'instagram', 'twitter', 'youtube', 'whatsapp',
-      'subsidiaries', 'product_categories'
+      'subsidiaries'
     ],
     validation: {
       email: [
