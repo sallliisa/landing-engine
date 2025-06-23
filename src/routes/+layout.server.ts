@@ -18,7 +18,7 @@ function getFullSlugPath(node: any): string {
 
 export async function load({params, url, untrack}) {
   console.log('RAN MAIN LAYOUT')
-  const [menu, primaryMenu, documentRequestMenu, helpCenterMenu, companyProfile] = await Promise.all([
+  const [menu, primaryMenu, documentRequestMenu, helpCenterMenu, companyProfile, collection] = await Promise.all([
     prisma.menuItem.findMany({
       where: {
         level: 1,
@@ -181,6 +181,7 @@ export async function load({params, url, untrack}) {
       }
     }),
     prisma.companyProfile.findFirst({where: {id: 1}}),
+    prisma.collection.findMany({})
   ])
 
   if (primaryMenu && untrack(() => url.pathname == '/')) {
@@ -208,6 +209,7 @@ export async function load({params, url, untrack}) {
     documentRequestMenuPath: documentRequestMenu ? getFullSlugPath(documentRequestMenu) : '',
     helpCenterMenuPath: helpCenterMenu ? getFullSlugPath(helpCenterMenu) : '',
     companyProfile,
+    collection
     // currentPageSectionGroup: currentPageSectionGroup
   }
 }

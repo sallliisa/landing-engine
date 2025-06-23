@@ -1,9 +1,11 @@
 <script lang="ts">
   import * as m from '$lib/paraglide/messages.js'
   import {page} from '$app/state';
+  import { getLocale } from '$lib/paraglide/runtime';
 </script>
 
 <!-- <div class="h-[36px] w-full"></div> -->
+ {JSON.stringify()}
 <div
   class="w-full py-16 flex items-center justify-center border-t border-outline-variant bg-center bg-cover"
   style="background-image: linear-gradient(rgba(255, 249, 245, 0.52), rgba(255, 249, 245, 0.52)), url(/assets/image/background-texture.png);"
@@ -34,15 +36,15 @@
       </div>
     </div>
     <div class="flex flex-col gap-base">
-      <p class="font-bold text-xl">Subsidiaries</p>
+      <p class="font-bold text-xl">{m.subsidiaries()}</p>
       {#each page.data.companyProfile.subsidiaries as subsidiary}
         <a class="underline" href={subsidiary.type === 'external' ? subsidiary.url : subsidiary.slug} target={subsidiary.type === 'external' ? '_blank' : undefined}>{subsidiary.name}</a>
       {/each}
     </div>
     <div class="flex flex-col gap-base">
-      <p class="font-bold text-xl">Offerings</p>
-      {#each page.data.companyProfile.product_categories as category}
-        <a class="underline" href={category.type === 'external' ? category.url : category.slug} target={category.type === 'external' ? '_blank' : undefined}>{category.name}</a>
+      <p class="font-bold text-xl">{m.products()}</p>
+      {#each page.data.collection.find(item => item.code === 'project-category')?.data as category}
+        <a class="underline" href="/proyek?category_code={category.code}">{getLocale() === 'en' ? category.name_en : category.name_id}</a>
       {/each}
     </div>
   </div>
