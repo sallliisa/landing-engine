@@ -2,6 +2,11 @@ import prisma from "$lib/utils/prisma";
 import type { Content } from "@prisma/client";
 
 export default {
+  types: {
+    media: {
+      type: 'file'
+    }
+  },
   detail: {
     allow: true,
     by: ['id']

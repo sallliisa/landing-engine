@@ -20,6 +20,7 @@ if (!fsSync.existsSync(publicStorageDir)) {
 }
 
 export async function saveFileFromTemp(url: string): Promise<string> {
+  console.log('moving file', url)
   const urlObject = new URL(url);
   const tempPath = path.resolve(process.cwd(), decodeURI(urlObject.pathname.substring(1)));
   
@@ -64,7 +65,7 @@ export async function readPublicStorageFile(url: string): Promise<Buffer> {
 
 export async function deleteFile(url: string): Promise<string> {
   const urlObject = new URL(url);
-  const filePath = path.resolve('static', decodeURI(urlObject.pathname.substring(1)));
+  const filePath = path.resolve(decodeURI(urlObject.pathname.substring(1)));
   try {
     await fs.access(filePath);
     await fs.unlink(filePath);

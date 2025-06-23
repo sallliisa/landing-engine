@@ -1,6 +1,6 @@
 import { MESSAGE } from '$lib/app/api/constants'
 import { configs } from '$lib/app/api/models/_index'
-import { buildWhereClause, isValidUrl, validateFields } from '$lib/utils/common.js'
+import { buildWhereClause, isValidFileURL, isValidTempFileURL, isValidUrl, validateFields } from '$lib/utils/common.js'
 import { deleteFile, saveFileFromTemp } from '$lib/utils/filestorage.js'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response.js'
@@ -50,20 +50,32 @@ export async function PUT(event) {
 
     if (!previousData) throw Error(MESSAGE.MODEL.RECORD.NOT_FOUND)
 
+    // Handle file uploads and process fields
+    for (const field in body) {
+      // Process file URLs
+      if (typeof body[field] !== 'string') continue;
+      
+      if (isValidFileURL(body[field])) {
+        if (isValidTempFileURL(body[field])) {
+          // If it's a temp file, move it to permanent storage
+          body[field] = await saveFileFromTemp(body[field])
+        } else if (!body[field] && previousData[field]) {
+          // If file field is being cleared and there was a previous file, delete it
+          await deleteFile(previousData[field])
+        }
+      }
+    }
+
+    // Process config types (e.g., multi relationships)
     if (config.types) {
       for (const field of Object.keys(config.types)) {
-        if (config.types[field]?.type === 'file') {
-          if (isValidUrl(body[field])) {
-            if (body[field]) body[field] = await saveFileFromTemp(body[field])
-            else if (previousData[field]) await deleteFile(previousData[field])
-          }
-        } else if (config.types[field]?.type === 'multi' && body[field]?.length) {
-          const by = config.types[field].params.by
+        if (config.types[field]?.type === 'multi' && Array.isArray(body[field]) && body[field].length) {
+          const by = config.types[field].params.by;
           body[field] = {
             set: body[field].map((item: any) => ({
               [by]: item[by]
             }))
-          }
+          };
         }
       }
     }

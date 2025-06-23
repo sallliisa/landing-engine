@@ -19,7 +19,7 @@
           <div class="flex flex-col gap-sm w-full">
             <p class="text-sm sm:text-base group-hover:underline">{formatDate(section.data.article[0].created_at)} • {section.data.article[0].categories.join(', ')}</p>
             <p class="text-lg sm:text-xl font-bold group-hover:underline">{section.data.article[0].title}</p>
-            <p class="text-sm text-outline group-hover:underline">{section.data.article[0].excerpt}</p>
+            <p class="text-sm text-outline group-hover:underline line-clamp-2 overflow-hidden text-ellipsis">{section.data.article[0].excerpt}</p>
           </div>
         </a>
         <div class="flex flex-col gap-sm col-span-1 md:col-span-1 lg:col-span-6 lg:-mt-6">

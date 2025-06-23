@@ -1,6 +1,6 @@
 import { MESSAGE } from '$lib/app/api/constants.js'
 import { configs } from '$lib/app/api/models/_index.js'
-import { validateFields } from '$lib/utils/common'
+import { isValidFileURL, validateFields } from '$lib/utils/common'
 import { saveFileFromTemp } from '$lib/utils/filestorage.js'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response'
@@ -36,13 +36,18 @@ export async function POST({params, request}) {
       await validateFields(body, mergedConfig.validation)
     }
 
-    // Handle file uploads
+    // Handle file uploads and process fields
+    for (const field in body) {
+      // Process file URLs
+      if (typeof body[field] !== 'string') continue
+      if (isValidFileURL(body[field])) body[field] = await saveFileFromTemp(body[field])
+    }
+
+    // Process config types (e.g., multi relationships)
     if (config.types) {
       for (const field of Object.keys(config.types)) {
-        if (config.types[field]?.type === 'file' && body[field]) {
-          body[field] = await saveFileFromTemp(body[field])
-        } else if (config.types[field]?.type === 'multi' && body[field]?.length) {
-          const by = config.types[field].params.by
+        if (config.types[field]?.type === 'multi' && Array.isArray(body[field]) && body[field].length) {
+          const by = config.types[field].params.by;
           body[field] = {
             connect: body[field].map((item: any) => ({
               [by]: item[by]

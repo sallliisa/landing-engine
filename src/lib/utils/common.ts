@@ -147,6 +147,57 @@ export function isFileURL(url: string) {
   return !!url.split(/[#?]/)[0].split('.').pop()?.trim();
 }
 
+export function isOfSameOrigin(url: string) {
+  try {
+    const urlObj = new URL(url);
+    const appUrl = process.env.PUBLIC_APP_URL || '';
+    
+    // If PUBLIC_APP_URL is set, verify the origin matches
+    if (appUrl) {
+      const appOrigin = new URL(appUrl).origin;
+      if (urlObj.origin !== appOrigin) {
+        return false;
+      }
+    }
+    
+    return true;
+  } catch (e) {
+    // If URL parsing fails, it's not a valid URL
+    return false;
+  }
+}
+
+export function isValidTempFileURL(url: string): boolean {
+  try {
+    const urlObj = new URL(url);
+    
+    // If PUBLIC_APP_URL is set, verify the origin matches
+    if (!isOfSameOrigin(url)) return false
+    
+    // Check if path matches /storage/temp/(public|private)/...
+    const tempPathRegex = /^\/storage\/temp\/(public|private)\/.+/;
+    return tempPathRegex.test(urlObj.pathname);
+  } catch (e) {
+    // If URL parsing fails, it's not a valid temp file URL
+    return false;
+  }
+}
+
+export function isValidFileURL(url: string): boolean {
+  try {
+    const urlObj = new URL(url);
+    
+    // If PUBLIC_APP_URL is set, verify the origin matches
+    if (!isOfSameOrigin(url)) return false
+    
+    // Check if path starts with /storage/
+    return urlObj.pathname.startsWith('/storage/');
+  } catch (e) {
+    // If URL parsing fails, it's not a valid file URL
+    return false;
+  }
+}
+
 export function parseSearchParams(searchParams: URLSearchParams): Record<string, unknown> {
   const parsed: Record<string, unknown> = {};
 
