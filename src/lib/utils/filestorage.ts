@@ -30,11 +30,12 @@ export async function saveFileFromTemp(url: string): Promise<string> {
   // Extract the destination directory (public/private) from the path
   const pathSegments = relativePath.split(/[\\/]+/); // Handle both / and \ as separators
   const storageIndex = pathSegments.indexOf('storage');
-  if (storageIndex === -1 || storageIndex === pathSegments.length - 1) {
-    throw new Error('Invalid temp file path: storage directory not found');
+  if (storageIndex === -1 || storageIndex >= pathSegments.length - 2) {
+    throw new Error('Invalid temp file path: storage directory structure not found');
   }
   
-  const destination = pathSegments[storageIndex + 1]; // Should be 'public' or 'private'
+  // In the path storage/temp/public/..., we want to get 'public'
+  const destination = pathSegments[storageIndex + 2];
   if (destination !== 'public' && destination !== 'private') {
     throw new Error(`Invalid destination directory: ${destination}. Must be 'public' or 'private'`);
   }
