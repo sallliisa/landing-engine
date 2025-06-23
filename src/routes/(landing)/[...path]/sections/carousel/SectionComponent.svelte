@@ -14,7 +14,7 @@
       opts={{
         containScroll: false,
         dragFree: true,
-        loop: true,
+        loop: section.meta.loop,
       }}
       class="w-full flex flex-col gap-8"
     >
