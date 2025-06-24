@@ -198,11 +198,43 @@ export function isValidFileURL(url: string): boolean {
   }
 }
 
-export function parseSearchParams(searchParams: URLSearchParams): Record<string, unknown> {
+export function parseSearchParams(
+  searchParams: URLSearchParams | string | null | undefined
+): Record<string, unknown> {
   const parsed: Record<string, unknown> = {};
 
-  for (const [key, value] of searchParams.entries()) {
-    parsed[key] = castValue(value);
+  // Handle null/undefined input
+  if (searchParams == null) {
+    return parsed;
+  }
+
+  // Convert string to URLSearchParams if needed
+  const params = typeof searchParams === 'string' 
+    ? new URLSearchParams(searchParams)
+    : searchParams;
+
+  // Handle case where URLSearchParams is empty
+  if (params.toString().trim() === '') {
+    return parsed;
+  }
+
+  // Process each parameter
+  for (const [key, value] of params.entries()) {
+    if (!key) continue; // Skip empty keys
+    
+    const trimmedValue = value.trim();
+    
+    // Handle multiple values for the same key by converting to array
+    if (key in parsed) {
+      const existingValue = parsed[key];
+      if (Array.isArray(existingValue)) {
+        existingValue.push(castValue(trimmedValue));
+      } else {
+        parsed[key] = [existingValue, castValue(trimmedValue)];
+      }
+    } else {
+      parsed[key] = castValue(trimmedValue);
+    }
   }
 
   return parsed;
