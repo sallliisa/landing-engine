@@ -292,13 +292,13 @@ export function parseSlug(text: string) {
 
 export function parseCode(text: string) {
   return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '') // Remove special characters
-    .replace(/\s+/g, ' ') // Replace multiple spaces with a single space
-    .trim()
-    .replace(/\s/g, '-') // Replace spaces with hyphens
-    .replace(/-+/g, '-') // Replace multiple hyphens with a single hyphen
-    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+    .toLowerCase() // Convert to lowercase
+    .trim() // Remove leading and trailing whitespace
+    .normalize("NFD") // Normalize to decompose accents
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+    .replace(/[^a-z0-9_\s]/g, "") // Remove non-alphanumeric characters (except spaces and underscores)
+    .replace(/\s+/g, "_") // Replace spaces with underscores
+    .replace(/_+/g, "_"); // Replace multiple underscores with a single underscore
 }
 
 export type ProcessFileUrlOptions = {
