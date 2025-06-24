@@ -12,6 +12,7 @@
   import TextareaInput from "$lib/app/components/input/TextareaInput.svelte";
   import TextInput from "$lib/app/components/input/TextInput.svelte";
   import { m } from "$lib/paraglide/messages";
+  import formField from "$lib/app/api/models/formField";
 
   const {onSubmit} = $props()
 
@@ -38,6 +39,7 @@
       if (Object.prototype.hasOwnProperty.call(searchParams, key)) {
         const element = searchParams[key];
         const formField = formData.data.find((formField: any) => formField.code === key)
+        console.log('formField', formField, element)
         if (formField) {
           formField.value = element
         }
@@ -86,6 +88,7 @@
 </script>
 
 <div class="grid grid-cols-6 gap-lg">
+  {JSON.stringify(formData.data)}
   <form class="flex flex-col gap-4 {section.meta.show_hkr_contact_detail ? 'col-span-4' : 'col-span-full'}" onsubmit={submitForm}>
     <div class="grid grid-cols-12 gap-4 max-w-screen-xl w-full">
       {#each formData.data as formField}
