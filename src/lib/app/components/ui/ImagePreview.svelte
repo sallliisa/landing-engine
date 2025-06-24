@@ -37,13 +37,13 @@
       class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-[100] bg-black/80"
     />
     <Dialog.Content
-      class="bg-transparent flex items-center justify-center top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] shadow-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 h-fit data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed inset-0 w-full md:w-fit z-[100] p-4 sm:p-6 md:inset-auto md:left-[50%] md:top-[50%] md:translate-x-[-50%] md:translate-y-[-50%] md:max-w-[90vw] md:max-h-[90vh] md:p-0"
+      class="bg-transparent flex items-center justify-center top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 h-fit data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed inset-0 w-full md:w-fit z-[100] p-4 sm:p-6 md:inset-auto md:left-[50%] md:top-[50%] md:translate-x-[-50%] md:translate-y-[-50%] md:max-w-[90vw] md:max-h-[90vh] md:p-0"
     >
-      <div class="relative w-full bg-surface shadow-xl overflow-y-auto flex flex-col md:m-0 md:w-auto md:max-w-none md:max-h-none md:bg-transparent md:shadow-none md:rounded-none md:overflow-visible">
+      <div class="relative w-full bg-surface overflow-y-auto flex flex-col md:m-0 md:w-auto md:max-w-none md:max-h-none md:bg-transparent md:rounded-none md:overflow-visible">
         <img 
           src={src} 
           alt={alt} 
-          class="w-full h-auto object-cover max-h-[50vh] block md:max-h-[90vh] md:max-w-[90vw] md:shadow-lg md:object-contain"
+          class="w-full h-auto object-cover max-h-[50vh] block md:max-h-[90vh] md:max-w-[90vw] md:object-contain"
         />
         {#if title || description}
           <div class="p-4 text-on-surface md:text-surface flex flex-col gap-xs md:absolute md:bottom-0 md:left-0 md:right-0 md:p-6 md:bg-gradient-to-t from-black/60 to-transparent">

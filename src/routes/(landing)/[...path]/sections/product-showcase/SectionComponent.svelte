@@ -77,6 +77,8 @@ import * as Carousel from "$lib/app/components/ui/carousel";
                     </div>
                   </div>
                 </div>
+              {:else if content.media_type === 'panorama'}
+                <img src={content.media} alt={content.title} class="w-full h-full object-cover object-center"/>
               {/if}
             {/if}
           </div>
