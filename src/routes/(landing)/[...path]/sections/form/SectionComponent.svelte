@@ -11,12 +11,15 @@
   import SuccessView from "./_layouts/SuccessView.svelte";
   import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
 
-  const {section} = $props();
-  setContext('section', section)
-  let viewIndex = $state<0 | 1>(0)
+  // const {section} = $props();
+  // setContext('section', section)
+  // let viewIndex = $state<0 | 1>(0)
 </script>
 
-<div class="flex w-full items-center justify-center">
+
+hello test
+
+<!-- <div class="flex w-full items-center justify-center">
   <div class="w-full max-w-screen-xl grid grid-cols-1 {section.meta.type === 'one-column' ? 'md:grid-cols-6 gap-lg' : 'md:grid-cols-2 gap-x-xl gap-y-lg'} py-6 lg:py-12 px-6 lg:px-12">
     {#if section.meta.type === 'two-column'}
       <div class="flex flex-col gap-lg">
@@ -48,9 +51,9 @@
       {@render contactDetail()}
     {/if}
   </div>
-</div>
+</div> -->
 
-{#snippet contactDetail()}
+<!-- {#snippet contactDetail()}
   <div class="col-span-2 outline outline-outline-variant p-6 flex flex-col gap-lg">
     {#if section.data.contactDetail.content.title || section.data.contactDetail.content.description}
       <div class="flex flex-col gap-xs">
@@ -72,11 +75,7 @@
         {#each section.data.contactDetail.socialMedia as socialMedia}
           <a href="https://{socialMedia.url}" aria-label="Social Media" target="_blank"><i class="{socialMedia.media} text-xl"></i></a>
         {/each}
-        <!-- {#if page.data.companyProfile?.facebook}<a href="https://{page.data.companyProfile?.facebook}" aria-label="Facebook" target="_blank"><i class="ri-facebook-circle-fill text-xl"></i></a>{/if}
-        {#if page.data.companyProfile?.instagram}<a href="https://{page.data.companyProfile?.instagram}" aria-label="Instagram"><i class="ri-instagram-fill text-xl"></i></a>{/if}
-        {#if page.data.companyProfile?.twitter}<a href="https://{page.data.companyProfile?.twitter}" aria-label="LinkedIn"><i class="ri-linkedin-box-fill text-xl"></i></a>{/if}
-        {#if page.data.companyProfile?.youtube}<a href="https://{page.data.companyProfile?.youtube}" aria-label="YouTube"><i class="ri-youtube-fill text-xl"></i></a>{/if} -->
       </div>
     </div>
   </div>
-{/snippet}
+{/snippet} -->
