@@ -19,7 +19,7 @@
 </div>
 
 {#snippet cardContent(child: any)}
-  <div class="flex flex-col gap-lg justify-between px-6 lg:px-8 py-9 lg:py-9 w-full h-full overlay before:bg-surface/5 active:before:bg-surface/10">
+  <div class="flex flex-col gap-lg justify-between px-6 lg:px-8 py-9 lg:py-9 w-full h-full {child.url ? 'overlay before:bg-surface/5 active:before:bg-surface/10' : ''}">
     {#if child.attachment}<img class="max-w-[48px] aspect-square" src={child.attachment} alt={child.title}/>{/if}
     {#if child.title || child.subtitle || child.description}
       <div class="flex flex-col gap-sm relative mt-[28px]">
