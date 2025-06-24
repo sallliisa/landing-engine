@@ -19,11 +19,11 @@
 </div>
 
 {#snippet cardContent(child: any)}
-  <div class="flex flex-col gap-lg justify-between px-6 lg:px-8 py-3 lg:py-9 w-full h-full">
+  <div class="flex flex-col gap-lg justify-between px-6 lg:px-8 py-9 lg:py-9 w-full h-full overlay before:bg-surface/5 active:before:bg-surface/10">
     {#if child.attachment}<img class="max-w-[48px] aspect-square" src={child.attachment} alt={child.title}/>{/if}
     {#if child.title || child.subtitle || child.description}
-      <div class="flex flex-col gap-sm">
-        <div class="flex flex-col gap-sm translate-y-[28px] group-hover/carouselItem:translate-y-[0px] transition-all">
+      <div class="flex flex-col gap-sm relative mt-[28px]">
+        <div class="flex relative flex-col gap-sm group-hover/carouselItem:translate-y-[-28px] transition-all">
           {#if child.title || child.subtitle}
             <div class="flex flex-col gap-xs">
               {#if child.subtitle}<p>{child.subtitle}</p>{/if}
@@ -31,10 +31,10 @@
             </div>
           {/if}
           {#if child.description}
-            <p class="rtf-content m-base">{@html child.description}</p>
+            <p class="rtf-content m-base text-sm md:text-base">{@html child.description}</p>
           {/if}
         </div>
-        <p class="text-sm translate-y-[28px] opacity-0 group-hover/carouselItem:translate-y-0 group-hover/carouselItem:opacity-100 transition-all">{child.url_text || m.learn_more()} <i class="ml-1 ri-arrow-right-up-line"></i></p>
+        <p class="text-sm translate-y-[28px] opacity-0 group-hover/carouselItem:translate-y-0 group-hover/carouselItem:opacity-100 transition-all absolute bottom-0 left-0">{child.url_text || m.learn_more()} <i class="ml-1 ri-arrow-right-up-line"></i></p>
       </div>
     {/if}
   </div>
