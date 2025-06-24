@@ -3,7 +3,9 @@
 import * as Carousel from "$lib/app/components/ui/carousel";
   import ImagePreview from "$lib/app/components/ui/ImagePreview.svelte";
   import Tabs from "$lib/app/components/ui/tabs/Tabs.svelte";
+  import Panorama from "$lib/app/components/util/Panorama.svelte";
   import { m } from "$lib/paraglide/messages";
+  import PanoramaView from "./_layouts/PanoramaView.svelte";
 
   const {section} = $props()
 
@@ -61,7 +63,7 @@ import * as Carousel from "$lib/app/components/ui/carousel";
             {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.description}
               <p class="rtf-content m-base">{@html section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.description}</p>
             {/if}
-            {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.media}
+            {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.media_type}
               {@const content = section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content}
               {#if content.media_type === 'image'}
                 <img src={content.media} alt={content.title} class="w-full h-full object-cover object-center"/>
@@ -78,7 +80,7 @@ import * as Carousel from "$lib/app/components/ui/carousel";
                   </div>
                 </div>
               {:else if content.media_type === 'panorama'}
-                <img src={content.media} alt={content.title} class="w-full h-full object-cover object-center"/>
+                <PanoramaView collection={content.collection}/>
               {/if}
             {/if}
           </div>
