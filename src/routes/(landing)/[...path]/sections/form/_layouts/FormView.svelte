@@ -88,7 +88,6 @@
 </script>
 
 <div class="grid grid-cols-6 gap-lg">
-  {JSON.stringify(formData.data)}
   <form class="flex flex-col gap-4 {section.meta.show_hkr_contact_detail ? 'col-span-4' : 'col-span-full'}" onsubmit={submitForm}>
     <div class="grid grid-cols-12 gap-4 max-w-screen-xl w-full">
       {#each formData.data as formField}
