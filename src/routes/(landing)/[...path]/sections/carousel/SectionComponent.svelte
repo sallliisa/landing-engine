@@ -60,13 +60,13 @@
             {#each item.collection as collectionItem}
               <div class="flex flex-row items-center gap-sm">
                 <i class={collectionItem.media}></i>
-                <p>{collectionItem.title}</p>
+                <p class="text-sm md:text-base">{collectionItem.title}</p>
               </div>
             {/each}
           </div>
         </div>
         <div class="flex flex-col gap-sm">
-          <div class="rtf-content m-base translate-y-[28px] group-hover/carouselItem:translate-y-0 transition-all">{@html item.description}</div>
+          <div class="rtf-content m-base translate-y-[28px] group-hover/carouselItem:translate-y-0 transition-all text-sm md:text-base">{@html item.description}</div>
           <div class="flex flex-row items-center gap-sm text-sm opacity-0 group-hover/carouselItem:opacity-100 translate-y-[28px] group-hover/carouselItem:translate-y-0 transition-all">
             <p>Lebih Banyak</p>
             <i class="ri-arrow-right-up-line"></i>
@@ -84,12 +84,12 @@
             {#each item.collection as collectionItem}
               <div class="flex flex-row items-center gap-sm">
                 <i class={collectionItem.media}></i>
-                <p>{collectionItem.title}</p>
+                <p class="text-sm md:text-base">{collectionItem.title}</p>
               </div>
             {/each}
           </div>
         </div>
-        <div class="rtf-content m-base">{@html item.description}</div>
+        <div class="rtf-content m-base text-sm md:text-base">{@html item.description}</div>
       </div>
     {/if}
   </Carousel.Item>
