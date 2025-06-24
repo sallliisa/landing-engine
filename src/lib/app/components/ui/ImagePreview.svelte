@@ -46,7 +46,7 @@
           class="w-full h-auto object-cover max-h-[50vh] block md:max-h-[90vh] md:max-w-[90vw] md:shadow-lg md:object-contain"
         />
         {#if title || description}
-          <div class="p-4 text-on-surface md:text-surface flex flex-col gap-xs md:absolute md:bottom-0 md:left-0 md:right-0 md:p-6 md:bg-gradient-to-t from-black/60 to-transparent md:rounded-b-xl">
+          <div class="p-4 text-on-surface md:text-surface flex flex-col gap-xs md:absolute md:bottom-0 md:left-0 md:right-0 md:p-6 md:bg-gradient-to-t from-black/60 to-transparent">
             {#if title}<p class="text-base font-semibold md:text-lg md:font-semibold">{title}</p>{/if}
             {#if description}<p class="text-xs rtf-content m-base m-0 md:text-sm">{@html description}</p>{/if}
           </div>

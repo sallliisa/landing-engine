@@ -12,6 +12,9 @@ export async function load(section: Record<string, any>) {
         }
       },
       childSectionGroups: {
+        orderBy: {
+          order: 'asc'
+        },
         include: {
           sections: {
             orderBy: {
