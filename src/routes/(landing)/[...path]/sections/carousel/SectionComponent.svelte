@@ -78,7 +78,7 @@
         <div class="flex flex-col gap-base">
           <div class="flex flex-col gap-xs">
             <p class="text-2xl md:text-3xl font-bold">{item.title}</p>
-            <p class="font-bold text-xl">{item.subtitle}</p>
+            <p class="font-semibold text-xl">{item.subtitle}</p>
           </div>
           <div class="flex flex-row gap-lg">
             {#each item.collection as collectionItem}
