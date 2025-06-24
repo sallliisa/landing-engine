@@ -22,7 +22,6 @@
     {#if section?.section_type_code}
       {#if section.visible}
       {@const sectionComponentPromise = getSectionComponent(section.section_type_code)}
-        {section.section_type_code} {!!sectionComponentPromise}
         {#if sectionComponentPromise}
           {#await sectionComponentPromise then SectionComponent}
             <SectionComponent {section}/>

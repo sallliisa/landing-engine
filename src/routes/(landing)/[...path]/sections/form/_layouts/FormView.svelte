@@ -11,8 +11,6 @@
   import SelectInput from "$lib/app/components/input/SelectInput.svelte";
   import TextareaInput from "$lib/app/components/input/TextareaInput.svelte";
   import TextInput from "$lib/app/components/input/TextInput.svelte";
-  import { m } from "$lib/paraglide/messages";
-  import formField from "$lib/app/api/models/formField";
 
   const {onSubmit} = $props()
 

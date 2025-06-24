@@ -1,25 +1,15 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  
-  import Button from "$lib/app/components/ui/Button.svelte";
-  import { parseSearchParams } from "$lib/utils/common";
-  import { formatData } from "$lib/utils/format";
-  import { mathjs } from "$lib/utils/math";
-  import { api } from "$lib/utils/services";
-  import { onMount, setContext } from "svelte";
+  import { setContext } from "svelte";
   import FormView from "./_layouts/FormView.svelte";
   import SuccessView from "./_layouts/SuccessView.svelte";
   import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
 
-  // const {section} = $props();
-  // setContext('section', section)
-  // let viewIndex = $state<0 | 1>(0)
+  const {section} = $props();
+  setContext('section', section)
+  let viewIndex = $state<0 | 1>(0)
 </script>
 
-
-hello test
-
-<!-- <div class="flex w-full items-center justify-center">
+<div class="flex w-full items-center justify-center">
   <div class="w-full max-w-screen-xl grid grid-cols-1 {section.meta.type === 'one-column' ? 'md:grid-cols-6 gap-lg' : 'md:grid-cols-2 gap-x-xl gap-y-lg'} py-6 lg:py-12 px-6 lg:px-12">
     {#if section.meta.type === 'two-column'}
       <div class="flex flex-col gap-lg">
@@ -51,9 +41,9 @@ hello test
       {@render contactDetail()}
     {/if}
   </div>
-</div> -->
+</div>
 
-<!-- {#snippet contactDetail()}
+{#snippet contactDetail()}
   <div class="col-span-2 outline outline-outline-variant p-6 flex flex-col gap-lg">
     {#if section.data.contactDetail.content.title || section.data.contactDetail.content.description}
       <div class="flex flex-col gap-xs">
@@ -78,4 +68,4 @@ hello test
       </div>
     </div>
   </div>
-{/snippet} -->
+{/snippet}

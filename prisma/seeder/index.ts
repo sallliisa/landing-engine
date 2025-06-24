@@ -180,7 +180,7 @@ const main = async () => {
         whatsapp: "6285635700000",
         linkedin: "https://id.linkedin.com/company/pthkrealtindo",
         subsidiaries: [{"url":"https://www.menaraantam.com/","name":"Menara Antam Sejahtera","type":"external"},{"url":"https://nusapratamaproperty.co.id/","name":"Nusa Pratama Property","type":"external"},{"url":"https://www.wikarealty.co.id/id/subsidiary/SUBS-4422441109165059694","name":"Hotel Karya Indonesia","type":"external"}],
-        product_categories: [{"url":"https://www.menaraantam.com/","name":"Menara Antam Sejahtera","type":"external"},{"url":"https://nusapratamaproperty.co.id/","name":"Nusa Pratama Property","type":"external"},{"url":"https://www.wikarealty.co.id/id/subsidiary/SUBS-4422441109165059694","name":"Hotel Karya Indonesia","type":"external"}]
+        // product_categories: [{"url":"https://www.menaraantam.com/","name":"Menara Antam Sejahtera","type":"external"},{"url":"https://nusapratamaproperty.co.id/","name":"Nusa Pratama Property","type":"external"},{"url":"https://www.wikarealty.co.id/id/subsidiary/SUBS-4422441109165059694","name":"Hotel Karya Indonesia","type":"external"}]
       },
     });
 

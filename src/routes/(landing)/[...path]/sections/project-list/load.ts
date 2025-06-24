@@ -1,5 +1,4 @@
 import prisma from "$lib/utils/prisma"
-import { Prisma } from "@prisma/client"
 
 export async function load(section: Record<string, any>) {
   const [filter, data] = await Promise.all([
