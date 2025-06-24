@@ -16,7 +16,7 @@
 </script>
 
 <div class="flex items-center justify-center w-full ">
-  <div class="flex items-center justify-center w-full px-6 lg:px-12 my-3">
+  <div class="flex items-center justify-center w-full px-6 lg:px-12 py-6">
     {#if section.data.content.url}
       <a href="{section.data.content.url}" class="w-full {widthPresetClassMap[section.meta.width_preset]} flex flex-col justify-between group/carouselItem gap-lg bg-center bg-cover overlay before:bg-surface/5 active:before:bg-surface/10 {section.meta.background_image ? 'text-surface' : 'text-on-surface'}" style="background-image: {bgImage}">
         {@render cardContent()}
@@ -26,7 +26,7 @@
         {@render cardContent()}
       </div>
     {/if}
-</div>
+  </div>
 </div>
 
 {#snippet cardContent()}

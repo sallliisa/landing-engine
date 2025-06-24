@@ -41,16 +41,8 @@
       {/if}
     </div>
   </div>
-  <div class="h-[12px] w-full flex items-center justify-center">
+  <!-- <div class="h-[12px] w-full flex items-center justify-center">
     <div class="max-w-screen-xl w-full h-full relative">
-      <!-- <div class="flex flex-col gap-3 fixed pt-12">
-        <button class="text-start underline font-semibold">Pesan Direktur</button>
-        <button class="text-start text-outline">Visi & Misi</button>
-        <button class="text-start text-outline">Pencapaian Perusahaan</button>
-        <button class="text-start text-outline">Struktur Organisasi</button>
-        <button class="text-start text-outline">Manajemen</button>
-        <button class="text-start text-outline">Anak Perusahaan</button>
-      </div> -->
     </div>
-  </div>
+  </div> -->
 </div>
