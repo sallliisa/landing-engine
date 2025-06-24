@@ -16,7 +16,7 @@
   {/if}
   {#if collection.length > 0}
     {#key activePanoramaIndex}
-      <Panorama url={collection[activePanoramaIndex].media} title={collection[activePanoramaIndex].title} class="w-full min-h-[300px] md:h-[450px]"/>
+      <Panorama url={collection[activePanoramaIndex].media} title={collection[activePanoramaIndex].title} class="w-full !min-h-[300px] md:!h-[450px]"/>
     {/key}
   {/if}
 </div>
