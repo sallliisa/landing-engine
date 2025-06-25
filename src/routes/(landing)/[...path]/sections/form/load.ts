@@ -27,6 +27,9 @@ export async function load(section: Record<string, any>) {
             visible: true,
             contents: {
               orderBy: {order: 'asc'},
+              where: {
+                gallery_id: null
+              },
               select: {
                 title: true,
                 description: true

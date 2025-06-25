@@ -33,8 +33,11 @@ export async function load(section: Record<string, any>) {
                     include: {
                       contents: {
                         orderBy: {
-                          order: 'asc'
-                        }
+                          order: 'asc',
+                        },
+                        where: {
+                          gallery_id: null
+                        },
                       },
                       galleries: {
                         orderBy: {
