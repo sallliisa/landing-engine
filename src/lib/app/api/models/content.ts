@@ -38,6 +38,10 @@ export default {
     by: ['id'],
     fields: ['media', 'title', 'subtitle', 'description', 'label', 'content', 'blurb', 'media_type', 'attachment', 'status', 'order', 'url', 'url_text', 'url_type', 'amount', 'collection', 'meta'],
   },
+  reorder: {
+    allow: true,
+    axis: ['gallery_id']
+  },
   delete: {
     allow: true,
     by: ['id']
