@@ -14,6 +14,9 @@ export default {
   list: {
     allow: true,
     filterableBy: ['gallery_id'],
+    orderBy: {
+      order: 'asc'
+    },
   },
   create: {
     allow: true,
