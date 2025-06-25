@@ -44,34 +44,38 @@ import * as Carousel from "$lib/app/components/ui/carousel";
       {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex]}
         <div class="flex flex-col gap-lg">
           <div class="flex flex-col gap-base md:px-6">
-            <div class="flex flex-row items-start justify-between gap-base">
-              {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.title || section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}
-                <div class="flex flex-col gap-xs">
-                  <p class="text-2xl md:text-3xl font-bold">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.title}</p>
-                  {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}
-                    <p class="font-medium text-lg">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}</p>
-                  {/if}
-                </div>
-              {/if}
-              {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url}
-                <a href={section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url} class="flex flex-row items-center gap-sm flex-shrink-0">
-                  <p class="font-semibold underline">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url_text || m.learn_more()}
-                  <i class="ri-arrow-right-line"></i>
-                </a>
-              {/if}
-            </div>
+            {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.title || 
+                section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle ||
+                section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url}
+              <div class="flex flex-row items-start justify-between gap-base">
+                {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.title || section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}
+                  <div class="flex flex-col gap-xs">
+                    <p class="text-2xl md:text-3xl font-bold">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.title}</p>
+                    {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}
+                      <p class="font-medium text-lg">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.subtitle}</p>
+                    {/if}
+                  </div>
+                {/if}
+                {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url}
+                  <a href={section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url} class="flex flex-row items-center gap-sm flex-shrink-0">
+                    <p class="font-semibold underline">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url_text || m.learn_more()}
+                    <i class="ri-arrow-right-line"></i>
+                  </a>
+                {/if}
+              </div>
+            {/if}
             {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.description}
               <p class="rtf-content m-base">{@html section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.description}</p>
             {/if}
             {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.media_type}
               {@const content = section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content}
-              {#if content.media_type === 'image'}
+              {#if content.media_type === 'image' && content.media}
                 <img src={content.media} alt={content.title} class="w-full h-full object-cover object-center"/>
-              {:else if content.media_type === 'video'}
+              {:else if content.media_type === 'video' && content.media}
                 <video src={content.media} class="w-full h-full object-cover object-center">
                   <track kind="captions" src="" srclang="id" label="Indonesia" />
                 </video>
-              {:else if content.media_type === 'embed'}
+              {:else if content.media_type === 'embed' && content.media}
                 <div class="min-h-[300px] md:h-[450px]">
                   <div class="embed-preview">
                     <div class="h-full w-full">
@@ -79,7 +83,7 @@ import * as Carousel from "$lib/app/components/ui/carousel";
                     </div>
                   </div>
                 </div>
-              {:else if content.media_type === 'panorama'}
+              {:else if content.media_type === 'panorama' && content.collection.length > 0}
                 <PanoramaView collection={content.collection}/>
               {/if}
             {/if}
