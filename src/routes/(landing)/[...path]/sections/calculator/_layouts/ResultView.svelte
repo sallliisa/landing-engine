@@ -3,10 +3,12 @@
   import { formatData } from "$lib/utils/format";
   import { mathjs } from "$lib/utils/math";
   import { isEmptyObject } from "$lib/utils/common";
-
+  import { trackEvent } from "$lib/utils/analytics";
   const {formData, onPrevious} = $props()
 
   let section = getContext<Record<string, any>>('section')
+
+  let isTracked = $state(false)
 
   const isFormValid = $derived.by(() => {
     return section.data.calculatorType.fields.every((field: any) => {
@@ -15,6 +17,15 @@
       return value !== undefined && value !== null && value !== '';
     });
   });
+
+  $effect(() => {
+    if (isFormValid && !isTracked) {
+      isTracked = true
+      trackEvent('calculator_usage', {
+        source: window.location.pathname,
+      })
+    }
+  })
 </script>
 
 

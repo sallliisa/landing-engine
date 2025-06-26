@@ -54,9 +54,7 @@
         {/if}
       </div>
       {#if section.data.content.url }
-        <!-- <div class="w-full"> -->
-          <Button href={section.data.content.url} class="max-w-fit">{section.data.content.url_text} <i class="ri-arrow-right-line"></i></Button>
-        <!-- </div> -->
+        <Button data-analytics-cta={section.data.content.url} href={section.data.content.url} class="max-w-fit">{section.data.content.url_text} <i class="ri-arrow-right-line"></i></Button>
       {/if}
     </div>
     {#if section.data.gallery.length > 0}
