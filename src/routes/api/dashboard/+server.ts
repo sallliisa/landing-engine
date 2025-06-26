@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { PrismaClient } from '@prisma/client';
 import { exception, success } from '$lib/utils/response';
+import type { FormType } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -26,7 +27,40 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		let data;
 
-		if (eventType === 'website_visit') {
+		if (eventType === 'aggregate_form_submission') {
+			// Get total count of all form submissions
+			const totalSubmissions = await prisma.formSubmission.count({
+				where: {
+					submitted_at: {
+						gte: startDate,
+						lt: endDate
+					}
+				}
+			});
+
+			return success({ data: [{ label: 'total', value: totalSubmissions }] });
+		} else if (eventType === 'form_submission') {
+			// Get form submissions grouped by form type
+			const result = await prisma.formType.findMany({
+				include: {
+					submissions: {
+						where: {
+							submitted_at: {
+								gte: startDate,
+								lt: endDate
+							}
+						}
+					}
+				}
+			});
+
+			const data = result.map(formType => ({
+				label: formType.name,
+				value: formType.submissions.length
+			}));
+
+			return success({ data });
+		} else if (eventType === 'website_visit') {
 			// For website_visit, we group by month using a raw query for efficiency.
 			const result: { month: string; count: bigint }[] = await prisma.$queryRaw`
                 SELECT TO_CHAR(timestamp, 'YYYY-MM') as month, COUNT(*) as count
@@ -45,7 +79,9 @@ export const GET: RequestHandler = async ({ url }) => {
 				page_view: 'source',
 				cta_click: 'name',
 				contact_click: 'name',
-				calculator_usage: 'source'
+				calculator_usage: 'source',
+				form_submission: 'name',
+				aggregate_form_submission: 'name'
 			}[eventType];
 
 			if (!groupByField) {
