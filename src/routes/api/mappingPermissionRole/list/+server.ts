@@ -9,9 +9,17 @@ export async function GET({url}) {
   
   try {
     const paginatedData = await withPagination(async (skip, take) => {
+      const searchTerm = urlSearchParams.search?.toString().toLowerCase() || '';
+      
       const allPermissions = await prisma.permission.findMany({
         skip,
         take,
+        where: {
+          name: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        },
         select: {
           code: true,
           name: true,
@@ -23,7 +31,14 @@ export async function GET({url}) {
         },
       });
 
-      const total = await prisma.permission.count();
+      const total = await prisma.permission.count({
+        where: {
+          name: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        },
+      });
       
       const formattedData = allPermissions.map((p) => ({
         code: p.code,

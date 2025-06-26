@@ -62,7 +62,7 @@ const permissionList = [
   "create-menuItem",
   "delete-menuItem",
   "detail-menuItem",
-  "view-menuItem",
+  "view-website",
   "update-menuItem",
 
   "create-page",
