@@ -22,7 +22,7 @@ export async function POST({ request, cookies }) {
       },
     });
 
-    return success({data: { token, permissions: user.role.permissions.map(p => p.code) }});
+    return success({data: { user, token }});
   } catch (error) {
     return exception(`Login failed: ${error}`)
   }
