@@ -74,6 +74,7 @@
 <svelte:head>
 	<link rel="stylesheet" href="/assets/pannellum/pannellum.css" />
 	<script type="text/javascript" src="/assets/pannellum/pannellum.js"></script>
+	<title>HK Realtindo</title>
 </svelte:head>
 
 {@render children()}
