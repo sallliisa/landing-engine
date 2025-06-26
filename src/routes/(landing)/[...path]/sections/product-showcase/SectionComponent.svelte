@@ -1,6 +1,6 @@
 <script lang="ts">
   import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
-import * as Carousel from "$lib/app/components/ui/carousel";
+  import * as Carousel from "$lib/app/components/ui/carousel";
   import ImagePreview from "$lib/app/components/ui/ImagePreview.svelte";
   import Tabs from "$lib/app/components/ui/tabs/Tabs.svelte";
   import Panorama from "$lib/app/components/util/Panorama.svelte";
