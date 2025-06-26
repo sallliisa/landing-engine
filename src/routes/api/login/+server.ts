@@ -7,7 +7,7 @@ export async function POST({ request, cookies }) {
   const { email, password } = await request.json();
 
   try {
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email }, include: {role: {include: {permissions: true}}} });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return exception('Invalid credentials')
     }
@@ -22,7 +22,7 @@ export async function POST({ request, cookies }) {
       },
     });
 
-    return success({data: { token, permissions: [] }});
+    return success({data: { token, permissions: user.role.permissions.map(p => p.code) }});
   } catch (error) {
     return exception(`Login failed: ${error}`)
   }
