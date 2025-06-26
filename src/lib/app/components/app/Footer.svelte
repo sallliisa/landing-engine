@@ -6,8 +6,7 @@
 
 <!-- <div class="h-[36px] w-full"></div> -->
 <div
-  class="w-full py-16 flex items-center justify-center border-t border-outline-variant bg-center bg-cover"
-  style="background-image: linear-gradient(rgba(255, 249, 245, 0.52), rgba(255, 249, 245, 0.52)), url(/assets/image/background-texture.png);"
+  class="w-full py-16 flex flex-col items-center justify-center bg-[#ECEFF1] border-t border-outline-variant bg-center bg-cover"
 >
   <div class="w-full max-w-screen-xl px-12 grid grid-dynamic-[250px] gap-8">
     <div class="flex flex-col gap-base">
@@ -48,3 +47,5 @@
     </div>
   </div>
 </div>
+<div class="w-full h-[9px] bg-primary"></div>
+<div class="w-full h-[6px] bg-secondary"></div>
