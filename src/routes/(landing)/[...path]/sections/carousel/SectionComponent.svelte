@@ -49,8 +49,10 @@
         alt="" 
         class="w-full h-full object-cover"
       />
-      <div class="absolute inset-0 bg-gradient-to-b from-black/33 to-black/33"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-black/33 to-transparent"></div>
+      {#if item.title || item.subtitle || item.description || item.collection?.length}
+        <div class="absolute inset-0 bg-gradient-to-b from-black/33 to-black/33"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/33 to-transparent"></div>
+      {/if}
     </div>
     {#if item.url}
       <a
