@@ -3,6 +3,12 @@
   import * as Carousel from "$lib/app/components/ui/carousel";
 
   const {section} = $props()
+
+  const aspectRatioMap: any = {
+    '1/1': 'aspect-[1/1]',
+    '4/3': 'aspect-[4/3]',
+    '16/9': 'aspect-[16/9]',
+  }
 </script>
 
 <div class="flex items-center justify-center w-full">
@@ -35,7 +41,7 @@
 
 {#snippet carouselItem(item: any)}
   <Carousel.Item 
-    class="min-[124rem]:basis-1/3 2xl:basis-1/2 lg:basis-[67%] basis-[85%] h-[450px] ml-1 p-0 before:bg-white/5 active:before:bg-white/10 relative overflow-hidden {item.url ? 'overlay' : ''}"
+    class="min-[124rem]:basis-1/3 2xl:basis-1/2 lg:basis-[67%] basis-[85%] ml-1 p-0 before:bg-white/5 active:before:bg-white/10 relative overflow-hidden {item.url ? 'overlay' : ''} {section.meta.preserve_aspect_ratio ? aspectRatioMap[section.meta.aspect_ratio || '4/3'] : 'h-[450px]'}"
   >
     <div class="absolute inset-0 -z-10">
       <img 
