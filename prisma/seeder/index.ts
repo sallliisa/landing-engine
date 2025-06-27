@@ -104,6 +104,9 @@ const permissionList = [
 
   "list-mappingRoleMenuItem",
   "toggle-mappingRoleMenuItem",
+
+  "list-mappingRoleArticleCategory",
+  "toggle-mappingRoleArticleCategory",
 ];
 
 const prisma = new PrismaClient();
