@@ -101,26 +101,37 @@ export default {
     searchableBy: ['id'],
     filterableBy: ['parent_id', "level"],
     orderBy: { order: 'asc' },
-    where: ({locals}) => {
-      if (locals.user?.role.role_group_id === 1) return undefined
-      return {
-        AND: [
-          {
-            field: 'allowedRoles',
-            operator: 'some',
-            value: {id: locals.user?.role_id}
-          }
-        ]
-      }
-    },
     fieldsForeign: {
       translations: {
         fields: ['name', 'language']
+      },
+      allowedRoles: {
+        fields: ['id']
       }
     },
     lifecycle: {
-      post: async (data) => {
-        return data
+      post: async (data, total, locals) => {
+        const userRoleId = locals?.user?.role_id;
+        const isAdmin = locals?.user?.role.role_group_id === 1;
+
+        // To add the 'can_edit' property, we must map over the data array
+        // and return new objects, as the original `data` is read-only.
+        return data.map(item => {
+          // We need to assert the type to get access to the 'allowedRoles' relation.
+          const menuItem = item as Prisma.MenuItemGetPayload<{ include: { allowedRoles: true } }>;
+          
+          let can_edit = false;
+          if (isAdmin) {
+            // Admins can edit everything.
+            can_edit = true;
+          } else if (userRoleId && menuItem.allowedRoles) {
+            // For other users, check if their role is in the item's allowedRoles list.
+            can_edit = menuItem.allowedRoles.some(role => role.id === userRoleId);
+          }
+
+          // Return a new object with all original properties plus 'can_edit'.
+          return { ...item, can_edit };
+        });
       }
     }
   },
