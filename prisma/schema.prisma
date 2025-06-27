@@ -323,8 +323,9 @@ model Role {
   // Users that have this Role
   users               User[]
   // Access control for forms: which form types are accessible to this role.
-  accessibleFormTypes FormType[]   @relation("FormTypeAccess")
-  accessibleMenuItem  MenuItem[]  @relation("MenuItemAccess")
+  accessibleFormTypes       FormType[]        @relation("FormTypeAccess")
+  accessibleMenuItem        MenuItem[]        @relation("MenuItemAccess")
+  accessibleArticleCategory ArticleCategory[] @relation("ArticleCategoryAccess")
 }
 
 model Permission {
@@ -346,6 +347,7 @@ model ArticleCategory {
   updated_at   DateTime                     @updatedAt
   translations ArticleCategoryTranslation[]
   articles     Article[]                    @relation("ArticleToCategories")
+  allowedRoles Role[]                       @relation("ArticleCategoryAccess")
 }
 
 model ArticleCategoryTranslation {
