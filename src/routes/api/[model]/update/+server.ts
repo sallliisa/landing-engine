@@ -21,7 +21,7 @@ function mergeUpdateConfigs<T>(base: ModelConfig<T>, create?: CreateConfig<T>, u
 }
 
 export async function PUT(event) {
-  const {params, request, fetch} = event
+  const {params, request, locals} = event
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND)
     if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND)
@@ -37,7 +37,7 @@ export async function PUT(event) {
       await validateFields(body, mergedConfig.validation)
     }
 
-    const customWhereObject = mergedConfig.where ? mergedConfig.where(event) : undefined
+    const customWhereObject = mergedConfig.where ? await mergedConfig.where(event) : undefined
 
     const whereClause = {
       ...Object.fromEntries((mergedConfig.by ?? []).map(key => [key, body[key] as string | number])) as any,
@@ -81,10 +81,10 @@ export async function PUT(event) {
       
 
     if (config.update?.lifecycle?.pre)
-      body = await config.update.lifecycle.pre(body)
+      body = await config.update.lifecycle.pre(body, locals)
 
     let data = config.update?.lifecycle?.main ?
-                await config.update.lifecycle.main(body)
+                await config.update.lifecycle.main(body, locals)
               :
                 await (prisma as any)[params.model].update({
                   where: whereClause,
@@ -95,7 +95,7 @@ export async function PUT(event) {
                 })
 
     if (config.update?.lifecycle?.post)
-      data = await config.update.lifecycle.post(body, data) as any
+      data = await config.update.lifecycle.post(body, data, locals) as any
 
     return success({data})
   } catch (err) {

@@ -142,6 +142,9 @@ export default {
       translations: {
         fields: ['name', 'language']
       },
+      allowedRoles: {
+        fields: ['id']
+      },
       page: {
         fields: ['id'],
         fieldsForeign: {
@@ -165,8 +168,24 @@ export default {
       },
     },
     lifecycle: {
-      async post(data) {
-        return {...data, has_page: !!data.page[0]}
+      async post(data: Record<string, any>, _total?: number, locals?: Record<string, any>) {
+        const userRoleId = locals?.user?.role_id;
+        const isAdmin = locals?.user?.role?.role_group_id === 1;
+        let can_edit = false;
+
+        if (isAdmin) {
+          can_edit = true;
+        } else if (userRoleId && data.allowedRoles) {
+          can_edit = data.allowedRoles.some((role: { id: string }) => role.id === userRoleId);
+        }
+
+        console.log(userRoleId, data.allowedRoles)
+
+        return { 
+          ...data, 
+          has_page: !!(data.page && data.page[0]),
+          can_edit
+        };
       },
     }
   },

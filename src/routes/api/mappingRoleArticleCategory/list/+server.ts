@@ -16,7 +16,7 @@ export async function GET({url}) {
           id: true,
           name: true,
           accessibleArticleCategory: {
-            where: { id: String(urlSearchParams.menu_item_id) },
+            where: { id: String(urlSearchParams.article_category_id) },
             select: { id: true },
           },
         },

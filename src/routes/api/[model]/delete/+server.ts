@@ -26,7 +26,7 @@ export async function DELETE(event) {
     if (!mergedConfig?.allow) throw Error(MESSAGE.MODEL.OPERATION_FORBIDDEN)
     const body = await request.json()
 
-    const customWhereObject = mergedConfig.where ? mergedConfig.where(event) : undefined
+    const customWhereObject = mergedConfig.where ? await mergedConfig.where(event) : undefined
 
     // Build where clause with both 'by' fields and additional where conditions
     const whereClause = {

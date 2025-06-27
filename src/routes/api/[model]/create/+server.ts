@@ -19,7 +19,7 @@ function mergeCreateConfigs<T>(base: ModelConfig<T>, operation?: CreateConfig<T>
   }
 }
 
-export async function POST({params, request}) {
+export async function POST({params, request, locals}) {
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND)
     if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND)
@@ -62,10 +62,10 @@ export async function POST({params, request}) {
 
     // Lifecycle hooks
     if (config.create?.lifecycle?.pre)
-      body = await config.create.lifecycle.pre(body)
+      body = await config.create.lifecycle.pre(body, locals)
 
     let data = config.create?.lifecycle?.main ?
-                await config.create.lifecycle.main(body)
+                await config.create.lifecycle.main(body, locals)
               :
                 await (prisma as any)[params.model].create({
                   data: mergedConfig.fields ? 
@@ -75,7 +75,7 @@ export async function POST({params, request}) {
                 })
 
     if (config.create?.lifecycle?.post)
-      data = await config.create.lifecycle.post(body, data) as any
+      data = await config.create.lifecycle.post(body, data, locals) as any
 
     return success({data})
   } catch (err) {
