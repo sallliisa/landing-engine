@@ -13,6 +13,8 @@ function parseSlug(text: string) {
 }
 
 const permissionList = [
+  "view-dashboard",
+
   "create-article",
   "delete-article",
   "detail-article",
