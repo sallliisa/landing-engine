@@ -45,6 +45,7 @@
 		"bcrypt": "^5.1.1",
 		"bits-ui": "^1.4.8",
 		"busboy": "^1.6.0",
+		"chart.js": "^4.5.0",
 		"dayjs": "^1.11.13",
 		"embla-carousel-svelte": "^8.6.0",
 		"jsonwebtoken": "^9.0.2",

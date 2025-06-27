@@ -1,10 +1,11 @@
 <script lang="ts">
   import { m } from "$lib/paraglide/messages";
 
-  const {header, defaultAlign = 'left', titleSize = '3xl'} = $props<{
+  const {header, defaultAlign = 'left', titleSize = '3xl', swapTitlePosition = false} = $props<{
     header: Record<string, any>,
     defaultAlign?: 'left' | 'center',
-    titleSize?: 'xl' | '2xl' | '3xl'
+    titleSize?: 'xl' | '2xl' | '3xl',
+    swapTitlePosition?: boolean
   }>()
 
   const defaultAlignClassMap: any = {
@@ -23,8 +24,13 @@
   <div class="flex flex-col md:flex-row md:items-center gap-y-base {header.url ? 'justify-between' : defaultAlign === 'center' ? 'justify-center' : 'justify-start'} w-full">
     <div class="flex flex-col {titleSize === '3xl' ? 'gap-sm' : 'gap-xs'} {header.url ? defaultAlignClassMap.left : defaultAlignClassMap[defaultAlign]}">
       <div class="flex flex-col gap-xs">
-        {#if header.subtitle}<p class="text-sm">{header.subtitle}</p>{/if}
-        {#if header.title}<p class="{titleSizeClassMap[titleSize]} font-bold ">{header.title}</p>{/if}
+        {#if !swapTitlePosition}
+          {#if header.subtitle}<p class="text-sm">{header.subtitle}</p>{/if}
+          {#if header.title}<p class="{titleSizeClassMap[titleSize]} font-bold ">{header.title}</p>{/if}
+        {:else}
+          {#if header.title}<p class="{titleSizeClassMap[titleSize]} font-bold ">{header.title}</p>{/if}
+          {#if header.subtitle}<p class="text-sm">{header.subtitle}</p>{/if}
+        {/if}
       </div>
       {#if header.description}<p class="rtf-content m-base text-sm text-outline">{@html header.description}</p>{/if}
     </div>
