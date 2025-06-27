@@ -96,6 +96,8 @@ const permissionList = [
   "view-user",
   "update-user",
 
+  "view-collection",
+
   "list-mappingPermissionRole",
   "toggle-mappingPermissionRole",
 

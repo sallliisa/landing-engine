@@ -30,7 +30,7 @@
         <div class="flex flex-row items-center gap-2">
           {#if page.data.companyProfile?.facebook}<a href="https://{page.data.companyProfile?.facebook}" data-analytics-contact={page.data.companyProfile?.facebook} aria-label="Facebook" target="_blank"><i class="ri-facebook-circle-fill text-xl"></i></a>{/if}
           {#if page.data.companyProfile?.instagram}<a href="https://{page.data.companyProfile?.instagram}" data-analytics-contact={page.data.companyProfile?.instagram} aria-label="Instagram"><i class="ri-instagram-fill text-xl"></i></a>{/if}
-          {#if page.data.companyProfile?.twitter}<a href="https://{page.data.companyProfile?.twitter}" data-analytics-contact={page.data.companyProfile?.twitter} aria-label="LinkedIn"><i class="ri-linkedin-box-fill text-xl"></i></a>{/if}
+          {#if page.data.companyProfile?.linkedin}<a href="https://{page.data.companyProfile?.linkedin}" data-analytics-contact={page.data.companyProfile?.linkedin} aria-label="LinkedIn"><i class="ri-linkedin-box-fill text-xl"></i></a>{/if}
           {#if page.data.companyProfile?.youtube}<a href="https://{page.data.companyProfile?.youtube}" data-analytics-contact={page.data.companyProfile?.youtube} aria-label="YouTube"><i class="ri-youtube-fill text-xl"></i></a>{/if}
         </div>
       </div>
