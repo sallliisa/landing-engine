@@ -7,6 +7,9 @@ export async function load(section: Record<string, any>) {
     },
     include: {
       contents: {
+        where: {
+          gallery_id: null
+        },
         orderBy: {
           order: 'asc'
         }
