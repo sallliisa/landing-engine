@@ -3,6 +3,7 @@
   import { fade, fly } from 'svelte/transition';
   import { cubicOut } from 'svelte/easing';
   import { page } from '$app/state';
+  import { browser } from '$app/environment';
   
   const socialLinks = [
     { 
@@ -28,8 +29,14 @@
   let isOpen = $state(false)
   let windowScrollY = $state(0)
   let windowHeight = $state(0)
-  let isAtTop = $derived(windowScrollY < (0.1*windowHeight))
-  let isAtBottom = $derived(windowScrollY > (document.documentElement.scrollHeight - windowHeight - (0.20*windowHeight)))
+  let isAtTop = $derived.by(() => {
+    if (!browser) return false
+    return windowScrollY < (0.1*windowHeight)
+  })
+  let isAtBottom = $derived.by(() => {
+    if (!browser) return false
+    return windowScrollY > (document.documentElement.scrollHeight - windowHeight - (0.20*windowHeight))
+  })
   let showFAB = $derived(!isAtTop && !isAtBottom)
 </script>
 

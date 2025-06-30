@@ -85,6 +85,7 @@
         "
       >
         <div class="flex flex-col gap-4 text-left">
+          {#if section.meta.logo}<img src="{section.meta.logo}" class="max-w-[72px]" alt="{banner.subtitle}"/>{/if}
           {#if banner?.subtitle}<p class="text-lg md:text-xl">{banner.subtitle}</p>{/if}
           {#if banner?.title}<h1 class="text-4xl md:text-5xl 2xl:text-6xl font-bold">{banner.title}</h1>{/if}
           {#if banner?.description}<div class="rtf-content mt-4 text-sm">{@html banner.description}</div>{/if}

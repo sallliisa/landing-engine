@@ -68,5 +68,5 @@
 		 </div>
 	</div> -->
 	<Footer/>
-	<!-- <FloatingContact /> -->
+	<FloatingContact />
 </div>
