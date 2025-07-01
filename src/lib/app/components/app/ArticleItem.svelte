@@ -21,7 +21,7 @@
 <a href="/article/{slug}" class="py-6 flex flex-col md:flex-row items-start md:items-center gap-4 group">
   <img 
     src="{thumbnail}" 
-    class="w-full md:w-[160px] aspect-video object-center object-cover outline outline-outline-variant order-1 md:order-2"
+    class="w-full md:w-[160px] aspect-[16/9] object-center object-cover outline outline-outline-variant order-1 md:order-2"
     alt="{title}"
   />
   <div class="flex flex-col gap-sm w-full md:flex-1 order-2 md:order-1">

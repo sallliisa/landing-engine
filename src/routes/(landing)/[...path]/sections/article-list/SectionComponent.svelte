@@ -139,7 +139,7 @@
               <p class="text-sm">{urlSearchParameters.page} <span class="text-outline-variant"> / </span> {articleListMeta.totalPages}</p>
               <Button
                 on:click={() => {
-                  if (urlSearchParameters.page && urlSearchParameters.page < articleListMeta.totalPages) {
+                  if (urlSearchParameters.page && (urlSearchParameters.page < articleListMeta.totalPages)) {
                      urlSearchParameters.page += 1;
                   }
                 }}
