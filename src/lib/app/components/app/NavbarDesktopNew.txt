@@ -225,4 +225,3 @@
     </div>
   </div>
 </div>
-<p class="z-[100]">{activeLevel1Index}</p>
