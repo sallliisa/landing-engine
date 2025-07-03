@@ -22,7 +22,8 @@ export default {
       post: async (body: any, data: any) => {
         const translations = languages.map(language => ({
           language,
-          page_id: data.id
+          page_id: data.id,
+          status_code: 'PUBLISHED' as const
         }));
         const pageTranslations = await prisma.pageTranslation.createManyAndReturn({
           data: translations,

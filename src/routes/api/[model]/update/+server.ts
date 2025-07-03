@@ -84,7 +84,7 @@ export async function PUT(event) {
       body = await config.update.lifecycle.pre(body, locals)
 
     let data = config.update?.lifecycle?.main ?
-                await config.update.lifecycle.main(body, locals)
+                await config.update.lifecycle.main(body, locals, whereClause)
               :
                 await (prisma as any)[params.model].update({
                   where: whereClause,

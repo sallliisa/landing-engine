@@ -17,7 +17,7 @@ export default {
   view: {
     fieldsForeign: {
       translations: {
-        fields: ['language', 'title', 'slug', 'excerpt', 'thumbnail']
+        fields: ['language', 'title', 'slug', 'excerpt', 'thumbnail', 'status_code']
       },
       categories: { // Changed from 'category' to 'categories'
         fields: ['id'], // Optionally specify fields from ArticleCategory itself
@@ -48,6 +48,7 @@ export default {
           title: body.title, // Ensure title is passed in body for create
           slug: parseSlug(body.title),
           language,
+          status_code: 'DRAFT',
           article_id: data.id
         }));
         await prisma.articleTranslation.createMany({

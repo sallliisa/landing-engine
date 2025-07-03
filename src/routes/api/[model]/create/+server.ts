@@ -22,6 +22,7 @@ function mergeCreateConfigs<T>(base: ModelConfig<T>, operation?: CreateConfig<T>
 export async function POST({params, request, locals}) {
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND)
+      
     if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND)
     const config: ModelConfig<Record<string, any>> = (await configs[`./${params.model}.ts`]() as any).default
     
