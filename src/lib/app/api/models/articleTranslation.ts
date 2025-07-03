@@ -27,14 +27,7 @@ export default {
         if (body.title) {
           body.slug = parseSlug(body.title);
         }
-        // Ensure draft state if updating a published translation
-        if (body.id) {
-          const { translation, created } = await ensureArticleDraftState(body.id);
-          if (created) {
-            // If a draft was created, update the body to use the draft's id
-            body.id = translation.id;
-          }
-        }
+        // Removed automatic draft creation logic
         return body;
       }
     },
