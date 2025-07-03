@@ -18,8 +18,8 @@
   let isContentVisible = $state(false)
   let isAnimating = $state(false)
 
-  const FADE_DURATION = 150
-  const HEIGHT_DURATION = 300
+  const FADE_DURATION = 200
+  const HEIGHT_DURATION = 150
 
   $effect(() => {
     if (isMenuExpanded && activeLevel1Index != null) {
@@ -39,8 +39,6 @@
   })
 
   const debouncedMenuExpandMouseHover = debounce((index: number, mode: 'expand' | 'shrink') => {
-    if (isAnimating && activeLevel1Index !== index) return
-
     if (mode === 'expand') {
       if (!isMenuExpanded) {
         // Initial open
@@ -227,3 +225,4 @@
     </div>
   </div>
 </div>
+<p class="z-[100]">{activeLevel1Index}</p>
