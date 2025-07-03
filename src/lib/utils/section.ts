@@ -182,8 +182,7 @@ export async function copySectionGroupContent(
 				const newGContent = await prisma.content.create({
 					data: {
 						...(gContentData as any),
-						gallery_id: newGallery.id,
-						section_id: newSection.id
+						gallery_id: newGallery.id
 					}
 				});
 				idMap.set(oldGContentId, newGContent.id);
