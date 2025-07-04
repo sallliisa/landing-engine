@@ -334,9 +334,10 @@ export function parseCode(text: string) {
 }
 
 export type ProcessFileUrlOptions = {
-  onTempFile?: (url: string) => Promise<string>;
-  onClearFile?: (url: string) => Promise<void>;
-  previousData?: Record<string, any>;
+	onTempFile?: (url: string) => Promise<string | undefined>;
+	onClearFile?: (url: string) => Promise<void>;
+	previousData?: Record<string, any>;
+	onFile?: (url: string) => Promise<void>;
 };
 
 /**
@@ -346,36 +347,40 @@ export type ProcessFileUrlOptions = {
  * @returns A new object with processed file URLs
  */
 export async function processFileUrls<T extends Record<string, any>>(
-  obj: T,
-  options: ProcessFileUrlOptions = {}
+	obj: T,
+	options: ProcessFileUrlOptions = {}
 ): Promise<T> {
-  const { onTempFile, onClearFile, previousData } = options;
-  const result: Record<string, any> = Array.isArray(obj) ? [...obj] : { ...obj };
+	const { onTempFile, onClearFile, previousData, onFile } = options;
+	const result: Record<string, any> = Array.isArray(obj) ? [...obj] : { ...obj };
 
-  for (const [key, value] of Object.entries(result)) {
-    if (value === null || value === undefined) continue;
+	for (const [key, value] of Object.entries(result)) {
+		if (value === null || value === undefined) continue;
 
-    // Handle nested objects and arrays
-    if (typeof value === 'object') {
-      result[key] = await processFileUrls(value, options);
-      continue;
-    }
+		// Handle nested objects and arrays
+		if (typeof value === 'object') {
+			result[key] = await processFileUrls(value, { ...options, previousData: previousData?.[key] });
+			continue;
+		}
 
-    // Handle string values that might be file URLs
-    if (typeof value === 'string') {
-      if (isValidFileURL(value)) {
-        if (isValidTempFileURL(value) && onTempFile) {
-          // Process temp file URL
-          result[key] = await onTempFile(value);
-        } else if (!value && previousData?.[key] && onClearFile) {
-          // Handle file clearing
-          await onClearFile(previousData[key]);
-        }
-      }
-    }
-  }
+		// Handle string values that might be file URLs
+		if (typeof value === 'string') {
+			if (isValidFileURL(value)) {
+				if (onFile) {
+					await onFile(value);
+				}
+				
+				if (isValidTempFileURL(value) && onTempFile) {
+					// Process temp file URL
+					result[key] = await onTempFile(value);
+				} else if (!value && previousData?.[key] && onClearFile) {
+					// Handle file clearing
+					await onClearFile(previousData[key]);
+				}
+			}
+		}
+	}
 
-  return result as T;
+	return result as T;
 }
 
 export const debounce = (fn: Function, ms = 300) => {
