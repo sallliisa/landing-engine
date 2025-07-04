@@ -86,7 +86,7 @@
 {/if}
 <div class="lg:flex flex-col hidden" style="--navbar-initial-text-color: var(--initial-text-color, var(--colors-on-surface));">
   <div 
-    class="w-full flex flex-col items-center justify-center fixed z-[50] box-border transition-all border-b {isMenuExpanded ? 'text-on-surface' : windowScrollY != 0 ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)]'} {(windowScrollY != 0 && !isMenuExpanded) ? 'bg-surface border-b-outline-variant' : 'border-transparent'}"
+    class="w-full flex flex-col items-center justify-center fixed z-[50] box-border border-b {isMenuExpanded ? 'text-on-surface' : windowScrollY != 0 ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)]'} {(windowScrollY != 0 && !isMenuExpanded) ? 'bg-surface border-b-outline-variant' : 'border-transparent'}"
   >
     <div class="flex flex-row items-center justify-between w-full px-12 py-6 max-w-screen-xl">
       <a href="{page.data.primaryMenuPath}">
@@ -143,9 +143,10 @@
     </div>
   {/if}
   <div 
-    class="fixed text-sm xl:text-base w-full bg-surface outline-0 z-[49] border-b ease-in-out pt-[88px] border-outline-variant overflow-hidden {isMenuExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
+    class="fixed text-sm xl:text-base w-full bg-surface outline-0 z-[49] border-b ease-in-out border-outline-variant overflow-hidden {isMenuExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
     style="transition: height {HEIGHT_DURATION}ms, opacity {FADE_DURATION}ms; height: {isMenuExpanded ? containerHeight + 88 : 0}px"
   >
+    <div class="h-[88px]"></div>
     <div class="relative w-full h-full">
       <div class="w-full max-w-screen-xl mx-auto px-12 relative h-full">
         {#each page.data.menu as menu, level1Index}
@@ -156,7 +157,7 @@
             >
               <div 
                 bind:this="{menuContentElements[level1Index]}"
-                class="w-full py-6 grid grid-cols-3 gap-lg"
+                class="w-full pt-6 pb-10 grid grid-cols-3 gap-lg"
               >
                 <div>
                   <p class="text-lg xl:text-xl font-bold">{menu.name}</p>
