@@ -95,7 +95,7 @@ export async function POST({ request }) {
           data: {
             ...gContentData,
             gallery_id: newGallery.id,
-            section_id: newSection.id,
+            // section_id: newSection.id,
           }
         });
       }
