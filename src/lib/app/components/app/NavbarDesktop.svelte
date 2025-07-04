@@ -82,11 +82,11 @@
 
 <svelte:window bind:scrollY={windowScrollY} bind:outerHeight={windowHeight}/>
 {#if isMenuExpanded}
-  <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed backdrop-blur-md"></div>
+  <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed backdrop-blur-md bg-on-surface/[8%]"></div>
 {/if}
 <div class="lg:flex flex-col hidden" style="--navbar-initial-text-color: var(--initial-text-color, var(--colors-on-surface));">
   <div 
-    class="w-full flex flex-col items-center justify-center fixed z-[50] box-border transition-all border-b {isMenuExpanded ? 'text-on-surface' : windowScrollY != 0 ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)]'} {(windowScrollY != 0 && !isMenuExpanded) ? 'bg-surface border-b-outline-variant' : 'border-transparent'}"
+    class="w-full flex flex-col items-center justify-center fixed z-[50] box-border transition-all {isMenuExpanded ? 'text-on-surface' : windowScrollY != 0 ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)]'}"
   >
     <div class="flex flex-row items-center justify-between w-full px-12 py-6 max-w-screen-xl">
       <a href="{page.data.primaryMenuPath}">
@@ -143,8 +143,8 @@
     </div>
   {/if}
   <div 
-    class="fixed text-sm xl:text-base w-full bg-surface outline-0 z-[49] border-b ease-in-out border-outline-variant overflow-hidden {isMenuExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
-    style="transition: height {HEIGHT_DURATION}ms, opacity {FADE_DURATION}ms; height: {isMenuExpanded ? containerHeight + 88 : 0}px"
+    class="fixed text-sm xl:text-base w-full bg-surface outline-0 z-[49] ease-in-out overflow-hidden {isMenuExpanded ? '' : 'pointer-events-none'}"
+    style="transition: height {HEIGHT_DURATION}ms, opacity {FADE_DURATION}ms; height: {isMenuExpanded ? containerHeight + 88 : windowScrollY != 0 ? 88 : 0}px"
   >
     <div class="h-[88px]"></div>
     <div class="relative w-full h-full">
