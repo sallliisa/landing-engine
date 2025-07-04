@@ -86,7 +86,7 @@
 {/if}
 <div class="lg:flex flex-col hidden" style="--navbar-initial-text-color: var(--initial-text-color, var(--colors-on-surface));">
   <div 
-    class="w-full flex flex-col items-center justify-center fixed z-[50] box-border border-b {isMenuExpanded ? 'text-on-surface' : windowScrollY != 0 ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)]'} {(windowScrollY != 0 && !isMenuExpanded) ? 'bg-surface border-b-outline-variant' : 'border-transparent'}"
+    class="w-full flex flex-col items-center justify-center fixed z-[50] box-border transition-all border-b {isMenuExpanded ? 'text-on-surface' : windowScrollY != 0 ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)]'} {(windowScrollY != 0 && !isMenuExpanded) ? 'bg-surface border-b-outline-variant' : 'border-transparent'}"
   >
     <div class="flex flex-row items-center justify-between w-full px-12 py-6 max-w-screen-xl">
       <a href="{page.data.primaryMenuPath}">
