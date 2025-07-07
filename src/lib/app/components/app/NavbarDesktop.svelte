@@ -13,7 +13,8 @@
   let isMenuExpanded = $state(false)
   let activeLevel1Index = $state<number | null>(null)
   let activeLevel2Index = $state<number | null>(null)
-  let menuContentElements: (HTMLDivElement | null)[] = []
+  let level1MenuContentElements: (HTMLDivElement | null)[] = $state([])
+  let level2MenuContentElements: (HTMLDivElement | null)[][] = $state(page.data.menu.map((item: any) => item.children.map(() => null)))
   let containerHeight = $state(0)
   let isContentVisible = $state(false)
   let isAnimating = $state(false)
@@ -22,10 +23,15 @@
   const HEIGHT_DURATION = 150
 
   $effect(() => {
-    if (isMenuExpanded && activeLevel1Index != null) {
-      const activeContentEl = menuContentElements[activeLevel1Index]
-      if (activeContentEl) {
-        containerHeight = activeContentEl.offsetHeight
+    let activeLevel1ContentElement: any = null
+    let activeLevel2ContentElement: any = null
+    if (isMenuExpanded) {
+      if (activeLevel1Index != null) activeLevel1ContentElement = level1MenuContentElements[activeLevel1Index]
+      if (activeLevel2Index != null && activeLevel1Index != null) activeLevel2ContentElement = level2MenuContentElements[activeLevel1Index][activeLevel2Index]
+      if (activeLevel1ContentElement && !activeLevel2ContentElement) {
+        return containerHeight = activeLevel1ContentElement.offsetHeight
+      } else if (activeLevel1ContentElement && activeLevel2ContentElement) {
+        return containerHeight = Math.max(activeLevel1ContentElement.offsetHeight, activeLevel2ContentElement.offsetHeight)
       }
     } else {
       containerHeight = 0
@@ -41,6 +47,7 @@
   const debouncedMenuExpandMouseHover = debounce((index: number, mode: 'expand' | 'shrink') => {
     if (mode === 'expand') {
       if (!isMenuExpanded) {
+        console.log('initial open')
         // Initial open
         isAnimating = true
         isMenuExpanded = true
@@ -51,6 +58,7 @@
           setTimeout(() => (isAnimating = false), FADE_DURATION)
         }, HEIGHT_DURATION)
       } else if (activeLevel1Index !== index) {
+        console.log('switching menus')
         // Switching menus
         isAnimating = true
         isContentVisible = false
@@ -64,6 +72,7 @@
         }, FADE_DURATION)
       }
     } else {
+      console.log('shrink')
       // shrink
       if (!isMenuExpanded) return
       isAnimating = true
@@ -144,7 +153,7 @@
   {/if}
   <div 
     class="fixed text-sm xl:text-base w-full bg-surface outline-0 z-[49] ease-in-out overflow-hidden {isMenuExpanded ? '' : 'pointer-events-none'}"
-    style="transition: height {HEIGHT_DURATION}ms, opacity {FADE_DURATION}ms; height: {isMenuExpanded ? containerHeight + 88 : windowScrollY != 0 ? 88 : 0}px"
+    style="transition: height {HEIGHT_DURATION}ms, opacity {FADE_DURATION}ms; height: {isMenuExpanded ? containerHeight + 152 : windowScrollY != 0 ? 88 : 0}px"
   >
     <div class="h-[88px]"></div>
     <div class="relative w-full h-full">
@@ -156,13 +165,12 @@
               style="transition-duration: {FADE_DURATION}ms"
             >
               <div 
-                bind:this="{menuContentElements[level1Index]}"
                 class="w-full pt-6 pb-10 grid grid-cols-3 gap-lg"
               >
                 <div>
                   <p class="text-lg xl:text-xl font-bold">{menu.name}</p>
                 </div>
-                <div class="flex flex-col gap-base">
+                <div class="flex flex-col gap-base" bind:this="{level1MenuContentElements[level1Index]}">
                   {#each menu.children as level2Child, level2Index}
                     {#if !level2Child.page}
                       <div
@@ -189,34 +197,39 @@
                     {/if}
                   {/each}
                 </div>
-                <div
-                  class="transition-all {activeLevel2Index !== null && isContentVisible ? 'opacity-100 filter-none' : 'opacity-0 filter blur-sm'}"
-                  style="transition-duration: {FADE_DURATION}ms; transition-delay: {isContentVisible ? FADE_DURATION : 0}ms"
-                >
-                  {#if activeLevel2Index != null}
-                    <div class="flex flex-col gap-base">
-                      {#each menu.children[activeLevel2Index]?.children as level3Child}
-                        {#if !level3Child.page}
-                          <div
-                            onfocus="{() => {}}"
-                            class="flex flex-row items-center justify-between group/menuItem"
-                            role="menu"
-                          >
-                            <p class="text-outline">{level3Child.name}</p>
-                          </div>
-                        {:else}
-                          <a
-                            onfocus={() => {}}
-                            class="flex flex-row items-center justify-between group/menuItem"
-                            href="/{menu.slug}/{menu.children[activeLevel2Index].slug}/{level3Child.slug}"
-                            onclick="{() => isMenuExpanded = false}"
-                          >
-                            <p>{level3Child.name}</p>
-                          </a>
-                        {/if}
-                      {/each}
+                <div class="relative">
+                  {#each menu.children as level2Child, level2Index}
+                    <div
+                      class="absolute inset-0 transition-all {activeLevel2Index === level2Index &&
+                      isContentVisible
+                        ? 'opacity-100 filter-none'
+                        : 'opacity-0 filter blur-sm pointer-events-none'}"
+                      style="transition-duration: {FADE_DURATION}ms; transition-delay: 0ms"
+                    >
+                      <div class="flex flex-col gap-base" bind:this="{level2MenuContentElements[level1Index][level2Index]}">
+                        {#each level2Child.children as level3Child}
+                          {#if !level3Child.page}
+                            <div
+                              onfocus="{() => {}}"
+                              class="flex flex-row items-center justify-between group/menuItem"
+                              role="menu"
+                            >
+                              <p class="text-outline">{level3Child.name}</p>
+                            </div>
+                          {:else}
+                            <a
+                              onfocus="{() => {}}"
+                              class="flex flex-row items-center justify-between group/menuItem"
+                              href="/{menu.slug}/{level2Child.slug}/{level3Child.slug}"
+                              onclick="{() => (isMenuExpanded = false)}"
+                            >
+                              <p>{level3Child.name}</p>
+                            </a>
+                          {/if}
+                        {/each}
+                      </div>
                     </div>
-                  {/if}
+                  {/each}
                 </div>
               </div>
             </div>
@@ -226,3 +239,4 @@
     </div>
   </div>
 </div>
+<!-- <p class="z-[100]">{JSON.stringify(level2MenuContentElements)}</p> -->
