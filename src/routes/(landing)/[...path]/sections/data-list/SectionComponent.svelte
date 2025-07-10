@@ -39,6 +39,12 @@
     openItems = filteredChildSections.map((cs: any) => cs.id || cs.name);
   });
 
+  const maxWidthMap = {
+    list: 'max-w-screen-lg',
+    gallery: 'max-w-[1121px]',
+    content: 'max-w-screen-xl',
+    card: 'max-w-screen-lg',
+  }
 </script>
 <div class="w-full flex items-center justify-center">
   <Accordion.Root type="multiple" bind:value={openItems} class="w-full {['list', 'card'].includes(section.meta.type) ? 'max-w-screen-lg' : 'max-w-screen-xl'} flex flex-col {section.meta.title ? 'sm:gap-lg gap-sm' : 'gap-base'} py-6 lg:py-12 px-6 lg:px-12">
