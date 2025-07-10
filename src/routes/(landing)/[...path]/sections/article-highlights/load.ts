@@ -11,7 +11,7 @@ export async function load(section: any) {
       where: section.meta.article_categories && Array.isArray(section.meta.article_categories)
         ? { categories: { some: { id: { in: section.meta.article_categories.map((item: any) => item.id) } } } }
         : undefined,
-      take: 4,
+      take: 3,
       orderBy: {
         created_at: 'desc'
       },

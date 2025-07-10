@@ -9,7 +9,7 @@
   let viewIndex = $state<0 | 1>(0)
 </script>
 
-<div class="flex w-full items-center justify-center">
+<div id="contact-form" class="flex w-full items-center justify-center">
   <div class="w-full max-w-screen-xl grid grid-cols-1 {section.meta.type === 'one-column' ? 'md:grid-cols-6 gap-lg' : 'md:grid-cols-2 gap-x-xl gap-y-lg'} py-6 lg:py-12 px-6 lg:px-12">
     {#if section.meta.type === 'two-column'}
       <div class="flex flex-col gap-lg">

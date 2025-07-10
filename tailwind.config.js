@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 
 const plugin = require('tailwindcss/plugin')
+import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette';
+
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
   variants: {
@@ -41,7 +43,7 @@ export default {
     },
   },
   plugins: [
-    require('@tailwindcss/aspect-ratio'),
+    // require('@tailwindcss/aspect-ratio'),
     require('tailwindcss-animate'),
     plugin(function ({ matchUtilities, theme }) {
       matchUtilities(
@@ -55,6 +57,21 @@ export default {
         { values: theme('spacing') }
       )
     }),
+    plugin(function({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          'text-shadow': (value) => {
+            return {
+              'text-shadow': `0 0 1px ${value}, 0 0 1px ${value}, 0 0 1px ${value}`
+            }
+          },
+        },
+        {
+          values: flattenColorPalette(theme('colors')),
+          type: ['color'],
+        }
+      )
+    })
   ],
 }
 

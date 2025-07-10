@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"tunneldb": "ssh -f -N -L 5433:localhost:5432 cid@office.berinovasi.top -p 2203",
+		"tunneldb": "ssh -L 5433:localhost:5432 cid@office.berinovasi.top -p 2203",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
