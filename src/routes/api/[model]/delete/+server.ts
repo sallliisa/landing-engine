@@ -1,6 +1,6 @@
 import { MESSAGE } from '$lib/app/api/constants'
 import { configs } from '$lib/app/api/models/_index'
-import { buildWhereClause } from '$lib/utils/common'
+import { buildWhereClause, processFileUrls } from '$lib/utils/common'
 import { deleteFile } from '$lib/utils/filestorage'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response.js'
@@ -26,7 +26,7 @@ export async function DELETE(event) {
     if (!mergedConfig?.allow) throw Error(MESSAGE.MODEL.OPERATION_FORBIDDEN)
     const body = await request.json()
 
-    const customWhereObject = mergedConfig.where ? mergedConfig.where(event) : undefined
+    const customWhereObject = mergedConfig.where ? await mergedConfig.where(event) : undefined
 
     // Build where clause with both 'by' fields and additional where conditions
     const whereClause = {
@@ -42,11 +42,14 @@ export async function DELETE(event) {
 
     if (!previousData) throw Error(MESSAGE.MODEL.RECORD.NOT_FOUND)
 
-    // Handle file deletions using top-level types config
-    if (config.types)
-      for (const field of Object.keys(config.types))
-        if (config.types[field]?.type === 'file' && previousData?.[field])
-          await deleteFile(previousData[field])
+    // Handle file deletions using processFileUrls
+    await processFileUrls(previousData, {
+      onFile: async (url: string) => {
+        if (url) {
+          await deleteFile(url)
+        }
+      }
+    })
 
     const data = await (prisma as any)[params.model].delete({
       where: whereClause

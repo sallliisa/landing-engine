@@ -21,12 +21,12 @@
 <a href="/article/{slug}" class="py-6 flex flex-col md:flex-row items-start md:items-center gap-4 group">
   <img 
     src="{thumbnail}" 
-    class="w-full md:w-[160px] aspect-video rounded-sm object-center object-cover outline outline-outline-variant order-1 md:order-2"
-    alt="{title} - {excerpt}"
+    class="w-full md:w-[160px] aspect-[16/9] object-center object-cover outline outline-outline-variant order-1 md:order-2"
+    alt="{title}"
   />
   <div class="flex flex-col gap-sm w-full md:flex-1 order-2 md:order-1">
     <p class="group-hover:underline text-sm">{formatDate(created_at)} • {categories.join(', ')}</p>
     <p class="text-xl font-bold group-hover:underline">{title}</p>
-    <p class="text-outline text-sm group-hover:underline">{excerpt}</p>
+    {#if excerpt}<p class="text-outline text-sm group-hover:underline line-clamp-2 overflow-hidden text-ellipsis">{excerpt}</p>{/if}
   </div>
 </a>

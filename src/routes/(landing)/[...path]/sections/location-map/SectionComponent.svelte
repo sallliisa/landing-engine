@@ -5,38 +5,36 @@
 </script>
 
 <div class="flex items-center justify-center">
-  <div class="w-full max-w-screen-xl px-6 lg:px-12 py-3 flex flex-col gap-lg">
+  <div class="w-full max-w-screen-xl px-6 lg:px-12 py-6 lg:py-12 flex flex-col gap-lg">
     <SectionHeader header={section.data.content}/>
-    <div class="flex flex-col md:grid md:grid-cols-4 outline outline-outline-variant min-h-[300px] md:h-[450px]">
-      <div class="embed-preview md:col-span-3">
+    <div class="flex flex-col md:grid md:grid-cols-3 lg:grid-cols-4 outline outline-outline-variant min-h-[300px] md:h-[450px]">
+      <div class="embed-preview {section.data.childSections.length > 0 ? 'md:col-span-2 lg:col-span-3' : 'col-span-full'}">
         <div class="h-full w-full">
           {@html section.data.embed}
         </div>
       </div>
-      <div class="w-full md:w-auto md:col-span-1 border-t md:border-t-0 md:border-l border-outline-variant flex flex-col gap-lg md:max-h-full md:overflow-y-scroll">
-        <div class="flex flex-row md:flex-col gap-base overflow-x-auto max-w-full py-4">
-          {#each section.data.childSections as childSection}
-            <div class="flex flex-col gap-x-lg gap-y-base">
-              <div class="flex flex-row items-center justify-center gap-sm pl-4 sticky left-0 ">
-                <p class="font-semibold min-w-max">{childSection.name}</p>
-                <div class="h-[1px] flex-grow w-full bg-outline-variant"></div>
+      {#if section.data.childSections.length > 0}
+        <div class="w-full md:w-auto md:col-span-1 border-t md:border-t-0 md:border-l border-outline-variant flex flex-col gap-lg md:max-h-full md:overflow-y-scroll">
+          <div class="flex flex-row md:flex-col gap-base overflow-x-auto max-w-full py-4">
+            {#each section.data.childSections as childSection}
+              <div class="flex flex-col gap-x-lg gap-y-base">
+                <div class="flex flex-row items-center justify-center gap-sm pl-4 sticky left-0 ">
+                  <p class="font-semibold whitespace-nowrap min-w-max">{childSection.name}</p>
+                  <div class="h-[1px] flex-grow w-full bg-outline-variant"></div>
+                </div>
+                <div class="flex flex-row md:flex-col gap-sm gap-x-lg whitespace-nowrap min-w-max px-4">
+                  {#each childSection.gallery as galleryItem}
+                    <div class="inline-flex flex-row items-center gap-sm flex-shrink-0 md:w-full md:flex">
+                      <img src={galleryItem.media} alt={galleryItem.title} class="w-16 h-16 aspect-square object-cover flex-shrink-0"/>
+                      <p class="text-sm">{galleryItem.title}</p>
+                    </div>
+                  {/each}
+                </div>
               </div>
-              <div class="flex flex-row md:flex-col gap-sm gap-x-lg whitespace-nowrap min-w-max px-4">
-                {#each childSection.gallery as galleryItem}
-                  <div class="inline-flex flex-row items-center gap-sm flex-shrink-0 md:w-full md:flex">
-                    <img src={galleryItem.media} alt={galleryItem.title} class="w-16 h-16 aspect-square object-cover flex-shrink-0"/>
-                    <p class="text-sm">{galleryItem.title}</p>
-                  </div>
-                {/each}
-              </div>
-            </div>
-            <!-- <div class="flex flex-row items-center gap-base">
-              <img src={childSection.gallery[0].media} alt={childSection.name} class="w-16 h-16 aspect-square rounded-sm object-cover flex-shrink-0"/>
-              <p class="font-semibold">{childSection.name}</p>
-            </div> -->
-          {/each}
+            {/each}
+          </div>
         </div>
-      </div>
+      {/if}
     </div>
   </div>
 </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import {page} from '$app/state';
   import { getLocale, setLocale } from "$lib/paraglide/runtime";
   import { slide, blur, fade } from "svelte/transition";
@@ -13,6 +13,30 @@
   let isMenuExpanded = $state(false)
   let activeLevel1Index = $state<number | null>(null)
   let activeLevel2Index = $state<number | null>(null)
+  let level1MenuContentElements: (HTMLDivElement | null)[] = $state([])
+  let level2MenuContentElements: (HTMLDivElement | null)[][] = $state(page.data.menu.map((item: any) => item.children.map(() => null)))
+  let containerHeight = $state(0)
+  let isContentVisible = $state(false)
+  let isAnimating = $state(false)
+
+  const FADE_DURATION = 200
+  const HEIGHT_DURATION = 150
+
+  $effect(() => {
+    let activeLevel1ContentElement: any = null
+    let activeLevel2ContentElement: any = null
+    if (isMenuExpanded) {
+      if (activeLevel1Index != null) activeLevel1ContentElement = level1MenuContentElements[activeLevel1Index]
+      if (activeLevel2Index != null && activeLevel1Index != null) activeLevel2ContentElement = level2MenuContentElements[activeLevel1Index][activeLevel2Index]
+      if (activeLevel1ContentElement && !activeLevel2ContentElement) {
+        return containerHeight = activeLevel1ContentElement.offsetHeight
+      } else if (activeLevel1ContentElement && activeLevel2ContentElement) {
+        return containerHeight = Math.max(activeLevel1ContentElement.offsetHeight, activeLevel2ContentElement.offsetHeight)
+      }
+    } else {
+      containerHeight = 0
+    }
+  })
 
   let [currentLevel1Menu, currentLevel2Menu] = $derived.by(() => {
     const l1 = page.data.menu.find((item: any) => item.slug === page.url.pathname.split('/').filter(Boolean)[0])
@@ -22,24 +46,56 @@
 
   const debouncedMenuExpandMouseHover = debounce((index: number, mode: 'expand' | 'shrink') => {
     if (mode === 'expand') {
-      isMenuExpanded = true
-      activeLevel1Index = index
-      activeLevel2Index = null
+      if (!isMenuExpanded) {
+        console.log('initial open')
+        // Initial open
+        isAnimating = true
+        isMenuExpanded = true
+        activeLevel1Index = index
+        activeLevel2Index = null
+        setTimeout(() => {
+          isContentVisible = true
+          setTimeout(() => (isAnimating = false), FADE_DURATION)
+        }, HEIGHT_DURATION)
+      } else if (activeLevel1Index !== index) {
+        console.log('switching menus')
+        // Switching menus
+        isAnimating = true
+        isContentVisible = false
+        setTimeout(() => {
+          activeLevel1Index = index
+          activeLevel2Index = null
+          isContentVisible = true
+          setTimeout(() => {
+            isAnimating = false
+          }, HEIGHT_DURATION)
+        }, FADE_DURATION)
+      }
     } else {
-      isMenuExpanded = false
-      activeLevel1Index = null
-      activeLevel2Index = null
+      console.log('shrink')
+      // shrink
+      if (!isMenuExpanded) return
+      isAnimating = true
+      isContentVisible = false
+      setTimeout(() => {
+        isMenuExpanded = false
+        setTimeout(() => {
+          activeLevel1Index = null
+          activeLevel2Index = null
+          isAnimating = false
+        }, HEIGHT_DURATION)
+      }, FADE_DURATION)
     }
   }, 100)
 </script>
 
 <svelte:window bind:scrollY={windowScrollY} bind:outerHeight={windowHeight}/>
 {#if isMenuExpanded}
-  <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed backdrop-blur-md"></div>
+  <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed backdrop-blur-md bg-on-surface/[8%]"></div>
 {/if}
 <div class="lg:flex flex-col hidden" style="--navbar-initial-text-color: var(--initial-text-color, var(--colors-on-surface));">
   <div 
-    class="w-full flex flex-col items-center justify-center fixed z-[50] box-border transition-all border-b {isMenuExpanded ? 'text-on-surface' : windowScrollY != 0 ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)]'} {(windowScrollY != 0 && !isMenuExpanded) ? 'bg-surface border-b-outline-variant' : 'border-transparent'}"
+    class="w-full flex flex-col items-center justify-center fixed z-[50] box-border transition-all {isMenuExpanded ? 'text-on-surface' : windowScrollY != 0 ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)]'}"
   >
     <div class="flex flex-row items-center justify-between w-full px-12 py-6 max-w-screen-xl">
       <a href="{page.data.primaryMenuPath}">
@@ -95,84 +151,92 @@
       {/each}
     </div>
   {/if}
-  {#if isMenuExpanded && activeLevel1Index != null}
-    <div
-      role="menu"
-      tabindex="{activeLevel1Index}"
-      class="fixed text-sm xl:text-base w-full bg-surface outline-0 z-[49] h-[428px] border-b transition-[border] pt-[88px] border-outline-variant"
-      in:slide={{duration: 200}}
-      out:slide={{duration: 200, delay: 100}}
-    >
-      {#key activeLevel1Index}
-        <div
-          class="w-full max-w-screen-xl px-12 py-6 mx-auto grid grid-cols-3 gap-lg"
-          in:blur|global={{duration: 100, delay: 100}}
-          out:blur|global={{duration: 100}}
-        >
-          <div>
-            <p class="text-lg xl:text-xl font-bold">{page.data.menu[activeLevel1Index].name}</p>
-          </div>
-          <div class="flex flex-col gap-base">
-            {#each page.data.menu[activeLevel1Index].children as level2Child, level2Index}
-              {#if !level2Child.page}
-                <div
-                  onfocus="{() => {}}"
-                  class="flex flex-row items-center justify-between group/menuItem"
-                  onmouseover="{() => {if (level2Child.children?.length) return activeLevel2Index = level2Index}}"
-                  role="menu"
-                  tabindex="{activeLevel2Index}"
-                >
-                  <p class="text-outline">{level2Child.name}</p>
-                  {#if level2Child.children?.length}<i class="ri-arrow-right-s-line transition-all {activeLevel2Index === level2Index ? 'text-outline' : 'text-outline-variant'}"></i>{/if}
-                </div>
-              {:else}
-                <a
-                  onfocus={() => {}}
-                  class="flex flex-row items-center justify-between group/menuItem"
-                  onmouseover="{() => {if (level2Child.children?.length) return activeLevel2Index = level2Index}}"
-                  href="/{page.data.menu[activeLevel1Index].slug}/{level2Child.slug}"
-                  onclick="{() => isMenuExpanded = false}"
-                >
-                  <p>{level2Child.name}</p>
-                  {#if level2Child.children?.length}<i class="ri-arrow-right-s-line transition-all {activeLevel2Index === level2Index ? 'text-outline' : 'text-outline-variant'}"></i>{/if}
-                </a>
-              {/if}
-            {/each}
-          </div>
-          {#if activeLevel2Index != null}
-            {#key activeLevel2Index}
-              <div
-                class="flex flex-col gap-base"
-                in:blur|global={{duration: 100, delay: 100}}
-                out:blur|global={{duration: 100}}
+  <div 
+    class="fixed text-sm xl:text-base w-full bg-surface outline-0 z-[49] ease-in-out overflow-hidden {isMenuExpanded ? '' : 'pointer-events-none'}"
+    style="transition: height {HEIGHT_DURATION}ms, opacity {FADE_DURATION}ms; height: {isMenuExpanded ? containerHeight + 152 : windowScrollY != 0 ? 88 : 0}px"
+  >
+    <div class="h-[88px]"></div>
+    <div class="relative w-full h-full">
+      <div class="w-full max-w-screen-xl mx-auto px-12 relative h-full">
+        {#each page.data.menu as menu, level1Index}
+          {#if menu.children?.length}
+            <div 
+              class="absolute inset-x-0 transition-all ease-in-out {activeLevel1Index === level1Index && isContentVisible ? 'opacity-100 filter-none' : 'opacity-0 filter blur-sm pointer-events-none'}"
+              style="transition-duration: {FADE_DURATION}ms"
+            >
+              <div 
+                class="w-full pt-6 pb-10 grid grid-cols-3 gap-lg"
               >
-                {#each page.data.menu[activeLevel1Index]?.children[activeLevel2Index]?.children as level3Child, level3Index}
-                  <!-- <a href="/{page.data.menu[activeLevel1Index].slug}/{page.data.menu[activeLevel1Index]?.children[activeLevel2Index].slug}/{level3Child.slug}" onclick="{() => isMenuExpanded = false}">{level3Child.name}</a> -->
-                  {#if !level3Child.page}
+                <div>
+                  <p class="text-lg xl:text-xl font-bold">{menu.name}</p>
+                </div>
+                <div class="flex flex-col gap-base" bind:this="{level1MenuContentElements[level1Index]}">
+                  {#each menu.children as level2Child, level2Index}
+                    {#if !level2Child.page}
+                      <div
+                        onfocus="{() => {}}"
+                        class="flex flex-row items-center justify-between group/menuItem"
+                        onmouseover="{() => {if (level2Child.children?.length) return activeLevel2Index = level2Index}}"
+                        role="menu"
+                        tabindex="{activeLevel2Index}"
+                      >
+                        <p class="text-outline">{level2Child.name}</p>
+                        {#if level2Child.children?.length}<i class="ri-arrow-right-s-line transition-all {activeLevel2Index === level2Index ? 'text-outline' : 'text-outline-variant'}"></i>{/if}
+                      </div>
+                    {:else}
+                      <a
+                        onfocus={() => {}}
+                        class="flex flex-row items-center justify-between group/menuItem"
+                        onmouseover="{() => {if (level2Child.children?.length) return activeLevel2Index = level2Index}}"
+                        href="/{menu.slug}/{level2Child.slug}"
+                        onclick="{() => isMenuExpanded = false}"
+                      >
+                        <p>{level2Child.name}</p>
+                        {#if level2Child.children?.length}<i class="ri-arrow-right-s-line transition-all {activeLevel2Index === level2Index ? 'text-outline' : 'text-outline-variant'}"></i>{/if}
+                      </a>
+                    {/if}
+                  {/each}
+                </div>
+                <div class="relative">
+                  {#each menu.children as level2Child, level2Index}
                     <div
-                      onfocus="{() => {}}"
-                      class="flex flex-row items-center justify-between group/menuItem"
-                      role="menu"
-                      tabindex="{activeLevel2Index}"
+                      class="absolute inset-0 transition-all {activeLevel2Index === level2Index &&
+                      isContentVisible
+                        ? 'opacity-100 filter-none'
+                        : 'opacity-0 filter blur-sm pointer-events-none'}"
+                      style="transition-duration: {FADE_DURATION}ms; transition-delay: 0ms"
                     >
-                      <p class="text-outline">{level3Child.name}</p>
+                      <div class="flex flex-col gap-base" bind:this="{level2MenuContentElements[level1Index][level2Index]}">
+                        {#each level2Child.children as level3Child}
+                          {#if !level3Child.page}
+                            <div
+                              onfocus="{() => {}}"
+                              class="flex flex-row items-center justify-between group/menuItem"
+                              role="menu"
+                            >
+                              <p class="text-outline">{level3Child.name}</p>
+                            </div>
+                          {:else}
+                            <a
+                              onfocus="{() => {}}"
+                              class="flex flex-row items-center justify-between group/menuItem"
+                              href="/{menu.slug}/{level2Child.slug}/{level3Child.slug}"
+                              onclick="{() => (isMenuExpanded = false)}"
+                            >
+                              <p>{level3Child.name}</p>
+                            </a>
+                          {/if}
+                        {/each}
+                      </div>
                     </div>
-                  {:else}
-                    <a
-                      onfocus={() => {}}
-                      class="flex flex-row items-center justify-between group/menuItem"
-                      href="/{page.data.menu[activeLevel1Index].slug}/{page.data.menu[activeLevel1Index]?.children[activeLevel2Index]?.slug}/{level3Child.slug}"
-                      onclick="{() => isMenuExpanded = false}"
-                    >
-                      <p>{level3Child.name}</p>
-                    </a>
-                  {/if}
-                {/each}
+                  {/each}
+                </div>
               </div>
-            {/key}
+            </div>
           {/if}
-        </div>
-      {/key}
+        {/each}
+      </div>
     </div>
-  {/if}
+  </div>
 </div>
+<!-- <p class="z-[100]">{JSON.stringify(level2MenuContentElements)}</p> -->

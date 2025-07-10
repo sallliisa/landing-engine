@@ -16,7 +16,7 @@ function mergeDetailConfigs<T>(base: ModelConfig<T>, operation?: DetailConfig<T>
 }
 
 export async function GET(event) {
-  const {params, url} = event
+  const {params, url, locals} = event
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND)
     if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND)
@@ -29,10 +29,10 @@ export async function GET(event) {
 
     // Lifecycle hook - pre
     if (config.detail?.lifecycle?.pre) {
-      urlSearchParams = await config.detail?.lifecycle.pre(urlSearchParams);
+      urlSearchParams = await config.detail?.lifecycle.pre(urlSearchParams, locals);
     }
 
-    const customWhereObject = mergedConfig.where ? mergedConfig.where(event) : undefined
+    const customWhereObject = mergedConfig.where ? await mergedConfig.where(event) : undefined
 
     const whereClause = {
       ...Object.fromEntries((mergedConfig.by ?? []).map(field => {
@@ -46,7 +46,7 @@ export async function GET(event) {
     
     // Lifecycle hook - main
     if (config.detail?.lifecycle?.main) {
-      data = await config.detail?.lifecycle.main(whereClause, undefined, undefined);
+      data = await config.detail?.lifecycle.main(whereClause, undefined, undefined, locals);
     } else {
       data = await (prisma as any)[params.model].findFirst({
         where: whereClause,
@@ -59,7 +59,7 @@ export async function GET(event) {
 
     // Lifecycle hook - post
     if (config.detail?.lifecycle?.post) {
-      data = await config.detail?.lifecycle.post(data, undefined);
+      data = await config.detail?.lifecycle.post(data, undefined, locals);
     }
 
     // Process custom fields if they exist

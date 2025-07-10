@@ -5,15 +5,15 @@ export default {
   by: ['id'],
   fields: [
     'id', 'name', 'slogan', 'address', 'email', 'phone',
-    'facebook', 'instagram', 'twitter', 'youtube', 'whatsapp', 'brochure',
-    'subsidiaries', 'product_categories'
+    'facebook', 'instagram', 'twitter', 'youtube', 'whatsapp',
+    'subsidiaries'
   ],
 
   update: {
     fields: [
       'name', 'slogan', 'address', 'email', 'phone',
-      'facebook', 'instagram', 'twitter', 'youtube', 'whatsapp', 'brochure',
-      'subsidiaries', 'product_categories'
+      'facebook', 'instagram', 'twitter', 'youtube', 'whatsapp',
+      'subsidiaries'
     ],
     validation: {
       email: [

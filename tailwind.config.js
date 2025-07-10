@@ -10,7 +10,7 @@ export default {
     },
   },
   theme: {
-    // fontFamily: ['Montserrat'],
+    fontFamily: ['Montserrat'],
     extend: {
       colors: {
         error: {
@@ -41,6 +41,7 @@ export default {
     },
   },
   plugins: [
+    require('@tailwindcss/aspect-ratio'),
     require('tailwindcss-animate'),
     plugin(function ({ matchUtilities, theme }) {
       matchUtilities(

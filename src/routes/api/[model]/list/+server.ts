@@ -34,7 +34,7 @@ export async function GET(event) {
       urlSearchParams = await config.list.lifecycle.pre(urlSearchParams, locals);
     }
 
-    const customWhereObject = mergedConfig.where ? mergedConfig.where(event) : undefined
+    const customWhereObject = mergedConfig.where ? await mergedConfig.where(event) : undefined
 
     // Build where clause
     const whereClause = {

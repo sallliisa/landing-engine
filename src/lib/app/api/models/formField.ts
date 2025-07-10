@@ -94,7 +94,7 @@ export default {
       ],
       type: [
         {
-          validator: (value: string) => ['text', 'textarea', 'image', 'file', 'date'].includes(value),
+          validator: (value: string) => ['text', 'textarea', 'number', 'image', 'file', 'date', 'select'].includes(value),
           message: 'Invalid field type'
         }
       ],

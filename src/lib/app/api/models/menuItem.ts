@@ -4,7 +4,7 @@ import type { Language, MenuItem, Prisma } from "@prisma/client";
 
 export default {
   allow: true,
-  fields: ['id', 'parent_id', 'primary', 'visible', 'level', 'order', 'menu_item_type', 'show_submenu_below_navbar', 'url', 'slug'],
+  fields: ['id', 'parent_id', 'role', 'visible', 'level', 'order', 'menu_item_type', 'show_submenu_below_navbar', 'url', 'slug'],
   types: {
     order: {
       type: 'number'
@@ -65,7 +65,7 @@ export default {
 
   update: {
     by: ['id'],
-    fields: ['visible', 'primary', 'show_submenu_below_navbar'],
+    fields: ['visible', 'role', 'show_submenu_below_navbar'],
     validation: {
       order: [
         {
@@ -76,17 +76,17 @@ export default {
     },
     lifecycle: {
       pre: async (body) => {
-        if (body.primary) {
+        if (body.role) {
           await prisma.menuItem.updateMany({
-            where: { primary: true },
-            data: { primary: false }
+            where: { role: body.role },
+            data: { role: null }
           });
         }
         if (body.visible == null) body.visible = false
         return body
       },
       post: async (body, data) => {
-        if (body.visible && body.primary) {
+        if (body.visible && body.role) {
           await prisma.menuItem.update({
             where: {id: body.id},
             data: {visible: false}
@@ -101,26 +101,37 @@ export default {
     searchableBy: ['id'],
     filterableBy: ['parent_id', "level"],
     orderBy: { order: 'asc' },
-    where: ({locals}) => {
-      if (locals.user?.role.role_group_id === 1) return undefined
-      return {
-        AND: [
-          {
-            field: 'allowedRoles',
-            operator: 'some',
-            value: {id: locals.user?.role_id}
-          }
-        ]
-      }
-    },
     fieldsForeign: {
       translations: {
         fields: ['name', 'language']
+      },
+      allowedRoles: {
+        fields: ['id']
       }
     },
     lifecycle: {
-      post: async (data) => {
-        return data
+      post: async (data, total, locals) => {
+        const userRoleId = locals?.user?.role_id;
+        const isAdmin = locals?.user?.role.role_group_id === 1;
+
+        // To add the 'can_edit' property, we must map over the data array
+        // and return new objects, as the original `data` is read-only.
+        return data.map(item => {
+          // We need to assert the type to get access to the 'allowedRoles' relation.
+          const menuItem = item as Prisma.MenuItemGetPayload<{ include: { allowedRoles: true } }>;
+          
+          let can_edit = false;
+          if (isAdmin) {
+            // Admins can edit everything.
+            can_edit = true;
+          } else if (userRoleId && menuItem.allowedRoles) {
+            // For other users, check if their role is in the item's allowedRoles list.
+            can_edit = menuItem.allowedRoles.some(role => role.id === userRoleId);
+          }
+
+          // Return a new object with all original properties plus 'can_edit'.
+          return { ...item, can_edit };
+        });
       }
     }
   },
@@ -130,6 +141,9 @@ export default {
     fieldsForeign: {
       translations: {
         fields: ['name', 'language']
+      },
+      allowedRoles: {
+        fields: ['id']
       },
       page: {
         fields: ['id'],
@@ -154,8 +168,24 @@ export default {
       },
     },
     lifecycle: {
-      async post(data) {
-        return {...data, has_page: !!data.page[0]}
+      async post(data: Record<string, any>, _total?: number, locals?: Record<string, any>) {
+        const userRoleId = locals?.user?.role_id;
+        const isAdmin = locals?.user?.role?.role_group_id === 1;
+        let can_edit = false;
+
+        if (isAdmin) {
+          can_edit = true;
+        } else if (userRoleId && data.allowedRoles) {
+          can_edit = data.allowedRoles.some((role: { id: string }) => role.id === userRoleId);
+        }
+
+        console.log(userRoleId, data.allowedRoles)
+
+        return { 
+          ...data, 
+          has_page: !!(data.page && data.page[0]),
+          can_edit
+        };
       },
     }
   },

@@ -3,7 +3,7 @@
 </script>
 
 <div class="flex items-center justify-center w-full">
-  <div class="w-full max-w-screen-md flex flex-col gap-6 pt-3 pb-6 px-6 lg:px-12">
+  <div class="w-full max-w-screen-md flex flex-col gap-6 py-6 lg:py-12 px-6 lg:px-12">
     {#if section.data.content.title || section.data.content.subtitle}
       {#if section.data.content.title || section.data.content.subtitle}
         <div class="flex flex-col items-center justify-center gap-xs">
@@ -41,7 +41,7 @@
 </div> -->
 
 <!-- <div class="flex items-center justify-center w-full">
-  <div class="w-full max-w-screen-md flex flex-col gap-6 pt-3 pb-6 px-6 lg:px-12">
+  <div class="w-full max-w-screen-md flex flex-col gap-6 py-6 lg:py-12 px-6 lg:px-12">
     {#if section.data.content.title || section.data.content.subtitle}
       <div class="flex flex-col gap-4">
         {#if section.data.content.title || section.data.content.subtitle}

@@ -27,6 +27,9 @@ export async function load(section: Record<string, any>) {
             visible: true,
             contents: {
               orderBy: {order: 'asc'},
+              where: {
+                gallery_id: null
+              },
               select: {
                 title: true,
                 description: true
@@ -56,7 +59,7 @@ export async function load(section: Record<string, any>) {
     formType: formTypeData,
     formDataTemplate: {
       form_type_id: section.meta.form_type_id,
-      data: formTypeData?.fields.map(field => ({...field, value: null}))
+      data: formTypeData?.fields.map(field => ({...field, value: undefined}))
     },
     content: sectionData?.contents[0],
     contactDetail: {

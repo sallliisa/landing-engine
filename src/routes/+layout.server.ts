@@ -18,7 +18,7 @@ function getFullSlugPath(node: any): string {
 
 export async function load({params, url, untrack}) {
   console.log('RAN MAIN LAYOUT')
-  const [menu, primaryMenu, companyProfile] = await Promise.all([
+  const [menu, primaryMenu, documentRequestMenu, helpCenterMenu, companyProfile, collection] = await Promise.all([
     prisma.menuItem.findMany({
       where: {
         level: 1,
@@ -133,7 +133,39 @@ export async function load({params, url, untrack}) {
       }
     }),
     prisma.menuItem.findFirst({
-      where: {primary: true},
+      where: {role: 'home'},
+      select: {
+        slug: true,
+        parent: {
+          select: {
+            slug: true,
+            parent: {
+              select: {
+                slug: true,
+              }
+            }
+          }
+        }
+      }
+    }),
+    prisma.menuItem.findFirst({
+      where: {role: 'document_request'},
+      select: {
+        slug: true,
+        parent: {
+          select: {
+            slug: true,
+            parent: {
+              select: {
+                slug: true,
+              }
+            }
+          }
+        }
+      }
+    }),
+    prisma.menuItem.findFirst({
+      where: {role: 'help_center'},
       select: {
         slug: true,
         parent: {
@@ -149,6 +181,7 @@ export async function load({params, url, untrack}) {
       }
     }),
     prisma.companyProfile.findFirst({where: {id: 1}}),
+    prisma.collection.findMany({})
   ])
 
   if (primaryMenu && untrack(() => url.pathname == '/')) {
@@ -173,7 +206,10 @@ export async function load({params, url, untrack}) {
               }))
             })),
     primaryMenuPath: primaryMenu ? getFullSlugPath(primaryMenu) : '',
+    documentRequestMenuPath: documentRequestMenu ? getFullSlugPath(documentRequestMenu) : '',
+    helpCenterMenuPath: helpCenterMenu ? getFullSlugPath(helpCenterMenu) : '',
     companyProfile,
+    collection
     // currentPageSectionGroup: currentPageSectionGroup
   }
 }

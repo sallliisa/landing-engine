@@ -110,6 +110,41 @@ export default {
         }
       }
     },
+    where: async (event) => {
+      if (event.locals.user?.role.role_group_id === 1) return undefined;
+      
+      // Get all category IDs that the user's role has access to
+      const roleWithCategories = await prisma.role.findUnique({
+        where: { id: event.locals.user?.role_id },
+        select: {
+          accessibleArticleCategory: {
+            select: { id: true }
+          }
+        }
+      });
+
+      const accessibleCategoryIds = roleWithCategories?.accessibleArticleCategory.map((cat: { id: string }) => cat.id) || [];
+      
+      // If role has no accessible categories, return no results
+      if (accessibleCategoryIds.length === 0) {
+        return { 
+          AND: [
+            { field: 'id', operator: 'equals', value: 'non-existent-id' }
+          ]
+        };
+      }
+
+      // Check that the article has ALL the categories that the role has access to
+      return {
+        AND: [
+          {
+            field: 'categories',
+            operator: 'some' as const,
+            value: { id: { in: accessibleCategoryIds } }
+          }
+        ]
+      };
+    }
   },
 
   detail: {

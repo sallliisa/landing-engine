@@ -124,7 +124,7 @@
           {#if articleListMeta && articleListMeta.totalPages > 1}
             <div class="flex justify-between items-center pt-4 border-t border-outline-variant">
               <Button
-                on:click={() => {
+                onclick={() => {
                   if (urlSearchParameters.page && urlSearchParameters.page > 1) {
                     urlSearchParameters.page -= 1;
                   }
@@ -138,7 +138,7 @@
               </Button>
               <p class="text-sm">{urlSearchParameters.page} <span class="text-outline-variant"> / </span> {articleListMeta.totalPages}</p>
               <Button
-                on:click={() => {
+                onclick={() => {
                   if (urlSearchParameters.page && urlSearchParameters.page < articleListMeta.totalPages) {
                      urlSearchParameters.page += 1;
                   }

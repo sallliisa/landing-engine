@@ -4,6 +4,7 @@
   import ListView from "./_layouts/ListView.svelte";
   import GalleryView from "./_layouts/GalleryView.svelte";
   import ContentView from "./_layouts/ContentView.svelte";
+  import CardView from "./_layouts/CardView.svelte";
 
   const {section} = $props()
 
@@ -39,9 +40,8 @@
   });
 
 </script>
-
 <div class="w-full flex items-center justify-center">
-  <Accordion.Root type="multiple" bind:value={openItems} class="w-full {section.meta.type === 'list' ? 'max-w-screen-lg' : 'max-w-screen-xl'} flex flex-col {section.meta.title ? 'sm:gap-lg gap-sm' : 'gap-base'} py-3 px-6 lg:px-12">
+  <Accordion.Root type="multiple" bind:value={openItems} class="w-full {['list', 'card'].includes(section.meta.type) ? 'max-w-screen-lg' : 'max-w-screen-xl'} flex flex-col {section.meta.title ? 'sm:gap-lg gap-sm' : 'gap-base'} py-6 lg:py-12 px-6 lg:px-12">
     {#if section.meta.searchable || section.meta.title}
       <div class="flex flex-col gap-base sm:flex-row items-center justify-between">
         {#if section.meta.title}<p class="text-xl font-bold whitespace-nowrap">{section.meta.title}</p>{/if}
@@ -95,8 +95,10 @@
             {:else if section.meta.type === 'content'}
               <div class="flex flex-row gap-8 flex-wrap">
                 <ContentView childSection={childSection.filteredContents}/>
-                <!-- {#each childSection.filteredContents as content} -->
-                <!-- {/each} -->
+              </div>
+            {:else if section.meta.type === 'card'}
+              <div class="flex flex-row gap-8 flex-wrap">
+                <CardView childSection={childSection.filteredContents}/>
               </div>
             {/if}
           </Accordion.Content>

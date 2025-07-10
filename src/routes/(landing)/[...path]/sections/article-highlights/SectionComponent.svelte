@@ -1,6 +1,7 @@
 <script lang="ts">
   import ArticleItem from "$lib/app/components/app/ArticleItem.svelte";
   import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
+  import { m } from "$lib/paraglide/messages";
   import { formatDate } from "$lib/utils/common";
 
   const {section} = $props()
@@ -9,7 +10,7 @@
 <div
   class="flex items-center justify-center bg-cover bg-center"
 >
-  <div class="w-full max-w-screen-xl flex flex-col py-3 gap-6 px-6 lg:px-12">
+  <div class="w-full max-w-screen-xl flex flex-col py-6 lg:py-12 gap-6 px-6 lg:px-12">
     <SectionHeader header={section.data.content}/>
     <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-lg">
       {#if section.data.article && section.data.article.length > 0}
@@ -18,15 +19,15 @@
           <div class="flex flex-col gap-sm w-full">
             <p class="text-sm sm:text-base group-hover:underline">{formatDate(section.data.article[0].created_at)} • {section.data.article[0].categories.join(', ')}</p>
             <p class="text-lg sm:text-xl font-bold group-hover:underline">{section.data.article[0].title}</p>
-            <p class="text-sm text-outline group-hover:underline">{section.data.article[0].excerpt}</p>
+            <p class="text-sm text-outline group-hover:underline line-clamp-2 overflow-hidden text-ellipsis">{section.data.article[0].excerpt}</p>
           </div>
         </a>
         <div class="flex flex-col gap-sm col-span-1 md:col-span-1 lg:col-span-6 lg:-mt-6">
-          {#each section.data.article.slice(1) as articleItem}, index (articleItem.id || index)}
+          {#each section.data.article.slice(1) as articleItem}
             <ArticleItem
               title={articleItem.title}
               excerpt={articleItem.excerpt}
-              created_at={formatDate(articleItem.created_at)}
+              created_at={new Date(articleItem.created_at).toJSON()}
               categories={articleItem.categories}
               thumbnail={articleItem.thumbnail}
               slug={articleItem.slug}
@@ -34,7 +35,7 @@
           {/each}
         </div>
       {:else}
-        <p class="col-span-full text-center py-10">No articles to display.</p>
+        <p class="col-span-full text-start text-outline">{m.no_articles_to_display()}</p>
       {/if}
     </div>
   </div>

@@ -30,8 +30,30 @@ export async function POST({ request }) {
   // Delete all sections in the destination group (children first)
   await prisma.section.deleteMany({ where: { section_group_id: destination_id } });
 
+  async function copyNestedSectionGroup(group: any, newParentSectionId: string) {
+    // 1. Copy the section group itself
+    const newGroup = await prisma.sectionGroup.create({
+      data: {
+        order: group.order,
+        parent_section_id: newParentSectionId
+      }
+    });
+
+    // 2. Copy all sections from the old group to the new group
+    const sectionsToCopy = await prisma.section.findMany({
+        where: {
+            section_group_id: group.id,
+            parent_section_id: null
+        }
+    });
+
+    for (const section of sectionsToCopy) {
+        await copySection(section, newGroup.id, null);
+    }
+  }
+
   // Helper to recursively copy a section and its children
-  async function copySection(section: any, newSectionGroupId: string, parentSectionId: string | null = null) {
+  async function copySection(section: any, newSectionGroupId: string | null = null, parentSectionId: string | null = null) {
     // Copy the section itself
     const { id, ...sectionData } = section;
     const newSection = await prisma.section.create({
@@ -73,16 +95,25 @@ export async function POST({ request }) {
           data: {
             ...gContentData,
             gallery_id: newGallery.id,
-            section_id: newSection.id,
+            // section_id: newSection.id,
           }
         });
       }
     }
 
+    // Copy child section groups
+    const childSectionGroups = await prisma.sectionGroup.findMany({
+        where: { parent_section_id: section.id }
+    });
+
+    for (const group of childSectionGroups) {
+        await copyNestedSectionGroup(group, newSection.id);
+    }
+
     // Copy child sections recursively
     const childSections = await prisma.section.findMany({ where: { parent_section_id: section.id } });
     for (const child of childSections) {
-      await copySection(child, newSectionGroupId, newSection.id);
+      await copySection(child, null, newSection.id);
     }
   }
 

@@ -14,6 +14,7 @@
   import NumberInput from '$lib/app/components/input/NumberInput.svelte';
   import FileInput from '$lib/app/components/input/FileInput.svelte';
   import ImageInput from '$lib/app/components/input/ImageInput.svelte';
+  import FloatingContact from '$lib/app/components/app/FloatingContact.svelte';
 
 	let wInnerWidth = $state(0)
 	
@@ -67,4 +68,5 @@
 		 </div>
 	</div> -->
 	<Footer/>
+	<FloatingContact />
 </div>

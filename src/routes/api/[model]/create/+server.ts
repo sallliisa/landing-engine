@@ -1,6 +1,6 @@
 import { MESSAGE } from '$lib/app/api/constants.js'
 import { configs } from '$lib/app/api/models/_index.js'
-import { validateFields } from '$lib/utils/common'
+import { isValidFileURL, validateFields, processFileUrls } from '$lib/utils/common.js'
 import { saveFileFromTemp } from '$lib/utils/filestorage.js'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response'
@@ -19,7 +19,7 @@ function mergeCreateConfigs<T>(base: ModelConfig<T>, operation?: CreateConfig<T>
   }
 }
 
-export async function POST({params, request}) {
+export async function POST({params, request, locals}) {
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND)
     if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND)
@@ -36,13 +36,20 @@ export async function POST({params, request}) {
       await validateFields(body, mergedConfig.validation)
     }
 
-    // Handle file uploads
+    // Process file uploads in the request body
+    body = await processFileUrls(body, {
+      onTempFile: async (url) => {
+        // If it's a temp file, move it to permanent storage
+        return await saveFileFromTemp(url);
+      }
+      // No need for onClearFile or previousData in create operation
+    });
+
+    // Process config types (e.g., multi relationships)
     if (config.types) {
       for (const field of Object.keys(config.types)) {
-        if (config.types[field]?.type === 'file' && body[field]) {
-          body[field] = await saveFileFromTemp(body[field])
-        } else if (config.types[field]?.type === 'multi' && body[field]?.length) {
-          const by = config.types[field].params.by
+        if (config.types[field]?.type === 'multi' && Array.isArray(body[field]) && body[field].length) {
+          const by = config.types[field].params.by;
           body[field] = {
             connect: body[field].map((item: any) => ({
               [by]: item[by]
@@ -55,10 +62,10 @@ export async function POST({params, request}) {
 
     // Lifecycle hooks
     if (config.create?.lifecycle?.pre)
-      body = await config.create.lifecycle.pre(body)
+      body = await config.create.lifecycle.pre(body, locals)
 
     let data = config.create?.lifecycle?.main ?
-                await config.create.lifecycle.main(body)
+                await config.create.lifecycle.main(body, locals)
               :
                 await (prisma as any)[params.model].create({
                   data: mergedConfig.fields ? 
@@ -68,7 +75,7 @@ export async function POST({params, request}) {
                 })
 
     if (config.create?.lifecycle?.post)
-      data = await config.create.lifecycle.post(body, data) as any
+      data = await config.create.lifecycle.post(body, data, locals) as any
 
     return success({data})
   } catch (err) {

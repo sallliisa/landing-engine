@@ -51,7 +51,7 @@ export async function findUser(token?: string): Promise<App.Locals['user'] | nul
 
 export async function handleProtectedRoute(request: Request): Promise<App.Locals['user']> {
   const token = request.headers.get('Authorization')?.split(' ')[1]
-  const user = await findUser(token) 
+  const user = await findUser(token)
   if (!user) {
     throw exception('Unauthorized', 401)
   }

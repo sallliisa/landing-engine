@@ -147,11 +147,94 @@ export function isFileURL(url: string) {
   return !!url.split(/[#?]/)[0].split('.').pop()?.trim();
 }
 
-export function parseSearchParams(searchParams: URLSearchParams): Record<string, unknown> {
+export function isOfSameOrigin(url: string) {
+  try {
+    const urlObj = new URL(url);
+    const appUrl = process.env.PUBLIC_APP_URL || '';
+    
+    // If PUBLIC_APP_URL is set, verify the origin matches
+    if (appUrl) {
+      const appOrigin = new URL(appUrl).origin;
+      if (urlObj.origin !== appOrigin) {
+        return false;
+      }
+    }
+    
+    return true;
+  } catch (e) {
+    // If URL parsing fails, it's not a valid URL
+    return false;
+  }
+}
+
+export function isValidTempFileURL(url: string): boolean {
+  try {
+    const urlObj = new URL(url);
+    
+    // If PUBLIC_APP_URL is set, verify the origin matches
+    if (!isOfSameOrigin(url)) return false
+    
+    // Check if path matches /storage/temp/(public|private)/...
+    const tempPathRegex = /^\/storage\/temp\/(public|private)\/.+/;
+    return tempPathRegex.test(urlObj.pathname);
+  } catch (e) {
+    // If URL parsing fails, it's not a valid temp file URL
+    return false;
+  }
+}
+
+export function isValidFileURL(url: string): boolean {
+  try {
+    const urlObj = new URL(url);
+    
+    // If PUBLIC_APP_URL is set, verify the origin matches
+    if (!isOfSameOrigin(url)) return false
+    
+    // Check if path starts with /storage/
+    return urlObj.pathname.startsWith('/storage/');
+  } catch (e) {
+    // If URL parsing fails, it's not a valid file URL
+    return false;
+  }
+}
+
+export function parseSearchParams(
+  searchParams: URLSearchParams | string | null | undefined
+): Record<string, unknown> {
   const parsed: Record<string, unknown> = {};
 
-  for (const [key, value] of searchParams.entries()) {
-    parsed[key] = castValue(value);
+  // Handle null/undefined input
+  if (searchParams == null) {
+    return parsed;
+  }
+
+  // Convert string to URLSearchParams if needed
+  const params = typeof searchParams === 'string' 
+    ? new URLSearchParams(searchParams)
+    : searchParams;
+
+  // Handle case where URLSearchParams is empty
+  if (params.toString().trim() === '') {
+    return parsed;
+  }
+
+  // Process each parameter
+  for (const [key, value] of params.entries()) {
+    if (!key) continue; // Skip empty keys
+    
+    const trimmedValue = value.trim();
+    
+    // Handle multiple values for the same key by converting to array
+    if (key in parsed) {
+      const existingValue = parsed[key];
+      if (Array.isArray(existingValue)) {
+        existingValue.push(castValue(trimmedValue));
+      } else {
+        parsed[key] = [existingValue, castValue(trimmedValue)];
+      }
+    } else {
+      parsed[key] = castValue(trimmedValue);
+    }
   }
 
   return parsed;
@@ -248,6 +331,56 @@ export function parseCode(text: string) {
     .replace(/[^a-z0-9_\s]/g, "") // Remove non-alphanumeric characters (except spaces and underscores)
     .replace(/\s+/g, "_") // Replace spaces with underscores
     .replace(/_+/g, "_"); // Replace multiple underscores with a single underscore
+}
+
+export type ProcessFileUrlOptions = {
+	onTempFile?: (url: string) => Promise<string | undefined>;
+	onClearFile?: (url: string) => Promise<void>;
+	previousData?: Record<string, any>;
+	onFile?: (url: string) => Promise<void>;
+};
+
+/**
+ * Recursively processes an object to handle file URLs.
+ * @param obj - The object to process
+ * @param options - Configuration options
+ * @returns A new object with processed file URLs
+ */
+export async function processFileUrls<T extends Record<string, any>>(
+	obj: T,
+	options: ProcessFileUrlOptions = {}
+): Promise<T> {
+	const { onTempFile, onClearFile, previousData, onFile } = options;
+	const result: Record<string, any> = Array.isArray(obj) ? [...obj] : { ...obj };
+
+	for (const [key, value] of Object.entries(result)) {
+		if (value === null || value === undefined) continue;
+
+		// Handle nested objects and arrays
+		if (typeof value === 'object') {
+			result[key] = await processFileUrls(value, { ...options, previousData: previousData?.[key] });
+			continue;
+		}
+
+		// Handle string values that might be file URLs
+		if (typeof value === 'string') {
+			if (isValidFileURL(value)) {
+				if (onFile) {
+					await onFile(value);
+				}
+				
+				if (isValidTempFileURL(value) && onTempFile) {
+					// Process temp file URL
+					result[key] = await onTempFile(value);
+				} else if (!value && previousData?.[key] && onClearFile) {
+					// Handle file clearing
+					await onClearFile(previousData[key]);
+				}
+			}
+		}
+	}
+
+	return result as T;
 }
 
 export const debounce = (fn: Function, ms = 300) => {

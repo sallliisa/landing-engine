@@ -2,6 +2,11 @@ import prisma from "$lib/utils/prisma";
 import type { Content } from "@prisma/client";
 
 export default {
+  // types: {
+  //   media: {
+  //     type: 'file'
+  //   }
+  // },
   detail: {
     allow: true,
     by: ['id']
@@ -9,6 +14,9 @@ export default {
   list: {
     allow: true,
     filterableBy: ['gallery_id'],
+    orderBy: {
+      order: 'asc'
+    },
   },
   create: {
     allow: true,
@@ -32,6 +40,10 @@ export default {
     allow: true,
     by: ['id'],
     fields: ['media', 'title', 'subtitle', 'description', 'label', 'content', 'blurb', 'media_type', 'attachment', 'status', 'order', 'url', 'url_text', 'url_type', 'amount', 'collection', 'meta'],
+  },
+  reorder: {
+    allow: true,
+    axis: ['gallery_id']
   },
   delete: {
     allow: true,
