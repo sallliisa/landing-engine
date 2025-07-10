@@ -107,7 +107,7 @@
         {/if}
       {/if}
     {/each}
-    <div class="absolute inset-0 z-[1]" style="background-image: linear-gradient(rgba(0,0,0,0.48), rgba(0,0,0,0.48)), linear-gradient(to top, rgba(0,0,0,0.33) 0%, rgba(0,0,0,0) 50%);"></div>
+    <div class="absolute inset-0 z-[1]" style="background-image: linear-gradient(rgba(0,0,0,0.16), rgba(0,0,0,0.16)), linear-gradient(to top, rgba(0,0,0,0.33) 0%, rgba(0,0,0,0) 50%);"></div>
     
     <!-- Banner Content -->
     <div class="relative w-full h-full flex flex-col items-center justify-center z-[10] px-4">
@@ -239,11 +239,11 @@
         {/if}
       {/if}
     {/each}
-    <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(rgba(0,0,0,0.48), rgba(0,0,0,0.48)), linear-gradient(to top, rgba(0,0,0,0.33) 0%, rgba(0,0,0,0) 50%);"></div>
+    <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(rgba(0,0,0,0.16), rgba(0,0,0,0.16)), linear-gradient(to top, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0) 50%);"></div>
     <div class="relative w-full h-full">
       {#each section.data.banner as banner, i (i)}
         <div 
-          class="absolute inset-0 flex flex-col gap-base items-center justify-center z-[10] max-w-[90ch] mx-auto transition-all duration-500 {activeBannerIndex === i ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
+          class="absolute inset-0 flex flex-col gap-base items-center justify-center z-[10] max-w-[90ch] mx-auto transition-all duration-500 text-shadow-outline-variant {activeBannerIndex === i ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
           style="
             transition-property: opacity, filter;
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -277,9 +277,9 @@
     {#each section.data.projectCategory as projectCategory, index}
       <a
         href="{projectCategory.url}?category_code={projectCategory.url_text}"
-        class="flex bg-center overlay before:bg-surface/5 active:before:bg-surface/10 relative bg-cover flex-col text-surface h-full items-start justify-end gap-xs {activeProjectCategoryIndex === index ? 'px-6 py-4' : 'px-1 py-1'} transition-all"
+        class="flex bg-center overlay before:bg-surface/5 active:before:bg-surface/10 relative bg-cover flex-col text-surface h-full items-start justify-end gap-xs text-shadow-outline-variant {activeProjectCategoryIndex === index ? 'px-6 py-4' : 'px-1 py-1'} transition-all"
         style="
-          background-image: linear-gradient(rgba(0,0,0,0.32), rgba(0,0,0,0.32)), linear-gradient(to top, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0) 100%), url({projectCategory.media});
+          background-image: linear-gradient(rgba(0,0,0,0.16), rgba(0,0,0,0.16)), linear-gradient(to top, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0) 100%), url({projectCategory.media});
           width: {activeProjectCategoryIndex === index ? `${(windowWidth)*0.475}px` : `${((windowWidth)-((windowWidth)*0.475))/(section.data.projectCategory?.length-1)}px`};
         "
         onmouseover={() => debouncedOnCategoryHover(index)}

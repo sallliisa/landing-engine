@@ -5,7 +5,7 @@
   const {section} = $props()
 
   const bgImage = section.meta.add_overlay 
-    ? `linear-gradient(rgba(0,0,0,0.48), rgba(0,0,0,0.48)), linear-gradient(${section.meta.content_align === 'vertical' ? 'to top' : 'to right'}, rgba(17,31,85,0.2) 0%, rgba(17,31,85,0) 100%), url('${section.meta.background_image}')` 
+    ? `linear-gradient(rgba(0,0,0,0.16), rgba(0,0,0,0.16)), linear-gradient(${section.meta.content_align === 'vertical' ? 'to top' : 'to right'}, rgba(17,31,85,0.2) 0%, rgba(17,31,85,0) 100%), url('${section.meta.background_image}')` 
     : `linear-gradient(${section.meta.content_align === 'vertical' ? 'to top' : 'to right'}, rgba(17,31,85,0.2) 0%, rgba(17,31,85,0) 50%), url('${section.meta.background_image}')`;
   
   const contentAlignClassMap = {
@@ -38,7 +38,7 @@
   }
 </script>
 
-<div class="flex flex-col w-full bg-cover bg-center bg-no-repeat {section.meta.add_overlay ? 'text-surface' : 'text-on-surface'}" style="background-image: {bgImage}">
+<div class="flex flex-col w-full bg-cover bg-center bg-no-repeat {section.meta.add_overlay ? 'text-surface text-shadow-outline-variant' : 'text-on-surface'}" style="background-image: {bgImage}">
   <div class="flex gap-lg px-6 lg:px-12 min-h-[40vh] {section.data.gallery.length > 0 && section.meta.content_align === 'vertical' ? 'pt-6 md:pt-12 lg:pt-16' : 'p-6 md:p-12 lg:p-16'} {(contentAlignClassMap as any)[section.meta.content_align].container}">
     <div class="{section.meta.content_align === 'vertical' ? 'block' : 'hidden'}"></div>
     <div class="flex flex-col gap-lg w-full {section.meta.content_align === 'horizontal' && section.data.gallery.length > 0 ? 'md:w-1/2' : 'w-full'} {section.data.gallery.length > 0 ? '' : 'pb-6 md:pb-0'} {(contentAlignClassMap as any)[section.meta.content_align].content.container}">

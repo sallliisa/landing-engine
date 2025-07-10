@@ -70,8 +70,8 @@
       {/if}
     {/if}
   {/each}
-  <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32));"></div>
-  <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);"></div>
+  <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.16));"></div>
+  <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(to top, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0) 100%);"></div>
   <div class="w-full h-full absolute bottom-0 left-0 z-10 p-8">
     <div class="absolute bottom-8 right-8 hidden lg:flex">
       {@render contactButton()}
@@ -80,7 +80,7 @@
       <div 
         class="absolute pr-4 pt-4 bottom-4 left-4 sm:bottom-8 sm:left-8 max-w-[90ch] flex flex-col gap-4"
       >
-        <div class="flex flex-col gap-4 text-left transition-all duration-500 {activeBannerIndex === i ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
+        <div class="flex flex-col gap-4 text-left transition-all duration-500 text-shadow-outline-variant {activeBannerIndex === i ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
           style="
             transition-property: opacity, filter;
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);

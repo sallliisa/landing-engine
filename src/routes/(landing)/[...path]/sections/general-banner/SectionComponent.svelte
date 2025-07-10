@@ -6,7 +6,7 @@
 
   const isEmptyDescription = !section.data.contents[0].description || section.data.contents[0].description.trim() === '';
   const bgImage = section.meta.add_overlay 
-    ? `linear-gradient(rgba(0,0,0,0.48), rgba(0,0,0,0.48)), url('${section.meta.background_image}')` 
+    ? `linear-gradient(rgba(0,0,0,0.16), rgba(0,0,0,0.16)), url('${section.meta.background_image}')` 
     : `url('${section.meta.background_image}')`;
 
   let initialNavbarTextColor = section.meta.add_overlay ? 'var(--colors-surface)' : 'var(--colors-on-surface)'; // Or your specific color values
@@ -25,7 +25,7 @@
   });
 </script>
 
-<div class="flex flex-col {section.meta.add_overlay ? 'text-surface' : 'text-on-surface'}">
+<div class="flex flex-col {section.meta.add_overlay ? 'text-surface text-shadow-outline-variant' : 'text-on-surface'}">
   <div
     class="h-fit lg:h-[50vh] flex justify-center bg-cover bg-center border-b border-outline-variant {isEmptyDescription ? 'items-end' : 'items-center'}"
     style="background-image: {bgImage}"
