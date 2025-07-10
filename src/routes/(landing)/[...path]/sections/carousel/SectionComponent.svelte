@@ -45,7 +45,7 @@
   >
     <div class="absolute inset-0 -z-10">
       <img 
-        src={item.media} 
+        src={"https://images.trvl-media.com/lodging/93000000/92770000/92760700/92760622/d90277ff.jpg?impolicy=resizecrop&rw=575&rh=575&ra=fill"} 
         alt="" 
         class="w-full h-full object-cover"
       />
