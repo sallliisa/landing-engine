@@ -49,6 +49,10 @@
         alt="" 
         class="w-full h-full object-cover"
       />
+      {#if item.title || item.subtitle || item.description || item.collection?.length}
+        <div class="absolute inset-0 bg-gradient-to-b from-black/[12%] to-black/[12%]"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/[12%] to-transparent"></div>
+      {/if}
     </div>
     {#if item.url}
       <a
@@ -78,7 +82,7 @@
         </div>
       </a>
     {:else}
-      <div class="flex flex-col gap-base p-8 items-start justify-between text-surface h-full w-full [text-shadow:_0_0_1px_#CDC9C9,_0_0_1px_#CDC9C9,_0_0_1px_#CDC9C9]">
+      <div class="flex flex-col gap-base p-8 items-start justify-between text-surface h-full w-full">
         <div class="flex flex-col gap-base">
           <div class="flex flex-col gap-xs">
             <p class="text-2xl md:text-3xl font-bold">{item.title}</p>
