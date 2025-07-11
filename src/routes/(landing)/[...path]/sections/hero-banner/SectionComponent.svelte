@@ -7,7 +7,7 @@
 
   const {section} = $props()
 
-  let activeBannerIndex = $state(0)
+  let activeBannerIndex = $state(1)
   let activeQuickAccessIndex = $state(0)
   let activeProjectCategoryIndex = $state(0)
   let windowWidth = $state(0)
@@ -60,11 +60,11 @@
     activeProjectCategoryIndex = index
   }, 100)
 
-  setInterval(() => {
-    if (!isMobile) {
-      activeBannerIndex = (activeBannerIndex + 1) % section.data.banner.length
-    }
-  }, 10000)
+  // setInterval(() => {
+  //   if (!isMobile) {
+  //     activeBannerIndex = (activeBannerIndex + 1) % section.data.banner.length
+  //   }
+  // }, 10000)
 </script>
 
 <svelte:window bind:innerWidth={windowWidth} />

@@ -93,6 +93,15 @@
 {#if isMenuExpanded}
   <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed backdrop-blur-md bg-on-surface/[8%]"></div>
 {/if}
+<div
+  role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}"
+  class="z-[48] h-[88px] w-screen top-0 fixed bg-gradient-to-b from-on-surface/[16%] to-transparent"
+  style="
+    backdrop-filter: blur(0px);
+    mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  "
+></div>
 <div class="lg:flex flex-col hidden" style="--navbar-initial-text-color: var(--initial-text-color, var(--colors-on-surface));">
   <div 
     class="w-full flex flex-col items-center justify-center fixed z-[50] box-border transition-all {isMenuExpanded ? 'text-on-surface' : windowScrollY != 0 ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)] text-shadow-outline-variant'}"
