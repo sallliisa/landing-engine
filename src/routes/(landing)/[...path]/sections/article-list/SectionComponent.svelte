@@ -14,6 +14,8 @@
   let articleListMeta = $state<any>({}); 
   let rawSearchInput = $state(''); 
 
+  const articleCategories = section.meta.article_categories?.length ? section.meta.article_categories : section.data.articleCategory;
+
   let urlSearchParameters = $state<{
     search?: string,
     article_category_ids?: string[], 
@@ -64,34 +66,47 @@
     debouncedSetSearchQuery(rawSearchInput);
   }
 
+  function handleCategoryClick(category: any, type: 'single' | 'multi') {
+    switch (type) {
+      case 'single':
+        if (urlSearchParameters.article_category_ids?.length === 1 && urlSearchParameters.article_category_ids[0] === category.id) {
+          urlSearchParameters.article_category_ids = undefined;
+        } else {
+          urlSearchParameters.article_category_ids = [category.id];
+        }
+        break;
+      case 'multi':
+        if (!urlSearchParameters.article_category_ids) {
+          urlSearchParameters.article_category_ids = [category.id];
+        } else if (urlSearchParameters.article_category_ids.includes(category.id)) {
+          urlSearchParameters.article_category_ids = urlSearchParameters.article_category_ids.filter(id => id !== category.id);
+          if (urlSearchParameters.article_category_ids.length === 0) {
+            urlSearchParameters.article_category_ids = undefined;
+          }
+        } else {
+          urlSearchParameters.article_category_ids = [...urlSearchParameters.article_category_ids, category.id];
+        }
+        break;
+    }
+    urlSearchParameters.page = 1;
+  }
+
 </script>
 
 <div class="flex justify-center w-full">
-  <div class="w-full max-w-screen-xl grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-6 lg:gap-8">
+  <div class="w-full max-w-screen-xl grid grid-cols-1 {section.meta.filter_type === 'single' ? 'md:grid-cols-1' : 'md:grid-cols-3 gap-0 md:gap-6 lg:gap-8'}">
     <!-- Sidebar: Search and Filters -->
-    <div class="md:col-span-1 p-6 md:p-8 lg:p-12 flex flex-col gap-6 md:border-r md:border-outline-variant">
+    <div class="md:col-span-1 py-12 px-6 md:px-8 lg:px-12 flex flex-col gap-6 {section.meta.filter_type === 'single' ? 'flex flex-row items-center justify-between pb-0' : 'md:border-r md:border-outline-variant'}">
       <SearchBar bind:value={urlSearchParameters.search}/>
       <div class="flex flex-row flex-wrap gap-3">
-        {#each section.data.articleCategory as category (category.id)}
+        {#each articleCategories as category (category.id)}
           <button
             type="button"
             class="px-3 py-1.5 rounded border transition text-sm
               {urlSearchParameters.article_category_ids && urlSearchParameters.article_category_ids.includes(category.id)
                 ? 'bg-primary text-on-primary border-primary'
                 : 'bg-transparent text-on-surface border-outline-variant hover:bg-surface-container-highest'}"
-            onclick={() => {
-              if (!urlSearchParameters.article_category_ids) {
-                urlSearchParameters.article_category_ids = [category.id];
-              } else if (urlSearchParameters.article_category_ids.includes(category.id)) {
-                urlSearchParameters.article_category_ids = urlSearchParameters.article_category_ids.filter(id => id !== category.id);
-                if (urlSearchParameters.article_category_ids.length === 0) {
-                  urlSearchParameters.article_category_ids = undefined;
-                }
-              } else {
-                urlSearchParameters.article_category_ids = [...urlSearchParameters.article_category_ids, category.id];
-              }
-              urlSearchParameters.page = 1;
-            }}
+            onclick={() => handleCategoryClick(category, section.meta.filter_type as 'single' | 'multi')}
           >
             {category.name}
           </button>
