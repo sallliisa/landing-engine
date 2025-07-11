@@ -33,7 +33,14 @@
     activeBannerIndex = (activeBannerIndex + 1) % section.data.banner.length
   }, 10000)
 
-  
+  let contactForm = $state<HTMLElement | null>(null)
+
+  $effect(() => {
+    if (!browser) return
+    setTimeout(() => {
+      contactForm = document.getElementById('contact-form')
+    }, (0));
+  })
 </script>
 
 <div class="h-screen flex items-end bg-black/80 text-white w-full relative">
@@ -106,7 +113,7 @@
 </div>
 
 {#snippet contactButton()}
-  {#if document.getElementById('contact-form')}
+  {#if contactForm}
     <Button
       class="flex flex-row items-center gap-2 max-w-fit"
       onclick={() => {
