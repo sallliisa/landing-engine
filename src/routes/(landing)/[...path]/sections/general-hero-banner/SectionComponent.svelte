@@ -32,6 +32,8 @@
   setInterval(() => {
     activeBannerIndex = (activeBannerIndex + 1) % section.data.banner.length
   }, 10000)
+
+  
 </script>
 
 <div class="h-screen flex items-end bg-black/80 text-white w-full relative">
@@ -104,18 +106,20 @@
 </div>
 
 {#snippet contactButton()}
-  <Button
-    class="flex flex-row items-center gap-2 max-w-fit"
-    onclick={() => {
-      const el = document.getElementById('contact-form');
-      if (el) {
-        const yOffset = -88;
-        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
-    }}
-    >
-    <span>Contact Us</span>
-    <i class="ri-customer-service-line"></i>
-  </Button>
+  {#if document.getElementById('contact-form')}
+    <Button
+      class="flex flex-row items-center gap-2 max-w-fit"
+      onclick={() => {
+        const el = document.getElementById('contact-form');
+        if (el) {
+          const yOffset = -88;
+          const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }}
+      >
+      <span>Contact Us</span>
+      <i class="ri-customer-service-line"></i>
+    </Button>
+  {/if}
 {/snippet}
