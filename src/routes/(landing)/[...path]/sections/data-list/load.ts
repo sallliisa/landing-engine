@@ -14,8 +14,14 @@ export async function load(section: Record<string, any>) {
       childSectionGroups: {
         include: {
           sections: {
+            orderBy: {
+              order: 'asc'
+            },
             include: {
               galleries: {
+                orderBy: {
+                  order: 'asc'
+                },
                 include: {
                   contents: {
                     orderBy: {
