@@ -33,13 +33,13 @@
     activeBannerIndex = (activeBannerIndex + 1) % section.data.banner.length
   }, 10000)
 
-  let contactForm = $state<HTMLElement | null>(null)
+  let contactForm = $state<boolean | null>(null)
 
   $effect(() => {
     if (!browser) return
     setTimeout(() => {
-      contactForm = document.getElementById('contact-form')
-    }, (0));
+      contactForm = !!document.getElementById('contact-form') || section.meta.has_contact_form
+    }, (100));
   })
 </script>
 

@@ -106,11 +106,11 @@
               <div class="flex flex-row items-center gap-base">
                 <div class="flex flex-row items-center gap-xs">
                   <i class="ri-building-4-line"></i>
-                  <p class="text-sm">{categoryFilterNameMap[project.meta?.category]}</p>
+                  <p class="text-xs">{categoryFilterNameMap[project.meta?.category]}</p>
                 </div>
                 <div class="flex flex-row items-center gap-xs">
                   <i class="ri-map-pin-line"></i>
-                  <p class="text-sm">{locationFilterNameMap[project.meta?.location]}</p>
+                  <p class="text-xs">{locationFilterNameMap[project.meta?.location]}</p>
                 </div>
               </div>
             </div>

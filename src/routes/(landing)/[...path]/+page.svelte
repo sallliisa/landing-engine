@@ -2,6 +2,8 @@
   import { page } from '$app/state';
   import { onMount } from 'svelte';
   import { sectionComponents } from './sections/index.js'
+  import SectionWrapper from './SectionWrapper.svelte';
+  import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
 
   export let data;
 
@@ -24,12 +26,25 @@
       {@const sectionComponentPromise = getSectionComponent(section.section_type_code)}
         {#if sectionComponentPromise}
           {#await sectionComponentPromise then SectionComponent}
-            <SectionComponent {section}/>
+            {#if index != 0}
+            <IntersectionObserver
+              threshold={0.1} 
+              animationDelay={100} 
+              animationDirection="fade-up"
+              once
+            >
+              <SectionComponent {section}/>
+            </IntersectionObserver>
+            {:else}
+              <SectionComponent {section}/>
+            {/if}
           {/await}
         {:else}
-          <div class="h-[20vh] bg-primary flex items-center justify-center">
-            <p class="text-4xl font-bold">Section Missing</p>
-          </div>
+          <!-- <SectionWrapper {section} {index}> -->
+            <div class="h-[20vh] bg-primary flex items-center justify-center">
+              <p class="text-4xl font-bold">Section Missing</p>
+            </div>
+          <!-- </SectionWrapper> -->
         {/if}
       {/if}
     {/if}
