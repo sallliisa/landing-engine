@@ -27,14 +27,14 @@
         {#if sectionComponentPromise}
           {#await sectionComponentPromise then SectionComponent}
             {#if index != 0}
-            <IntersectionObserver
+            <!-- <IntersectionObserver
               threshold={0.1} 
               animationDelay={100} 
               animationDirection="fade-up"
               once
-            >
+            > -->
               <SectionComponent {section}/>
-            </IntersectionObserver>
+            <!-- </IntersectionObserver> -->
             {:else}
               <SectionComponent {section}/>
             {/if}
