@@ -8,9 +8,18 @@ export async function load(section: any) {
       where: {section_id: section.id}
     }),
     prisma.article.findMany({
-      where: section.meta.article_categories && Array.isArray(section.meta.article_categories)
-        ? { categories: { some: { id: { in: section.meta.article_categories.map((item: any) => item.id) } } } }
-        : undefined,
+      where: {
+        AND: [
+          ...(section.meta.article_categories_or && Array.isArray(section.meta.article_categories_or) && section.meta.article_categories_or.length > 0
+            ? [{ categories: { some: { id: { in: section.meta.article_categories_or.map((item: any) => item.id) } } } }]
+            : []),
+          ...(section.meta.article_categories_and && Array.isArray(section.meta.article_categories_and) && section.meta.article_categories_and.length > 0
+            ? section.meta.article_categories_and.map((category: any) => ({
+                categories: { some: { id: category.id } }
+              }))
+            : [])
+        ]
+      },
       take: 3,
       orderBy: {
         created_at: 'desc'

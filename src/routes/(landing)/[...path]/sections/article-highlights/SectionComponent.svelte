@@ -14,7 +14,7 @@
     <SectionHeader header={section.data.content}/>
     <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-lg">
       {#if section.data.article && section.data.article.length > 0}
-        <a href={`/article/${section.data.article[0].slug}`} class="col-span-1 md:col-span-1 lg:col-span-6 flex flex-col gap-base group">
+      <a href={`/article/${section.data.article[0].slug}`} class="col-span-1 md:col-span-1 lg:col-span-6 flex flex-col gap-base group">
           <img src="{section.data.article[0].thumbnail}" class="w-full h-[240px] sm:h-[320px] object-center object-cover outline outline-outline-variant" alt={section.data.article[0].title}/>
           <div class="flex flex-col gap-sm w-full">
             <p class="text-sm sm:text-base group-hover:underline">{formatDate(section.data.article[0].created_at)} • {section.data.article[0].categories.join(', ')}</p>
