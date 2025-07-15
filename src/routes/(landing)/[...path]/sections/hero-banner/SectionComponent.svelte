@@ -274,7 +274,7 @@
   <div class="h-[20vh] w-full flex flex-row items-center gap-[0px]">
     {#each section.data.projectCategory as projectCategory, index}
       <a
-        href="{projectCategory.url}?category_code={projectCategory.url_text}"
+        href="{projectCategory.url}?category_code={projectCategory.url_text}#project-list"
         class="flex bg-center overlay before:bg-surface/5 active:before:bg-surface/10 relative bg-cover flex-col text-surface h-full items-start justify-end gap-xs text-shadow-outline-variant {activeProjectCategoryIndex === index ? 'px-6 py-4' : 'px-1 py-1'} transition-all"
         style="
           background-image: linear-gradient(rgba(0,0,0,0.16), rgba(0,0,0,0.16)), linear-gradient(to top, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0) 100%), url({projectCategory.media});
