@@ -6,6 +6,7 @@
   import ArticleItem from "$lib/app/components/app/ArticleItem.svelte";
   import Spinner from "$lib/app/components/ui/Spinner.svelte";
   import Button from "$lib/app/components/ui/Button.svelte";
+  import TabItem from "$lib/app/components/ui/tabs/TabItem.svelte";
 
   const {section} = $props()
 
@@ -22,7 +23,7 @@
     page?: number,
     limit?: number,
   }>({
-    article_category_ids: section.data?.articleCategory?.id ? [section.data.articleCategory.id] : undefined,
+    article_category_ids: section.meta.allow_select_all ? undefined : [articleCategories[0]?.id],
     page: 1,
     limit: 10,
   });
@@ -70,7 +71,9 @@
     switch (type) {
       case 'single':
         if (urlSearchParameters.article_category_ids?.length === 1 && urlSearchParameters.article_category_ids[0] === category.id) {
-          urlSearchParameters.article_category_ids = undefined;
+          if (section.meta.allow_select_all) {
+            urlSearchParameters.article_category_ids = undefined;
+          }
         } else {
           urlSearchParameters.article_category_ids = [category.id];
         }
@@ -80,7 +83,7 @@
           urlSearchParameters.article_category_ids = [category.id];
         } else if (urlSearchParameters.article_category_ids.includes(category.id)) {
           urlSearchParameters.article_category_ids = urlSearchParameters.article_category_ids.filter(id => id !== category.id);
-          if (urlSearchParameters.article_category_ids.length === 0) {
+          if (urlSearchParameters.article_category_ids.length === 0 && section.meta.allow_select_all) {
             urlSearchParameters.article_category_ids = undefined;
           }
         } else {
@@ -94,23 +97,16 @@
 </script>
 
 <div class="flex justify-center w-full">
-  <div class="w-full max-w-screen-xl grid grid-cols-1 {section.meta.filter_type === 'single' ? 'md:grid-cols-1' : 'md:grid-cols-3 gap-0 md:gap-6 lg:gap-8'}">
+  <div class="w-full max-w-screen-xl grid grid-cols-1 {section.meta.type === 'one-column' ? 'md:grid-cols-1' : 'md:grid-cols-3 gap-0 md:gap-6 lg:gap-8'}">
     <!-- Sidebar: Search and Filters -->
-    <div class="md:col-span-1 py-12 px-6 md:px-8 lg:px-12 flex flex-col gap-6 {section.meta.filter_type === 'single' ? 'flex flex-row items-center justify-between pb-0' : 'md:border-r md:border-outline-variant'}">
+    <div class="md:col-span-1 py-12 px-6 md:px-8 lg:px-12 gap-6 {section.meta.type === 'one-column' ? 'flex sm:flex-row flex-col items-center justify-between pb-0' : 'md:border-r md:border-outline-variant flex flex-col'}">
       <SearchBar bind:value={urlSearchParameters.search}/>
-      <div class="flex flex-row flex-wrap gap-3">
-        {#each articleCategories as category (category.id)}
-          <button
-            type="button"
-            class="px-3 py-1.5 rounded border transition text-sm
-              {urlSearchParameters.article_category_ids && urlSearchParameters.article_category_ids.includes(category.id)
-                ? 'bg-primary text-on-primary border-primary'
-                : 'bg-transparent text-on-surface border-outline-variant hover:bg-surface-container-highest'}"
-            onclick={() => handleCategoryClick(category, section.meta.filter_type as 'single' | 'multi')}
-          >
-            {category.name}
-          </button>
-        {/each}
+      <div class="{section.meta.filter_style === 'chip' ? 'flex-wrap flex flex-row px-4 gap-y-3' : 'w-fit max-w-full overflow-auto flex items-center justify-center'}">
+        <div class="w-full flex flex-row items-center">
+          {#each articleCategories as category (category.id)}
+            {@render ArticleCategoryPicker(category)}
+          {/each}
+        </div>
       </div>
     </div>
 
@@ -253,3 +249,20 @@
 {:else}
   <p>No articles found.</p>
 {/if} -->
+
+{#snippet ArticleCategoryPicker(category: any)}
+  {#if section.meta.filter_style === 'chip'}
+    <button
+      type="button"
+      class="px-3 py-1.5 rounded border transition text-sm ml-3
+        {urlSearchParameters.article_category_ids && urlSearchParameters.article_category_ids.includes(category.id)
+          ? 'bg-primary text-on-primary border-primary'
+          : 'bg-transparent text-on-surface border-outline-variant hover:bg-surface-container-highest'}"
+      onclick={() => handleCategoryClick(category, section.meta.filter_type as 'single' | 'multi')}
+    >
+      {category.name}
+    </button>
+  {:else if section.meta.filter_style === 'tab'}
+    <TabItem onclick={() => handleCategoryClick(category, section.meta.filter_type as 'single' | 'multi')} active={urlSearchParameters.article_category_ids && urlSearchParameters.article_category_ids.includes(category.id)}>{category.name}</TabItem>
+  {/if}
+{/snippet}
