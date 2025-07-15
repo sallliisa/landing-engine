@@ -9,7 +9,7 @@
     <div class="flex flex-col gap-16 max-w-screen-xl px-12 w-full justify-center pt-8 lg:pt-0">
       <div class="flex flex-col gap-lg">
         <div class="flex flex-row items-center gap-base">
-          <Button size="square" onclick={() => history.back()}><i class="ri-arrow-left-s-line"></i></Button>
+          <Button variant="outlined" size="square" onclick={() => history.back()}><i class="ri-arrow-left-s-line"></i></Button>
           <div>
             <h1 class="text-2xl font-bold">{page.url.searchParams.get('title')}</h1>
             <p class="text-sm text-outline">{page.url.searchParams.get('description')}</p>
