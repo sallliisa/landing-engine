@@ -11,10 +11,14 @@
   import SelectInput from "$lib/app/components/input/SelectInput.svelte";
   import TextareaInput from "$lib/app/components/input/TextareaInput.svelte";
   import TextInput from "$lib/app/components/input/TextInput.svelte";
+  import {Recaptcha, recaptcha, observer} from "$lib/app/components/util/Recaptcha";
+  import { PUBLIC_RECAPTCHA_SITEKEY } from "$env/static/public";
 
   const {onSubmit} = $props()
 
   let section = getContext<Record<string, any>>('section')
+
+  const RECAPTCHA_SITEKEY = "6Lftu-cqAAAAAKR33Iaonf4Kf-vknPIsTTaVWSn0"
 
   let isLoading = $state(false)
 
@@ -69,24 +73,48 @@
     });
   });
 
+  async function validateReCaptchaToken(token: string) {
+    const {success, error} = await api.post('/api/public/recaptcha/verify', {token})
+    recaptchaError = error
+    return success
+  }
+
   async function submitForm(e: any) {
     e.preventDefault()
     if (!isFormClientValid) return
     try {
       isLoading = true
+      await validateReCaptchaToken(e.detail.token)
       const {data} = await api.post({path: '/api/public/formSubmission/submit'}, formData)
       isLoading = false
       await onSubmit()
     } catch (error: any) {
       isLoading = false
-      console.log('test2', error.error)
       formError = error.error
     }
   }
+
+  let recaptchaError = $state<string | null>(null)
+
+  const onCaptchaInitError = (event: any) => {
+    console.log("recaptcha init has failed.", event);
+  };
+
+  function validateForm(e: any) {
+    e.preventDefault()
+    recaptcha.execute();
+  }
 </script>
 
+<Recaptcha
+  sitekey={PUBLIC_RECAPTCHA_SITEKEY}
+  badge="topright"
+  size="invisible"
+  on:success={submitForm}
+  on:error={onCaptchaInitError}
+/>
 <div class="grid grid-cols-6 gap-lg">
-  <form class="flex flex-col gap-4 {section.meta.show_hkr_contact_detail ? 'col-span-4' : 'col-span-full'}" onsubmit={submitForm}>
+  <form class="flex flex-col gap-4 {section.meta.show_hkr_contact_detail ? 'col-span-4' : 'col-span-full'}" onsubmit={validateForm}>
     <div class="grid grid-cols-12 gap-4 max-w-screen-xl w-full">
       {#each formData.data as formField}
         {@const InputComponent = componentTypeMap[formField.type]}
