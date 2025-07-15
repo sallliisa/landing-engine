@@ -101,8 +101,8 @@
     <!-- Sidebar: Search and Filters -->
     <div class="md:col-span-1 py-12 px-6 md:px-8 lg:px-12 gap-6 {section.meta.type === 'one-column' ? 'flex sm:flex-row flex-col items-center justify-between pb-0' : 'md:border-r md:border-outline-variant flex flex-col'}">
       <SearchBar bind:value={urlSearchParameters.search}/>
-      <div class="{section.meta.filter_style === 'chip' ? 'flex-wrap flex flex-row px-4 gap-y-3' : 'w-fit max-w-full overflow-auto flex items-center justify-center'}">
-        <div class="w-full flex flex-row items-center">
+      <div class="{section.meta.filter_style === 'chip' ? 'flex flex-row px-4' : 'w-fit max-w-full overflow-auto flex items-center justify-center'}">
+        <div class="w-full flex flex-row items-center {section.meta.filter_style === 'chip' ? 'flex-wrap gap-y-3' : ''}">
           {#each articleCategories as category (category.id)}
             {@render ArticleCategoryPicker(category)}
           {/each}
