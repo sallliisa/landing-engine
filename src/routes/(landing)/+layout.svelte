@@ -40,11 +40,11 @@
 
 <div class="bg-surface text-on-surface min-h-screen flex flex-col justify-between">
 	<div class="flex flex-col w-full">
-		{#if wInnerWidth >= 1024}
-			<NavbarDesktop/>
+		<NavbarDesktop/>
+		<NavbarMobile/>
+		<!-- {#if wInnerWidth >= 1024}
 		{:else}
-			<NavbarMobile/>
-		{/if}
+		{/if} -->
 		{#if navigating.complete}
 			<div
 				in:fade={{ duration: 200 }}

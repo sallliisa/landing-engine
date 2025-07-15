@@ -24,7 +24,7 @@
       text: 'before:bg-on-surface/5 active:before:bg-on-surface/10 disabled:text-outline-variant',
     },
     size: {
-      square: 'p-3',
+      square: 'p-3 aspect-square',
 			wide: 'px-6 py-3',
     }
   }

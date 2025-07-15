@@ -153,7 +153,7 @@
       </div>
     </div>
   </div>
-  {#if currentLevel1Menu.show_submenu_below_navbar && !isMenuExpanded}
+  {#if currentLevel1Menu?.show_submenu_below_navbar && !isMenuExpanded}
     <div transition:blur={{duration: 150}} class="w-full z-[51] py-1.5 flex flex-row items-center justify-center gap-4 fixed top-[88px] border-y transition-all {(windowScrollY != 0) ? 'bg-surface border-y-outline-variant mt-0' : 'border-transparent -mt-4'}">
       {#each currentLevel1Menu.children as menu}
         <a href="/{currentLevel1Menu.slug}/{menu.slug}" class="text-start text-sm {windowScrollY != 0 ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)]'} {menu.slug === currentLevel2Menu.slug ? 'font-semibold underline' : ''}">{menu.translations[0].name}</a>
