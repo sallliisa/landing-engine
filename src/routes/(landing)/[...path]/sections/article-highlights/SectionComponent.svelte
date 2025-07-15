@@ -37,6 +37,6 @@
       {:else}
         <p class="col-span-full text-start text-outline">{m.no_articles_to_display()}</p>
       {/if}
-    </div>
+    </div> 
   </div>
 </div>
