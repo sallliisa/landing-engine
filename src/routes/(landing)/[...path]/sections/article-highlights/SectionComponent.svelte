@@ -14,6 +14,7 @@
   animationDirection="fade-up"
   once
 > -->
+{#if (section.data.article.length > 0)}
   <div
     class="flex items-center justify-center w-full"
   >
@@ -47,4 +48,5 @@
       </div> 
     </div>
   </div>
+{/if}
 <!-- </IntersectionObserver> -->
