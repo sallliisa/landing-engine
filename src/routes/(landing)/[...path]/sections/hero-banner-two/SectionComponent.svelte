@@ -193,6 +193,9 @@
           onmouseenter={() => {
             if (locationActiveCode || categoryActiveCode) isProjectListOpen = true
           }}
+          onclick={(e) => {
+            if (locationActiveCode || categoryActiveCode) isProjectListOpen = true
+          }}
         >
           <SelectInput
             data={[{code: 'all', name_id: 'Semua Kategori'}, ...(section.data.filter.category || [])]}
