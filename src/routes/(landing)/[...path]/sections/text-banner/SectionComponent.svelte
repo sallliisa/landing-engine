@@ -6,7 +6,7 @@
 
 <div class="flex items-center justify-center w-full">
   <div class="w-full max-w-screen-xl py-6 lg:py-12 px-6 lg:px-12 grid md:grid-cols-2 grid-cols-1 gap-lg">
-    <div class="col-span-1">
+    <div class="col-span-1 flex items-center justify-center">
       <img src="{section.data.content.media}" alt="{section.data.content.title}" class="w-full object-center object-cover"/>
     </div>
     <div class="col-span-1 flex flex-col gap-sm">

@@ -49,10 +49,10 @@
       </Label.Root>
     {/if}
     <Select.Trigger
-      class="px-4 py-3 rounded-sm outline w-full min-w-full outline-outline-variant focus-within:outline-outline select-none flex flex-row gap-2 items-center justify-between text-sm tracking-[0.01em]"
+      class="px-4 py-3 rounded-sm outline w-full min-w-full outline-outline-variant focus-within:outline-outline select-none flex flex-row gap-2 items-center justify-between text-sm tracking-[0.01em] {restProps.class}"
       aria-label={placeholder}
     >
-      <p class={value ? '' : 'text-outline'}>{selectedLabel}</p>
+      <p class={value ? 'text-on-surface' : 'text-outline'}>{selectedLabel}</p>
       <i class="ri-expand-up-down-line text-outline text-lg"></i>
     </Select.Trigger>
     {#if errorMessage}
