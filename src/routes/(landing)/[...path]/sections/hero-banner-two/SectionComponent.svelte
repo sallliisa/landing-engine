@@ -120,7 +120,6 @@
 
 <div class="h-screen flex items-end bg-black/80 text-white w-full relative">
   <!-- Preload adjacent images -->
-  {String(isProjectListOpen)}
   {#each section.data.banner as banner, i}
     {#if preloadIndexes.includes(i) && banner?.media}
       {#if (!banner?.media_type || banner?.media_type === 'image')}
@@ -160,7 +159,9 @@
   <div class="w-full h-full absolute bottom-0 left-0 z-10 p-4 sm:p-8 flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 justify-end lg:justify-normal">
     <div class="flex items-end w-full">
       {#each section.data.banner as banner, i (i)}
-        <div class="w-full">
+        <div 
+          class="absolute pr-4 pt-4 bottom-4 left-4 sm:bottom-8 sm:left-8 max-w-[100ch] flex flex-col gap-4"
+        >
           <div class="flex flex-col gap-4 text-left transition-all duration-500 text-shadow-outline-variant {activeBannerIndex === i ? 'opacity-100' : 'opacity-0 pointer-events-none absolute'}"
             style="
               transition-property: opacity, filter;
