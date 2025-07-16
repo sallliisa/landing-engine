@@ -157,19 +157,23 @@
   <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.16));"></div>
   <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(to top, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0) 100%);"></div>
   <div class="w-full h-full absolute bottom-0 left-0 z-10 p-4 sm:p-8 flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 justify-end lg:justify-normal">
-    <div class="flex items-end w-full">
+    <div class="relative w-full h-full">
       {#each section.data.banner as banner, i (i)}
         <div 
-          class="absolute pr-4 pt-4 bottom-4 left-4 sm:bottom-8 sm:left-8 max-w-[100ch] flex flex-col gap-4"
+          class="absolute pr-4 pt-4 bottom-0 left-0 max-w-[100ch] flex flex-col gap-4 transition-opacity duration-500 {activeBannerIndex === i ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'}"
+          style="
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+          "
         >
-          <div class="flex flex-col gap-4 text-left transition-all duration-500 text-shadow-outline-variant {activeBannerIndex === i ? 'opacity-100' : 'opacity-0 pointer-events-none absolute'}"
+          <div class="flex flex-col gap-4 text-left text-shadow-outline-variant"
             style="
-              transition-property: opacity, filter;
-              transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-              transition-duration: {activeBannerIndex === i ? '500ms' : '250ms'};
-              transition-delay: {activeBannerIndex === i ? '150ms' : '0ms'};
+              transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+              transform: translateZ(0);
+              backface-visibility: hidden;
+              -webkit-backface-visibility: hidden;
               filter: {activeBannerIndex === i ? 'none' : 'blur(8px)'};
-              will-change: opacity, filter;
             "
           >
             {#if section.meta.logo}<img src="{section.meta.logo}" class="max-w-[72px]" alt="{banner.subtitle}"/>{/if}
