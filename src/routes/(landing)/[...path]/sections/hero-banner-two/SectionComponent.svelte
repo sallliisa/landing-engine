@@ -157,7 +157,7 @@
   <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.16));"></div>
   <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(to top, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0) 100%);"></div>
   <div class="w-full h-full absolute bottom-0 left-0 z-10 p-4 sm:p-8 flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 justify-end lg:justify-normal">
-    <div class="relative w-full h-full">
+    <div class="relative w-full h-full z-[1]">
       {#each section.data.banner as banner, i (i)}
         <div 
           class="absolute pr-4 pt-4 bottom-0 left-0 max-w-[100ch] flex flex-col gap-4 transition-opacity duration-500 {activeBannerIndex === i ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'}"
@@ -184,7 +184,7 @@
         </div>
       {/each}
     </div>
-    <div class="flex items-end justify-end w-full mt-4 lg:mt-0">
+    <div class="flex items-end justify-end w-full mt-4 lg:mt-0 z-[5]">
       <div class="relative w-full lg:w-fit">
         <div
           class="select-container w-full p-4 bg-surface rounded-full flex flex-row items-center gap-base relative outline z-[1] outline-outline-variant text-on-surface"
