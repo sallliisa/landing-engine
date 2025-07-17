@@ -5,6 +5,7 @@
   import GalleryView from "./_layouts/GalleryView.svelte";
   import ContentView from "./_layouts/ContentView.svelte";
   import CardView from "./_layouts/CardView.svelte";
+  import MediaView from "./_layouts/MediaView.svelte";
 
   const {section} = $props()
 
@@ -44,8 +45,10 @@
     gallery: 'max-w-[1121px]',
     content: 'max-w-screen-xl',
     card: 'max-w-screen-lg',
+    media: 'max-w-screen-xl',
   }
 </script>
+
 <div class="w-full flex items-center justify-center">
   <Accordion.Root type="multiple" bind:value={openItems} class="w-full {maxWidthMap[section.meta.type]} flex flex-col {section.meta.title ? 'sm:gap-lg gap-sm' : 'gap-base'} py-6 lg:py-12 px-6 lg:px-12">
     {#if section.meta.searchable || section.meta.title}
@@ -96,6 +99,13 @@
               <div class="flex flex-row items-center justify-center gap-6 flex-wrap">
                 {#each childSection.filteredContents as content}
                   <GalleryView {content}/>
+                {/each}
+              </div>
+            {:else if section.meta.type === 'media'}
+              <div class="h-4 w-full"></div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-lg">
+                {#each childSection.filteredContents as content}
+                  <MediaView {content}/>
                 {/each}
               </div>
             {:else if section.meta.type === 'content'}
