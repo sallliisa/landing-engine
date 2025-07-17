@@ -232,10 +232,10 @@
                 </div>
               </a>
             {/each}
-            <div class="h-[16px] w-[1px]"></div>
             {#if filteredProjects.length === 0}
               <p class="text-center text-outline">Tidak ada proyek yang memenuhi kriteria</p>
             {/if}
+            <div class="h-[16px] w-[1px]"></div>
           </div>
         </div>
       </div>
