@@ -38,7 +38,7 @@
         {#if section.data.content.title || section.data.content.subtitle}
           <div class="flex flex-col gap-xs">
             {#if section.data.content.subtitle}<p class="{(contentAlignClassMap as any)[section.meta.content_align].content.content}">{section.data.content.subtitle}</p>{/if}
-            {#if section.data.content.title}<p class="text-2xl font-bold {(contentAlignClassMap as any)[section.meta.content_align].content.content}">{section.data.content.title}</p>{/if}
+            {#if section.data.content.title}<p class="text-2xl md:text-3xl font-bold {(contentAlignClassMap as any)[section.meta.content_align].content.content}">{section.data.content.title}</p>{/if}
           </div>
         {/if}
         {#if section.data.content.description}
