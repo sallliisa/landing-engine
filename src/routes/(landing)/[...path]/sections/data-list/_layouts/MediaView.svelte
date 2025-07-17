@@ -5,9 +5,9 @@
   const {content} = $props()
 </script>
 
-<div class="flex flex-col gap-sm">
-  <img class="aspect-[2/3] object-center object-cover" src={content.media} alt={content.title ?? ''}/>
-  <div class="flex flex-col gap-xs">
+<div class="flex flex-col gap-base">
+  <img class="aspect-[2/3] border border-outline-variant rounded-sm object-center object-cover" src={content.media} alt={content.title ?? ''}/>
+  <div class="flex flex-col gap-sm">
     <p class="font-bold">{content.title}</p>
     <div class="flex flex-row items-center gap-base flex-wrap text-sm">
       {#if content.url}<a href={content.url} target="_blank" rel="noopener noreferrer"><span class="underline">{content.url_text || m.learn_more()}</span> <i class="ri-arrow-right-up-line"></i></a>{/if}
