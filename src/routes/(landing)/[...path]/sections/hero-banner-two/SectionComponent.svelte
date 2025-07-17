@@ -101,11 +101,11 @@
       
       // Filter by category (if any category is selected)
       const matchesCategory = !categoryActiveCode || categoryActiveCode === 'all' || 
-        project.meta?.category === categoryActiveCode
+        project.category === categoryActiveCode
       
       // Filter by location (if any location is selected)
       const matchesLocation = !locationActiveCode || locationActiveCode === 'all' || 
-        project.meta?.location === locationActiveCode;
+        project.location === locationActiveCode;
       
       return matchesCategory && matchesLocation;
     });
@@ -217,8 +217,8 @@
         </div>
         <div
           bind:this={projectListRef}
-          class="w-full absolute bottom-[30px] left-0 rounded-t-[16px] outline overflow-hidden outline-outline-variant bg-surface text-on-surface flex flex-col gap-base transition-all duration-400"
-          style="height: {isProjectListOpen ? `${contentHeight + 30}px` : '0px'}"
+          class="w-full absolute bottom-[30px] left-0 rounded-t-[16px] outline overflow-auto outline-outline-variant bg-surface text-on-surface flex flex-col gap-base transition-all duration-400"
+          style="height: {isProjectListOpen ? `${contentHeight}px` : '0px'}"
           onclick={(e) => e.stopPropagation()}
           role="none"
         >
@@ -228,10 +228,11 @@
                 <img class="w-[66px] aspect-square rounded-sm" src={project.media} alt={project.name}/>
                 <div class="flex flex-col gap-xs">
                   <p class="font-bold">{project.title}</p>
-                  <p class="text-sm">{categoryFilterNameMap[project.meta?.category]}, {locationFilterNameMap[project.meta?.location]}</p>
+                  <p class="text-sm">{categoryFilterNameMap[project.category]}, {locationFilterNameMap[project.location]}</p>
                 </div>
               </a>
             {/each}
+            <div class="h-[16px] w-[1px]"></div>
             {#if filteredProjects.length === 0}
               <p class="text-center text-outline">Tidak ada proyek yang memenuhi kriteria</p>
             {/if}
