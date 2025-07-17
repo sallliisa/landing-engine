@@ -20,7 +20,8 @@ export default {
           muted: '#FFD1CF'
         },
         surface: {
-          DEFAULT: '#FFF9F5',
+          // DEFAULT: '#FFF9F5',
+          DEFAULT: '#FFFFFF',
           muted: '#EFE9E7'
         },
         primary: {
