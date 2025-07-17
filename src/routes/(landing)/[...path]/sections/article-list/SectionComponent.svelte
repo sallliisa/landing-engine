@@ -120,7 +120,12 @@
         <p class="text-outline text-center py-10">No articles found.</p>
       {:else}
         <div class="flex flex-col gap-8 w-full">
-          <div class="flex flex-col gap-3 divide-y divide-outline-variant w-full">
+          <!-- <div
+            class="flex flex-col gap-3 divide-y divide-outline-variant w-full"
+          > -->
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-base w-full"
+          >
             {#each articles as article (article.id)}
               <ArticleItem
                 title={article.title}
