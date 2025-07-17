@@ -29,8 +29,9 @@
 </script>
 
 <div class="flex items-center justify-center w-full">
+  {section.meta.content_order}
   <div class="w-full {widthPresetClassMap[section.meta.width_preset]} flex flex-col gap-6 py-6 lg:py-12 px-6 lg:px-12 {(contentAlignClassMap as any)[section.meta.content_align].container}">
-    {#if section.meta.content_order === 'image-content'}
+    {#if section.meta.content_order === 'image-text'}
       {@render ContentImage()}
     {/if}
     {#if section.data.content.title || section.data.content.subtitle || section.data.content.description}
@@ -46,7 +47,7 @@
         {/if}
       </div>
     {/if}
-    {#if section.meta.content_order === 'content-image'}
+    {#if section.meta.content_order === 'text-image'}
       {@render ContentImage()}
     {/if}
   </div>
