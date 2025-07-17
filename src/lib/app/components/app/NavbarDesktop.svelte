@@ -91,7 +91,8 @@
 
 <svelte:window bind:scrollY={windowScrollY} bind:outerHeight={windowHeight}/>
 {#if isMenuExpanded}
-  <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed backdrop-blur-md bg-on-surface/[8%]"></div>
+  <!-- <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed backdrop-blur-md bg-on-surface/[8%]"></div> -->
+  <div role="none" transition:fade onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed bg-on-surface/[16%]"></div>
 {/if}
 <div
   role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}"

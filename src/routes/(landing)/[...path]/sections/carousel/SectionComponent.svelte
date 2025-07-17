@@ -1,6 +1,7 @@
 <script lang="ts">
   import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
   import * as Carousel from "$lib/app/components/ui/carousel";
+  import CenterNavigation from "$lib/app/components/ui/carousel/carousel-center-navigation.svelte";
 
   const {section} = $props()
 
@@ -16,26 +17,33 @@
     <div class="w-full max-w-screen-xl px-6 lg:px-12">
       <SectionHeader header={section.data.content} defaultAlign="center"/>
     </div>
-    <Carousel.Root
-      opts={{
-        containScroll: false,
-        dragFree: true,
-        loop: section.meta.loop,
-      }}
-      class="w-full flex flex-col gap-8"
-    >
-      {#if section.meta.navigation_position == 'top'}
-        {@render carouselNavigation()}
-      {/if}
-      <Carousel.Content>
-        {#each section.data.gallery as item, i (item.id || `carousel-${i}`)}
-          {@render carouselItem(item)}
-        {/each}
-      </Carousel.Content>
-      {#if section.meta.navigation_position == 'bottom'}
-        {@render carouselNavigation()}
-      {/if}
-    </Carousel.Root>
+    <div class="relative w-full">
+      <Carousel.Root
+        opts={{
+          containScroll: false,
+          dragFree: true,
+          loop: section.meta.loop,
+        }}
+        class="w-full flex flex-col gap-8"
+      >
+        {#if section.meta.navigation_position == 'top'}
+          {@render carouselNavigation()}
+        {/if}
+        <div class="relative w-full">
+          <Carousel.Content>
+            {#each section.data.gallery as item, i (item.id || `carousel-${i}`)}
+              {@render carouselItem(item)}
+            {/each}
+          </Carousel.Content>
+          {#if section.meta.navigation_position == 'center'}
+            <CenterNavigation />
+          {/if}
+        </div>
+        {#if section.meta.navigation_position == 'bottom'}
+          {@render carouselNavigation()}
+        {/if}
+      </Carousel.Root>
+    </div>
   </div>
 </div>
 
