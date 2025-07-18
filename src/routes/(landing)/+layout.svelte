@@ -14,7 +14,9 @@
   import NumberInput from '$lib/app/components/input/NumberInput.svelte';
   import FileInput from '$lib/app/components/input/FileInput.svelte';
   import ImageInput from '$lib/app/components/input/ImageInput.svelte';
+  import FloatingContactButton from './[...path]/sections/floating-contact-button/SectionComponent.svelte';
   import FloatingContact from '$lib/app/components/app/FloatingContact.svelte';
+  import { browser } from '$app/environment';
 
 	let wInnerWidth = $state(0)
 	
@@ -36,6 +38,37 @@
 			console.log('nav', navigating.from, 'to', navigating.to)
 		}
 	})
+
+	let generalFloatingContactShouldDisplay = $state(true)
+
+	let portalObserver: MutationObserver;
+
+	$effect(() => {
+		if (!browser) return;
+
+		const portalElement = document.getElementById('floating-contact-portal');
+		if (!portalElement) return;
+
+		// Initial check
+		generalFloatingContactShouldDisplay = portalElement.children.length === 0;
+
+		// Set up mutation observer to watch for changes in the portal
+		portalObserver = new MutationObserver((mutations) => {
+			generalFloatingContactShouldDisplay = portalElement.children.length === 0;
+		});
+
+		// Start observing the portal for child list changes
+		portalObserver.observe(portalElement, { childList: true });
+		
+		console.log('observing', )
+
+		// Cleanup function
+		return () => {
+			if (portalObserver) {
+				portalObserver.disconnect();
+			}
+		};
+	});
 </script>
 
 <div class="bg-surface text-on-surface min-h-screen flex flex-col justify-between">
@@ -54,6 +87,7 @@
 		{/if}
 		{@render children()}
 	</div>
+	<!-- Portal target for floating contact button -->
 	<!-- <div class="mt-[400px]"></div>
 	<div class="w-full flex items-center justify-center">
 		<div class="w-full max-w-screen-2xl flex flex-col gap-12">
@@ -68,5 +102,8 @@
 		 </div>
 	</div> -->
 	<Footer/>
-	<FloatingContact />
+	{#if generalFloatingContactShouldDisplay}
+		<FloatingContact />
+	{/if}
+	<div id="floating-contact-portal" class="z-[100]"></div>
 </div>

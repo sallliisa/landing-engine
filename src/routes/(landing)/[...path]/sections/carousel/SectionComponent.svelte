@@ -31,9 +31,15 @@
         {/if}
         <div class="relative w-full">
           <Carousel.Content>
-            {#each section.data.gallery as item, i (item.id || `carousel-${i}`)}
-              {@render carouselItem(item)}
-            {/each}
+            {#if section.meta.type === 'card'}
+              {#each section.data.gallery as item, i (item.id || `carousel-${i}`)}
+                {@render carouselCardItem(item)}
+              {/each}
+            {:else if section.meta.type === 'timeline'}
+              {#each section.data.gallery as item, i (item.id || `carousel-${i}`)}
+                {@render carouselTimelineItem(item, i)}
+              {/each}
+            {/if}
           </Carousel.Content>
           {#if section.meta.navigation_position == 'center'}
             <CenterNavigation />
@@ -47,7 +53,7 @@
   </div>
 </div>
 
-{#snippet carouselItem(item: any)}
+{#snippet carouselCardItem(item: any)}
   <Carousel.Item 
     class="min-[124rem]:basis-1/3 2xl:basis-1/2 lg:basis-[67%] basis-[85%] ml-1 p-0 before:bg-white/5 active:before:bg-white/10 relative overflow-hidden {item.url ? 'overlay' : ''} {section.meta.preserve_aspect_ratio ? aspectRatioMap[section.meta.aspect_ratio || '4/3'] : 'h-[450px]'}"
   >
@@ -108,6 +114,29 @@
         <div class="rtf-content m-base text-sm md:text-base">{@html item.description}</div>
       </div>
     {/if}
+  </Carousel.Item>
+{/snippet}
+
+{#snippet carouselTimelineItem(item: any, index: number)}
+  <Carousel.Item 
+    class="min-[124rem]:basis-1/4 2xl:basis-1/3 lg:basis-1/2 md:basis-[67%] basis-[85%] p-0 before:bg-white/5 active:before:bg-white/10 relative overflow-hidden {item.url ? 'overlay' : ''} {section.meta.preserve_aspect_ratio ? aspectRatioMap[section.meta.aspect_ratio || '4/3'] : 'h-[450px]'}"
+  >
+    <div class="relative inset-0 flex flex-col items-center">
+      <div class="w-full relative h-[1px] mt-[6px]">
+        <div class="absolute h-full bg-outline {index === 0 ? 'left-1/2 right-0' : index === section.data.gallery.length - 1 ? 'left-0 right-1/2' : 'left-0 right-0'}"></div>
+      </div>
+      <div class="w-[12px] aspect-square bg-outline absolute mx-auto rounded-full"></div>
+      <div class="flex flex-col gap-base items-center justify-center mt-2 px-2">
+        <p>{item.subtitle}</p>
+        <div class="flex flex-col items-center justify-center gap-base max-w-[48ch]">
+          <img class="rounded-sm object-center object-cover aspect-[18.5/9] w-full" src="{item.media}" alt="{item.title}"/>
+          <div class="flex flex-col items-center justify-center gap-xs">
+            <p class="text-lg font-bold">{item.title}</p>
+            <p class="rtf-content m-base text-center text-sm sm:text-base text-outline">{@html item.description}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </Carousel.Item>
 {/snippet}
 
