@@ -56,11 +56,11 @@
       
       // Filter by category (if any category is selected)
       const matchesCategory = !selectedCategoryCode || 
-        project.category === selectedCategoryCode
+        project.meta?.category === selectedCategoryCode
       
       // Filter by location (if any location is selected)
       const matchesLocation = !locationActiveCode || 
-        project.location === locationActiveCode;
+        project.meta?.location === locationActiveCode;
       
       return matchesSearch && matchesCategory && matchesLocation;
     });
@@ -128,11 +128,11 @@
       <div class="flex flex-row items-center gap-base">
         <div class="flex flex-row items-center gap-xs">
           <i class="ri-building-4-line"></i>
-          <p class="text-xs">{categoryFilterNameMap[project?.category]}</p>
+          <p class="text-xs">{categoryFilterNameMap[project.meta?.category]}</p>
         </div>
         <div class="flex flex-row items-center gap-xs">
           <i class="ri-map-pin-line"></i>
-          <p class="text-xs">{locationFilterNameMap[project?.location]}</p>
+          <p class="text-xs">{locationFilterNameMap[project.meta?.location]}</p>
         </div>
       </div>
     </div>
@@ -154,17 +154,23 @@
     </div>
     <div class="flex flex-col items-center gap-xs">
       <p class="font-semibold text-center flex items-center">{project.title}</p>
-      <div class="flex flex-row items-center gap-base">
-        <div class="flex flex-row items-center gap-xs">
-          <i class="ri-building-4-line"></i>
-          <p class="text-xs">{categoryFilterNameMap[project?.category]}</p>
+      {#if project.meta?.category || project.meta?.location}
+        <div class="flex flex-row items-center gap-base">
+          {#if project.meta?.category}
+            <div class="flex flex-row items-center gap-xs">
+              <i class="ri-building-4-line"></i>
+              <p class="text-xs">{categoryFilterNameMap[project?.meta.category]}</p>
+            </div>
+          {/if}
+          {#if project.meta?.location}
+            <div class="flex flex-row items-center gap-xs">
+              <i class="ri-map-pin-line"></i>
+              <p class="text-xs">{locationFilterNameMap[project?.meta.location]}</p>
+            </div>
+          {/if}
         </div>
-        <div class="flex flex-row items-center gap-xs">
-          <i class="ri-map-pin-line"></i>
-          <p class="text-xs">{locationFilterNameMap[project?.location]}</p>
-        </div>
-      </div>
-      {#if project.description}<p class="text-xs text-muted text-center rtf-content">{@html project.description}</p>{/if}
+      {/if}
+      {#if project.description}<p class="text-xs text-muted rtf-content m-base">{@html project.description}</p>{/if}
     </div>
   </a>
 {/snippet}

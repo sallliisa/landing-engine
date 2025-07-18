@@ -182,28 +182,30 @@
                 </div>
                 <div class="flex flex-col gap-base" bind:this="{level1MenuContentElements[level1Index]}">
                   {#each menu.children as level2Child, level2Index}
-                    {#if !level2Child.page}
-                      <div
-                        onfocus="{() => {}}"
-                        class="flex flex-row items-center justify-between group/menuItem"
-                        onmouseover="{() => {if (level2Child.children?.length) return activeLevel2Index = level2Index}}"
+                    {#if level2Child.visible}
+                      {#if !level2Child.page}
+                        <div
+                          onfocus="{() => {}}"
+                          class="flex flex-row items-center justify-between group/menuItem"
+                          onmouseover="{() => {if (level2Child.children?.length) return activeLevel2Index = level2Index}}"
                         role="menu"
                         tabindex="{activeLevel2Index}"
                       >
                         <p class="text-outline">{level2Child.name}</p>
                         {#if level2Child.children?.length}<i class="ri-arrow-right-s-line transition-all {activeLevel2Index === level2Index ? 'text-outline' : 'text-outline-variant'}"></i>{/if}
                       </div>
-                    {:else}
-                      <a
-                        onfocus={() => {}}
-                        class="flex flex-row items-center justify-between group/menuItem"
-                        onmouseover="{() => {if (level2Child.children?.length) return activeLevel2Index = level2Index}}"
-                        href="/{menu.slug}/{level2Child.slug}"
-                        onclick="{() => isMenuExpanded = false}"
-                      >
-                        <p>{level2Child.name}</p>
-                        {#if level2Child.children?.length}<i class="ri-arrow-right-s-line transition-all {activeLevel2Index === level2Index ? 'text-outline' : 'text-outline-variant'}"></i>{/if}
-                      </a>
+                      {:else}
+                        <a
+                          onfocus={() => {}}
+                          class="flex flex-row items-center justify-between group/menuItem"
+                          onmouseover="{() => {if (level2Child.children?.length) return activeLevel2Index = level2Index}}"
+                          href="/{menu.slug}/{level2Child.slug}"
+                          onclick="{() => isMenuExpanded = false}"
+                        >
+                          <p>{level2Child.name}</p>
+                          {#if level2Child.children?.length}<i class="ri-arrow-right-s-line transition-all {activeLevel2Index === level2Index ? 'text-outline' : 'text-outline-variant'}"></i>{/if}
+                        </a>
+                      {/if}
                     {/if}
                   {/each}
                 </div>

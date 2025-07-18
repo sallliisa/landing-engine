@@ -64,6 +64,17 @@
     </span>
   </a>
   
+  {#if page.data.companyProfile?.whatsapp}
+    <a 
+      href={`https://wa.me/${page.data.companyProfile?.whatsapp}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center justify-center w-[64px] h-[64px] rounded-full bg-surface outline outline-outline-variant bg-surface-container-high hover:bg-surface-container-highest transition-all duration-150 {isOpen ? 'opacity-100' : 'opacity-0'}"
+      aria-label="Whatsapp"
+    >
+      <i class="ri-whatsapp-line text-2xl"></i>
+    </a>
+  {/if}
   {#if page.data.companyProfile?.facebook}
   <a 
     href={page.data.companyProfile?.facebook}
@@ -98,15 +109,15 @@
   </a>
   {/if}
   {#if page.data.companyProfile?.youtube}
-  <a 
-    href={page.data.companyProfile?.youtube}
-    target="_blank"
-    rel="noopener noreferrer"
-    class="flex items-center justify-center w-[64px] h-[64px] rounded-full bg-surface outline outline-outline-variant bg-surface-container-high hover:bg-surface-container-highest transition-all duration-150 {isOpen ? 'opacity-100' : 'opacity-0'}"
-    aria-label="Youtube"
-  >
-    <i class="ri-youtube-line text-2xl"></i>
-  </a>
+    <a 
+      href={page.data.companyProfile?.youtube}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center justify-center w-[64px] h-[64px] rounded-full bg-surface outline outline-outline-variant bg-surface-container-high hover:bg-surface-container-highest transition-all duration-150 {isOpen ? 'opacity-100' : 'opacity-0'}"
+      aria-label="Youtube"
+    >
+      <i class="ri-youtube-line text-2xl"></i>
+    </a>
   {/if}
   </div>
 </div>

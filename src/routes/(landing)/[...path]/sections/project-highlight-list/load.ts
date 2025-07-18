@@ -7,7 +7,7 @@ export async function load(section: Record<string, any>) {
         OR: [
           {
             code: {
-              in: ['project-category', 'project-location', 'projects']
+              in: ['project-category', 'project-location']
             }
           }
         ]
@@ -19,7 +19,7 @@ export async function load(section: Record<string, any>) {
       },
       include: {
         contents: {
-          orderBy: {order: 'asc'}
+          orderBy: {order: 'asc'},
         },
         galleries: {
           include: {
@@ -39,6 +39,6 @@ export async function load(section: Record<string, any>) {
       category: filter.find(item => item.code === 'project-category')?.data,
       location: filter.find(item => item.code === 'project-location')?.data
     },
-    projects: filter.find(item => item.code === 'projects')?.data
+    projects: data?.galleries[0].contents
   }
 }
