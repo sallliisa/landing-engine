@@ -41,7 +41,13 @@
       </div>
       {#if categories?.length}
         <p class="text-muted font-semibold hidden lg:block">⋅</p>
-        <p class="text-xs text-muted font-semibold"> {categories.join(', ')}</p>
+        <p class="text-xs text-muted font-semibold">
+          {#if categories.length <= 2}
+            {categories.join(', ')}
+          {:else}
+            {categories.slice(0, 2).join(', ')} dan {categories.length - 2} lainnya
+          {/if}
+        </p>
       {/if}
     </div>
     <div class="flex flex-col gap-2 group-hover/news:underline">

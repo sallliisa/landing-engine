@@ -37,4 +37,8 @@ export default {
       }
     }
   },
+  delete: {
+    allow: true,
+    by: ['id']
+  }
 } satisfies ModelConfig<Page>;

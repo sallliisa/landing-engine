@@ -12,14 +12,25 @@ export async function GET({ url }) {
     const queryParams = qs.parse(url.searchParams.toString());
     // Get array of category IDs from search params (e.g., article_category_ids[]=id1&article_category_ids[]=id2)
     const articleCategoryIds = queryParams.article_category_ids as string[] | undefined;
+    const articleCategoryMainIds = queryParams.article_category_main_ids as string[] | undefined;
     const searchQuery = queryParams.search as string | undefined;
     // 'page' and 'limit' from queryParams will be used by withPagination
     const paginatedData = await withPagination(async (skip, take) => {
       const whereClause: Prisma.ArticleWhereInput = {
         // Filter by categories if provided (many-to-many)
-        ...(articleCategoryIds && articleCategoryIds.length > 0
-          ? { categories: { some: { id: { in: articleCategoryIds } } } }
-          : {}),
+        // ...(articleCategoryIds && articleCategoryIds.length > 0
+        //   ? { categories: { some: { id: { in: articleCategoryIds } } } }
+        //   : {}),
+        AND: [
+          ...(articleCategoryIds && Array.isArray(articleCategoryIds) && articleCategoryIds.length > 0
+            ? [{ categories: { some: { id: { in: articleCategoryIds } } } }]
+            : []),
+          ...(articleCategoryMainIds && Array.isArray(articleCategoryMainIds) && articleCategoryMainIds.length > 0
+            ? articleCategoryMainIds.map((category: any) => ({
+                categories: { some: { id: category } }
+              }))
+            : [])
+        ],
         // Articles must have a translation for the current locale.
         // If searchQuery is present, the title of that translation must match.
         translations: {

@@ -15,17 +15,19 @@
   let articleListMeta = $state<any>({}); 
   let rawSearchInput = $state(''); 
 
-  const articleCategories = section.meta.article_categories?.length ? section.meta.article_categories : section.data.articleCategory;
+  const articleCategories = section.meta.article_categories_filter?.length ? section.meta.article_categories_filter : section.data.articleCategory;
 
   let urlSearchParameters = $state<{
     search?: string,
     article_category_ids?: string[], 
+    article_category_main_ids?: string[],
     page?: number,
     limit?: number,
   }>({
-    article_category_ids: section.meta.allow_select_all ? undefined : [articleCategories[0]?.id],
+    article_category_ids: section.meta.allow_filter ? section.meta.allow_select_all ? undefined : [articleCategories[0]?.id] : undefined,
+    article_category_main_ids: section.meta.article_categories_main?.map((cat: any) => cat.id) || undefined,
     page: 1,
-    limit: 10,
+    limit: 12,
   });
 
   const fetchArticles = async () => {
@@ -33,8 +35,11 @@
     try {
       const params: Record<string, string | number | (string[]) | undefined> = {};
       if (urlSearchParameters.search) params.search = urlSearchParameters.search;
-      if (urlSearchParameters.article_category_ids && urlSearchParameters.article_category_ids.length > 0) {
+      if (urlSearchParameters.article_category_ids && urlSearchParameters.article_category_ids.length > 0 && section.meta.allow_filter) {
         params["article_category_ids[]"] = urlSearchParameters.article_category_ids;
+      }
+      if (urlSearchParameters.article_category_main_ids && urlSearchParameters.article_category_main_ids.length > 0) {
+        params["article_category_main_ids[]"] = urlSearchParameters.article_category_main_ids;
       }
       if (urlSearchParameters.page) params.page = urlSearchParameters.page;
       if (urlSearchParameters.limit) params.limit = urlSearchParameters.limit;
@@ -101,13 +106,15 @@
     <!-- Sidebar: Search and Filters -->
     <div class="md:col-span-1 py-12 px-6 md:px-8 lg:px-12 gap-6 {section.meta.type === 'one-column' ? 'flex sm:flex-row flex-col items-center justify-between pb-0' : 'md:border-r md:border-outline-variant flex flex-col'}">
       <SearchBar bind:value={urlSearchParameters.search} class="w-full sm:w-[unset]"/>
-      <div class="{section.meta.filter_style === 'chip' ? 'flex flex-row px-4' : 'w-fit max-w-full overflow-auto flex items-center justify-center'}">
-        <div class="w-full flex flex-row items-center {section.meta.filter_style === 'chip' ? 'flex-wrap gap-y-3 justify-center' : ''}">
-          {#each articleCategories as category (category.id)}
-            {@render ArticleCategoryPicker(category)}
-          {/each}
+      {#if section.meta.allow_filter}
+        <div class="{section.meta.filter_style === 'chip' ? 'flex flex-row px-4' : 'w-fit max-w-full overflow-auto flex items-center justify-center'}">
+          <div class="w-full flex flex-row items-center {section.meta.filter_style === 'chip' ? 'flex-wrap gap-y-3 justify-center' : ''}">
+            {#each articleCategories as category (category.id)}
+              {@render ArticleCategoryPicker(category)}
+            {/each}
+          </div>
         </div>
-      </div>
+      {/if}
     </div>
 
     <!-- Article List and Pagination -->
