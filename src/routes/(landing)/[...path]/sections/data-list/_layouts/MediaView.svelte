@@ -6,9 +6,9 @@
   const {content, aspectRatio} = $props()
 
   const aspectRatioMap: any = {
-    '3:4': 'aspect-[3/4]',
-    '1:1': 'aspect-[1/1]',
-    '2:3': 'aspect-[2/3]',
+    '3/4': 'aspect-[3/4]',
+    '1/1': 'aspect-[1/1]',
+    '2/3': 'aspect-[2/3]',
   }
 </script>
 
