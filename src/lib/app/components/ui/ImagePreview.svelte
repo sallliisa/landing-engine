@@ -8,7 +8,9 @@
     alt,
     title, 
     description,
+    subtitle,
     trigger,
+    hideTextOnPreview,
     ...restProps
   } = $props<{
     src?: string,
@@ -16,17 +18,20 @@
     title?: string,
     description?: string,
     trigger?: () => any,
+    hideTextOnPreview?: boolean,
     [key: string]: any
   }>()
 </script>
 
 <Dialog.Root>
   <Dialog.Trigger class={restProps.class} type="button">
-    {#if !trigger}
-      <div class="text-white bg-center h-full bg-cover flex flex-col text-start items-start group/item justify-end p-6" style="background-image: {(title || description) ? `linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 50%), ` : ``} url('{src}');">
-        <p class="font-semibold translate-y-5 group-hover/item:translate-y-0 transition-all">{title}</p>
-        <!-- {#if description}<p class="text-sm translate-y-5 group-hover/item:translate-y-0 transition-all rtf-content m-base text-start">{@html description}</p>{/if} -->
-        <p class="text-xs mt-2 opacity-0 translate-y-5 transition-all group-hover/item:opacity-100 group-hover/item:translate-y-0"><i class="ri-arrow-right-up-line"></i></p>
+    {#if !trigger }
+      <div class="text-white bg-center h-full bg-cover flex flex-col text-start items-start group/item justify-end p-6" style="background-image: {((title || description || subtitle) && !hideTextOnPreview) ? `linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 50%), ` : ``} url('{src}');">
+        {#if !hideTextOnPreview}
+          <p class="font-semibold translate-y-5 group-hover/item:translate-y-0 transition-all">{title}</p>
+          <!-- {#if description}<p class="text-sm translate-y-5 group-hover/item:translate-y-0 transition-all rtf-content m-base text-start">{@html description}</p>{/if} -->
+          <p class="text-xs mt-2 opacity-0 translate-y-5 transition-all group-hover/item:opacity-100 group-hover/item:translate-y-0"><i class="ri-arrow-right-up-line"></i></p>
+        {/if}
       </div>
     {:else}
       {@render trigger()}
@@ -45,8 +50,9 @@
           alt={alt} 
           class="w-full h-auto object-cover max-h-[50vh] block md:max-h-[90vh] md:max-w-[90vw] md:object-contain"
         />
-        {#if title || description}
+        {#if (title || description || subtitle)}
           <div class="p-4 text-on-surface md:text-surface flex flex-col gap-xs md:absolute md:bottom-0 md:left-0 md:right-0 md:p-6 md:bg-gradient-to-t from-black/60 to-transparent">
+            {#if subtitle}<p class="text-sm">{subtitle}</p>{/if}
             {#if title}<p class="text-base font-semibold md:text-lg md:font-semibold">{title}</p>{/if}
             {#if description}<p class="text-xs rtf-content m-base m-0 md:text-sm">{@html description}</p>{/if}
           </div>

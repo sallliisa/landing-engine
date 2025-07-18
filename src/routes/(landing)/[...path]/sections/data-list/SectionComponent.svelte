@@ -105,7 +105,7 @@
               <div class="h-4 w-full"></div>
               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-lg">
                 {#each childSection.filteredContents as content}
-                  <MediaView {content}/>
+                  <MediaView {content} aspectRatio={section.meta.media_aspect_ratio}/>
                 {/each}
               </div>
             {:else if section.meta.type === 'content'}
