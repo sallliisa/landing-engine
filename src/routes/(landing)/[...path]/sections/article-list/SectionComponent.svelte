@@ -105,7 +105,7 @@
   <div class="w-full max-w-screen-xl grid grid-cols-1 {section.meta.type === 'one-column' ? 'md:grid-cols-1' : 'md:grid-cols-3 gap-0 md:gap-6 lg:gap-8'}">
     <!-- Sidebar: Search and Filters -->
     <div class="md:col-span-1 py-12 px-6 md:px-8 lg:px-12 gap-6 {section.meta.type === 'one-column' ? 'flex sm:flex-row flex-col items-center justify-between pb-0' : 'md:border-r md:border-outline-variant flex flex-col'}">
-      <SearchBar bind:value={urlSearchParameters.search} class="w-full sm:w-[unset]"/>
+      <SearchBar bind:value={urlSearchParameters.search} class="w-full {section.meta.allow_filter ? 'sm:w-[unset]' : ''}"/>
       {#if section.meta.allow_filter}
         <div class="{section.meta.filter_style === 'chip' ? 'flex flex-row px-4' : 'w-fit max-w-full overflow-auto flex items-center justify-center'}">
           <div class="w-full flex flex-row items-center {section.meta.filter_style === 'chip' ? 'flex-wrap gap-y-3 justify-center' : ''}">
