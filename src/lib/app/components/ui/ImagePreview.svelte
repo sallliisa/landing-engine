@@ -28,8 +28,9 @@
     {#if !trigger }
       <div class="text-white bg-center h-full bg-cover flex flex-col text-start items-start group/item justify-end p-6" style="background-image: {((title || description || subtitle) && !hideTextOnPreview) ? `linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 50%), ` : ``} url('{src}');">
         {#if !hideTextOnPreview}
+        <!-- {#if description}<p class="text-sm translate-y-5 group-hover/item:translate-y-0 transition-all rtf-content m-base text-start">{@html description}</p>{/if} -->
+          <p class="text-xs">{subtitle}</p>
           <p class="font-semibold translate-y-5 group-hover/item:translate-y-0 transition-all">{title}</p>
-          <!-- {#if description}<p class="text-sm translate-y-5 group-hover/item:translate-y-0 transition-all rtf-content m-base text-start">{@html description}</p>{/if} -->
           <p class="text-xs mt-2 opacity-0 translate-y-5 transition-all group-hover/item:opacity-100 group-hover/item:translate-y-0"><i class="ri-arrow-right-up-line"></i></p>
         {/if}
       </div>
