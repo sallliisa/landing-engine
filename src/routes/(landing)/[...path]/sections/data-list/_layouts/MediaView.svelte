@@ -3,7 +3,7 @@
   import ImagePreview from "$lib/app/components/ui/ImagePreview.svelte";
   import { m } from "$lib/paraglide/messages";
 
-  const {content, aspectRatio} = $props()
+  const {content, aspectRatio, hideOutline} = $props()
 
   const aspectRatioMap: any = {
     '3/4': 'aspect-[3/4]',
@@ -15,7 +15,7 @@
 <div class="flex flex-col gap-base">
   <ImagePreview 
     src={content.media}
-    class="{aspectRatioMap[aspectRatio]} border border-outline-variant rounded-sm object-center object-cover"
+    class="{aspectRatioMap[aspectRatio]} {hideOutline ? '' : 'border border-outline-variant'} rounded-sm object-center object-cover"
     title={content.title}
     description={content.description}
     subtitle={content.subtitle}
