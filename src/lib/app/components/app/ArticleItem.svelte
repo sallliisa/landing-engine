@@ -32,7 +32,7 @@
 </a> -->
 
 <a href="/article/{slug}" class="flex flex-col gap-2 group/news">
-  <img src={thumbnail} alt="img" class="aspect-square object-center object-cover rounded-sm"/>
+  <img src={thumbnail} alt="img" class="aspect-square object-center object-cover rounded-sm outline outline-outline-variant"/>
   <div class="flex flex-col gap-1 mt-1">
     <div class="flex flex-col lg:flex-row lg:items-center lg:gap-1 min-w-max">
       <div class="flex flex-row items-center gap-2 text-muted">
