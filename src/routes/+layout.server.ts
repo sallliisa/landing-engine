@@ -38,7 +38,8 @@ export async function load({params, url, untrack}) {
           },
           select: {
             id: true,
-            name: true
+            name: true,
+            description: true,  
           },
         },
         page: {
@@ -72,7 +73,8 @@ export async function load({params, url, untrack}) {
               },
               select: {
                 id: true,
-                name: true
+                name: true,
+                description: true,
               },
             },
             page: {
@@ -106,7 +108,8 @@ export async function load({params, url, untrack}) {
                   },
                   select: {
                     id: true,
-                    name: true
+                    name: true,
+                    description: true,
                   },
                 },
                 page: {
@@ -193,14 +196,17 @@ export async function load({params, url, untrack}) {
             .map((item) => ({
               ...item,
               name: item.translations[0].name,
+              description: item.translations[0].description,
               page: item.page?.[0],
               children: item.children.map((item) => ({
                 ...item,
                 name: item.translations[0].name,
+                description: item.translations[0].description,
                 page: item.page?.[0],
                 children: item.children.map((item) => ({
                   ...item,
                   name: item.translations[0].name,
+                  description: item.translations[0].description,
                   page: item.page?.[0],
                 }))
               }))

@@ -4,7 +4,7 @@ import type { Language, MenuItemTranslation } from "@prisma/client";
 
 export default {
   allow: true,
-  fields: ['id', 'menu_item_id', 'language', 'name'],
+  fields: ['id', 'menu_item_id', 'language', 'name', 'description', 'media'],
 
   create: {
     allow: false,
