@@ -8,7 +8,6 @@
   const { section } = $props();
 
   onMount(() => {
-    console.log('mounting and setting')
     contactFABContent.data = section.data.profile
   })
 

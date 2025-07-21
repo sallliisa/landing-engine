@@ -109,7 +109,12 @@
   >
     <div class="flex flex-row items-center justify-between w-full px-12 py-6 max-w-screen-xl">
       <a href="{page.data.primaryMenuPath}">
-        <img src="/assets/logo/hkr.svg" class="w-[64px] h-[27px]" alt="HK Realtindo"/>
+        <!-- {#if isMenuExpanded ? containerHeight + 152 : windowScrollY != 0 ? 88 : 0} -->
+        {#if isMenuExpanded || windowScrollY != 0}
+          <img src="/assets/logo/hkr-sil.svg" class="w-[64px] h-[27px]" alt="HK Realtindo"/>
+        {:else}
+          <img src="/assets/logo/hkr-w.svg" class="w-[64px] h-[27px]" alt="HK Realtindo"/>
+        {/if}
       </a>
       <div class="flex flex-row items-center gap-base text-sm xl:text-base">
         {#each page.data.menu as menu, index}

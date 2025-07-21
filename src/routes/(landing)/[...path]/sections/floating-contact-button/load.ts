@@ -6,14 +6,19 @@ export async function load(section: Record<string, any>) {
       id: section.id
     },
     include: {
-      contents: {
+      galleries: {
         orderBy: {
           order: 'asc'
+        },
+        include: {
+          contents: {
+            orderBy: {order: 'asc'}
+          }
         }
       },
     }
   })
   return {
-    profile: data?.contents[0]?.meta
+    profile: data?.galleries[0]?.contents
   }
 }

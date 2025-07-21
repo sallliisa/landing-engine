@@ -38,11 +38,11 @@
     if (!browser) return false
     return windowScrollY > (document.documentElement.scrollHeight - windowHeight - (0.20*windowHeight))
   })
-  // let showFAB = $derived(!isAtTop && !isAtBottom)
-  let showFAB = true
+  let showFAB = $derived(!isAtTop && !isAtBottom)
+  // let showFAB = true
 
   let contactData = $derived.by(() => {
-    if (!contactFABContent.data) return page.data.companyProfile
+    if (!contactFABContent.data) return page.data.collection.find((item: any) => item.code === 'contact-detail')?.data
     else return contactFABContent.data
   })
 </script>
@@ -71,8 +71,20 @@
       Contact Us
     </span>
   </a>
+
+  {#each contactData as contactDetail}
+    <a 
+      href={contactDetail?.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center justify-center w-[64px] h-[64px] rounded-full bg-surface outline outline-outline-variant bg-surface-container-high hover:bg-surface-container-highest transition-all duration-150 {isOpen ? 'opacity-100' : 'opacity-0'}"
+      aria-label="{contactDetail?.name}"
+    >
+      <i class="{contactDetail.media} text-2xl"></i>
+    </a>
+  {/each}
   
-  {#if contactData?.email}
+  <!-- {#if contactData?.email}
     <a 
       href={`mailto:${contactData?.email}`}
       target="_blank"
@@ -159,7 +171,7 @@
     >
       <i class="ri-youtube-line text-2xl"></i>
     </a>
-  {/if}
+  {/if} -->
   </div>
 </div>
 
