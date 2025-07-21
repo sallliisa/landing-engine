@@ -177,11 +177,11 @@
               <div 
                 class="w-full pt-6 pb-10 px-12 grid grid-cols-3 gap-lg"
               >
-                <div>
-                  <p class="text-lg xl:text-xl font-bold">{menu.name}</p>
-                  <p class="text-sm text-outline">{JSON.stringify(menu)}</p>
-                </div>
                 <div class="flex flex-col gap-base" bind:this="{level1MenuContentElements[level1Index]}">
+                  <div class="flex flex-col gap-xs">
+                    <p class="text-lg xl:text-xl font-bold">{menu.name}</p>
+                    <p class="text-sm text-outline">{menu.description}</p>
+                  </div>
                   {#each menu.children as level2Child, level2Index}
                     {#if level2Child.visible}
                       {#if !level2Child.page}
