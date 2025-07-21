@@ -12,7 +12,7 @@ export default {
 
   update: {
     by: ['id'],
-    fields: ['name'],
+    fields: ['name', 'description', 'media'],
     validation: {
       name: [
         {
