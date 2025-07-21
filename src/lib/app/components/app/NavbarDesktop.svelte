@@ -175,7 +175,7 @@
               style="transition-duration: {FADE_DURATION}ms"
             >
               <div 
-                class="w-full pt-6 pb-10 grid grid-cols-3 gap-lg"
+                class="w-full pt-6 pb-10 px-12 grid grid-cols-3 gap-lg"
               >
                 <div>
                   <p class="text-lg xl:text-xl font-bold">{menu.name}</p>
