@@ -37,6 +37,6 @@ export default {
 
   detail: {
     by: ['menu_item_id', 'language'],
-    fields: ['id', 'menu_item_id', 'language', 'name'],
+    fields: ['id', 'menu_item_id', 'language', 'name', 'description', 'media'],
   },
 } as ModelConfig<MenuItemTranslation>
