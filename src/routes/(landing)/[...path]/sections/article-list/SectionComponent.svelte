@@ -131,7 +131,7 @@
             class="flex flex-col gap-3 divide-y divide-outline-variant w-full"
           > -->
           <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-base w-full"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-lg gap-y-[48px] w-full"
           >
             {#each articles as article (article.id)}
               <ArticleItem

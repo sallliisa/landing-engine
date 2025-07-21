@@ -26,7 +26,7 @@
 <Dialog.Root>
   <Dialog.Trigger class={restProps.class} type="button">
     {#if !trigger }
-      <div class="text-white bg-center h-full bg-cover flex flex-col text-start items-start group/item justify-end p-6" style="background-image: {((title || description || subtitle) && !hideTextOnPreview) ? `linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 50%), ` : ``} url('{src}');">
+      <div class="text-surface text-shadow-outline-variant bg-center h-full bg-cover flex flex-col text-start items-start group/item justify-end p-6" style="background-image: {((title || description || subtitle) && !hideTextOnPreview) ? `linear-gradient(to top, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0) 50%), ` : ``} url('{src}');">
         {#if !hideTextOnPreview}
         <!-- {#if description}<p class="text-sm translate-y-5 group-hover/item:translate-y-0 transition-all rtf-content m-base text-start">{@html description}</p>{/if} -->
           <p class="text-xs">{subtitle}</p>

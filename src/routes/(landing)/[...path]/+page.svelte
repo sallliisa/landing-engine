@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { page } from '$app/state';
-  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
   import { sectionComponents } from './sections/index.js'
   import SectionWrapper from './SectionWrapper.svelte';
   import IntersectionObserver from '$lib/components/IntersectionObserver.svelte';
+  import { browser } from '$app/environment';
 
-  export let data;
+  const {data} = $props()
 
-  // Helper to load and cache components
   let loadedComponents: Record<string, any> = {};
 
   async function getSectionComponent(section_type_code: string) {
@@ -17,6 +16,41 @@
     }
     return loadedComponents[section_type_code];
   }
+
+  $effect(() => {
+    if (!browser) return;
+
+    const hash = $page.url.hash;
+
+    if (hash) {
+      const id = hash.substring(1);
+
+      const scrollToElement = () => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      };
+
+      scrollToElement();
+
+      const observer = new MutationObserver((mutations, obs) => {
+        if (document.getElementById(id)) {
+          scrollToElement();
+          obs.disconnect();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  });
 </script>
 
 <div class="flex flex-col col-span-4">
