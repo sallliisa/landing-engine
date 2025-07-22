@@ -94,6 +94,7 @@
   <!-- <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed backdrop-blur-md bg-on-surface/[8%]"></div> -->
   <div role="none" transition:fade onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed bg-on-surface/[16%]"></div>
 {/if}
+
 <div
   role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}"
   class="z-[48] h-[88px] w-screen top-0 fixed bg-gradient-to-b from-on-surface/[16%] to-transparent"
@@ -128,22 +129,22 @@
                     onfocus="{() => {}}"
                     role="menu"
                     tabindex="{index}"
-                    onmouseover="{() => debouncedMenuExpandMouseHover(index, menu.children?.length > 1 ? 'expand' : 'shrink')}"
+                    onmouseover="{() => debouncedMenuExpandMouseHover(index, menu.children?.length ? 'expand' : 'shrink')}"
                     class="flex flex-row gap-xs cursor-default"
                   >
                     <p>{menu.name}</p>
-                    {#if menu.children?.length > 1}<i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>{/if}
+                    {#if menu.children?.length}<i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>{/if}
                   </div>
                 {:else}
                   <a
                     onfocus="{() => {}}"
-                    onmouseover="{() => debouncedMenuExpandMouseHover(index, menu.children?.length > 1 ? 'expand' : 'shrink')}"
+                    onmouseover="{() => debouncedMenuExpandMouseHover(index, menu.children?.length ? 'expand' : 'shrink')}"
                     onclick="{() => isMenuExpanded = false}"
                     href="/{menu.slug}"
                     class="flex flex-row gap-xs"
                   > 
                   <p>{menu.name}</p>
-                    {#if menu.children?.length > 1}<i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>{/if}
+                    {#if menu.children?.length}<i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>{/if}
                   </a>
                 {/if}
               </div>
