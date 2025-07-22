@@ -7,12 +7,12 @@
   
   const { section } = $props();
 
-  onMount(() => {
-    contactFABContent.data = section.data.profile
-  })
+  // onMount(() => {
+  //   contactFABContent.data = section.data.profile
+  // })
 
-  onDestroy(() => {
-    console.log('DESTROYINH')
-    contactFABContent.data = null
-  })
+  // onDestroy(() => {
+  //   console.log('DESTROYINH')
+  //   contactFABContent.data = null
+  // })
 </script>
