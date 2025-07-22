@@ -128,7 +128,7 @@
 
 {#snippet carouselTimelineItem(item: any, index: number)}
   <Carousel.Item 
-    class="min-[124rem]:basis-1/4 2xl:basis-1/3 lg:basis-1/2 md:basis-[67%] basis-[85%] p-0 before:bg-white/5 active:before:bg-white/10 relative overflow-hidden {item.url ? 'overlay' : ''} {section.meta.preserve_aspect_ratio ? aspectRatioMap[section.meta.aspect_ratio || '4/3'] : 'h-[450px]'}"
+    class="min-[124rem]:basis-1/4 2xl:basis-1/3 lg:basis-1/2 md:basis-[67%] basis-[85%] p-0 before:bg-white/5 active:before:bg-white/10 relative overflow-hidden {item.url ? 'overlay' : ''} {section.meta.preserve_aspect_ratio ? aspectRatioMap[section.meta.aspect_ratio || '4/3'] : 'h-fit'}"
   >
     <div class="relative inset-0 flex flex-col items-center">
       <div class="w-full relative h-[1px] mt-[6px]">

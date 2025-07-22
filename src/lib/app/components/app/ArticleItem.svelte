@@ -42,11 +42,7 @@
       {#if categories?.length}
         <p class="text-muted font-semibold hidden lg:block">⋅</p>
         <p class="text-xs text-muted font-semibold">
-          {#if categories.length <= 2}
-            {categories.join(', ')}
-          {:else}
-            {categories.slice(0, 2).join(', ')} dan {categories.length - 2} lainnya
-          {/if}
+          {categories[0]}{#if categories.length > 1}, {categories.length - 1}+{/if}
         </p>
       {/if}
     </div>
