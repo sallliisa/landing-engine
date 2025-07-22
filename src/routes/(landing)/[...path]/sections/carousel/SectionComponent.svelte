@@ -31,7 +31,16 @@
         {/if}
         <div class="relative w-full">
           <Carousel.Content>
-            {#if section.meta.type === 'card'}
+            {#if section.meta.type === 'timeline'}
+              {#each section.data.gallery as item, i (item.id || `carousel-${i}`)}
+                {@render carouselTimelineItem(item, i)}
+              {/each}
+            {:else}
+              {#each section.data.gallery as item, i (item.id || `carousel-${i}`)}
+                {@render carouselCardItem(item)}
+              {/each}
+            {/if}
+            <!-- {#if section.meta.type === 'card'}
               {#each section.data.gallery as item, i (item.id || `carousel-${i}`)}
                 {@render carouselCardItem(item)}
               {/each}
@@ -39,7 +48,7 @@
               {#each section.data.gallery as item, i (item.id || `carousel-${i}`)}
                 {@render carouselTimelineItem(item, i)}
               {/each}
-            {/if}
+            {/if} -->
           </Carousel.Content>
           {#if section.meta.navigation_position == 'center'}
             <CenterNavigation />
