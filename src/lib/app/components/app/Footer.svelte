@@ -49,7 +49,7 @@
       <div class="flex flex-col gap-base">
         <p class="font-bold text-xl">{m.products()}</p>
         {#each page.data.collection.find((item: any) => item.code === 'project-category')?.data as category}
-          <a class="underline" href="/{page.data.projectListMenuPath}?category_code={category.code}#project-list">{getLocale() === 'en' ? category.name_en : category.name_id}</a>
+          <a class="underline" href="{page.data.projectListMenuPath}?category_code={category.code}#project-list">{getLocale() === 'en' ? category.name_en : category.name_id}</a>
         {/each}
       </div>
     </div>
