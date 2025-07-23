@@ -58,7 +58,7 @@
                   </div>
                 {/if}
                 {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url}
-                  <a href={section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url} class="flex flex-row items-center gap-sm flex-shrink-0">
+                  <a href={section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url} target="_blank" class="flex flex-row items-center gap-sm flex-shrink-0">
                     <p class="font-semibold underline">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url_text || m.learn_more()}
                     <i class="ri-arrow-right-line"></i>
                   </a>
