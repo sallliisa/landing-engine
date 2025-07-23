@@ -141,7 +141,7 @@
           <img class="rounded-sm object-center object-cover aspect-[18.5/9] w-full" src="{item.media}" alt="{item.title}"/>
           <div class="flex flex-col items-center justify-center gap-xs">
             <p class="text-lg font-bold">{item.title}</p>
-            <p class="rtf-content m-base text-center text-sm sm:text-base text-outline">{@html item.description}</p>
+            <p class="rtf-content m-base text-center text-sm text-outline">{@html item.description}</p>
           </div>
         </div>
       </div>
