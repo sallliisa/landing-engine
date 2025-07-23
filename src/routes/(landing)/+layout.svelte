@@ -17,6 +17,7 @@
   import FloatingContactButton from './[...path]/sections/floating-contact-button/SectionComponent.svelte';
   import FloatingContact from '$lib/app/components/app/FloatingContact.svelte';
   import { browser } from '$app/environment';
+  import Button from '$lib/app/components/ui/Button.svelte';
 
 	let wInnerWidth = $state(0)
 	
@@ -100,6 +101,22 @@
 			<FileInput bind:value={testValue.input5}/>
 			<ImageInput bind:value={testValue.input5}/>
 		 </div>
+	</div> -->
+	<!-- <div class="flex items-center justify-center py-8">
+		<div class="grid grid-cols-4 gap-4">
+			<Button class="max-w-fit">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit" variant="tonal">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit" variant="outlined">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit" variant="text">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-lg">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-lg" variant="tonal">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-lg" variant="outlined">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-lg" variant="text">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-full">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-full" variant="tonal">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-full" variant="outlined">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-full" variant="text">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+		</div>
 	</div> -->
 	<Footer/>
 	{#if generalFloatingContactShouldDisplay}
