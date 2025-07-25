@@ -153,7 +153,7 @@
         {/each}
       </div>
       <div>
-        <button onclick="{() => getLocale() === 'id' ? setLocale('en') : setLocale('id')}" class="bg-surface outline outline-outline-variant flex flex-row items-center justify-between gap-sm px-3 py-2">
+        <button onclick="{() => getLocale() === 'id' ? setLocale('en') : setLocale('id')}" class="bg-surface outline outline-outline-variant flex flex-row items-center justify-between gap-sm px-3 py-2 rounded-full">
           <img src="/assets/i18n/flags/{getLocale()}.svg" alt="{getLocale()}" class="rounded-full aspect-square w-4 outline outline-outline-variant object-center object-cover"/>
           <p class="font-bold uppercase text-on-surface">{getLocale()}</p>
         </button>

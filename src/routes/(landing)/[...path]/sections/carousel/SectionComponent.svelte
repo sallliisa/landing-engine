@@ -64,13 +64,13 @@
 
 {#snippet carouselCardItem(item: any)}
   <Carousel.Item 
-    class="min-[124rem]:basis-1/3 2xl:basis-1/2 lg:basis-[67%] basis-[85%] ml-1 p-0 before:bg-white/5 active:before:bg-white/10 relative overflow-hidden {item.url ? 'overlay' : ''} {section.meta.preserve_aspect_ratio ? aspectRatioMap[section.meta.aspect_ratio || '4/3'] : 'h-[450px]'}"
+    class="min-[124rem]:basis-1/3 2xl:basis-1/2 lg:basis-[67%] basis-[85%] ml-1 p-0 before:bg-white/5 active:before:bg-white/10 relative overflow-hidden rounded-sm {item.url ? 'overlay' : ''} {section.meta.preserve_aspect_ratio ? aspectRatioMap[section.meta.aspect_ratio || '4/3'] : 'h-[450px]'}"
   >
     <div class="absolute inset-0 -z-10">
       <img 
         src={item.media} 
         alt="" 
-        class="w-full h-full object-cover"
+        class="w-full h-full object-cover rounded-sm"
       />
       {#if item.title || item.subtitle || item.description || item.collection?.length}
         <div class="absolute inset-0 bg-gradient-to-b from-black/[16%] to-black/[16%]"></div>

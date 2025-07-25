@@ -44,7 +44,7 @@
 </div>
 
 {#snippet contactDetail()}
-  <div class="col-span-2 outline outline-outline-variant p-6 flex flex-col gap-lg">
+  <div class="col-span-2 outline outline-outline-variant p-6 flex flex-col gap-lg rounded-sm">
     {#if section.data.contactDetail.content.title || section.data.contactDetail.content.description}
       <div class="flex flex-col gap-xs">
         <p class="text-xl font-semibold">{section.data.contactDetail.content.title}</p>
