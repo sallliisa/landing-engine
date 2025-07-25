@@ -28,14 +28,14 @@
           <i class="ri-mail-line"></i>
           <a href="mailto:{page.data.companyProfile.email}" data-analytics-contact={`mailto:${page.data.companyProfile.email}`}>{page.data.companyProfile.email}</a>
         </div> -->
-        {#each contactDetailData.slice(0, 2) as contactDetail}
+        {#each contactDetailData?.slice(0, 2) as contactDetail}
           <div class="flex flex-row gap-sm">
             <i class="{contactDetail.media}"></i>
             <a href={contactDetail.url} data-analytics-contact={contactDetail.url} aria-label={contactDetail.name} target="_blank">{contactDetail.label}</a>
           </div>
         {/each}
         <div class="flex flex-row items-center gap-2">
-          {#each contactDetailData.slice(2) as socialMedia}
+          {#each contactDetailData?.slice(2) as socialMedia}
             <a href={socialMedia.url} data-analytics-contact={socialMedia.url} aria-label={socialMedia.name} target="_blank"><i class="{socialMedia.media} text-xl"></i></a>
           {/each}
         </div>
