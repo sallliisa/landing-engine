@@ -79,8 +79,9 @@
       {/if}
     {/if}
   {/each}
-  <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.16));"></div>
-  <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(to top, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0) 100%);"></div>
+  <!-- <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.16));"></div>
+  <div class="w-full h-full absolute z-[1]" style="background-image: linear-gradient(to top, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0) 100%);"></div> -->
+  <div class="w-full h-full absolute bottom-0 left-0 z-[1]" style="background: linear-gradient(to top right, rgba(0, 0, 0, 0.36) 0%, rgba(0, 0, 0, 0.0) 30%);"></div>
   <div class="w-full h-full absolute bottom-0 left-0 z-10 p-8">
     <div class="absolute bottom-8 right-8 hidden lg:flex">
       {@render contactButton()}

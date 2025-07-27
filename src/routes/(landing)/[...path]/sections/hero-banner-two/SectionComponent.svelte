@@ -154,7 +154,6 @@
       {/if}
     {/if}
   {/each}
-  <div class="w-full h-[200px] absolute top-0 left-0 z-[1]" style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.36) 0%, rgba(0, 0, 0, 0.18) 30%, rgba(0, 0, 0, 0) 100%);"></div>
   <div class="w-full h-full absolute bottom-0 left-0 z-[1]" style="background: linear-gradient(to top right, rgba(0, 0, 0, 0.36) 0%, rgba(0, 0, 0, 0.0) 30%);"></div>
   <div class="w-full h-full absolute bottom-0 left-0 z-10 p-4 sm:p-8 flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 justify-end lg:justify-normal">
     <div class="relative w-full h-full z-[1]">
