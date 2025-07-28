@@ -8,7 +8,7 @@
 <div class="flex items-center justify-center w-full">
   <div class="w-full max-w-screen-xl flex flex-col gap-6 py-6 lg:py-12 px-6 lg:px-12">
     <SectionHeader header={section.data.content} defaultAlign="center"/>
-            <div class="flex flex-wrap gap-base items-stretch justify-center">
+    <div class="flex flex-wrap gap-base items-stretch justify-center">
       {#each section.data.gallery as item, i (item.id || `testimonial-${i}`)}
         {@render testimonialItem(item)}
       {/each}

@@ -14,6 +14,7 @@
   onMount(() => {
     if (browser) {
       document.documentElement.style.setProperty('--initial-text-color', initialNavbarTextColor);
+      document.documentElement.style.setProperty('--navbar-overlay-display', 'block');
     }
   });
 
@@ -21,6 +22,7 @@
     if (browser) {
       // Optional: Reset the variable when the component is destroyed if needed
       document.documentElement.style.removeProperty('--initial-text-color');
+      document.documentElement.style.setProperty('--navbar-overlay-display', 'none');
     }
   });
 </script>

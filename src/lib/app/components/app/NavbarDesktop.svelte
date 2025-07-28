@@ -94,7 +94,13 @@
   <!-- <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed backdrop-blur-md bg-on-surface/[8%]"></div> -->
   <div role="none" transition:fade onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed bg-on-surface/[16%]"></div>
 {/if}
-<div class="w-full fixed top-0 left-0 z-[1] transition-all" style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.36) 0%, rgba(0, 0, 0, 0.18) 30%, rgba(0, 0, 0, 0) 100%); height: {isMenuExpanded ? 0 : windowScrollY != 0 ? 0 : 200}px;"></div>
+<div
+  class="w-full fixed top-0 left-0 z-[1] transition-all"
+  style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.36) 0%, rgba(0, 0, 0, 0.18) 30%, rgba(0, 0, 0, 0) 100%);
+  height: {isMenuExpanded ? 0 : windowScrollY != 0 ? 0 : 200}px;
+  display: var(--navbar-overlay-display);
+  "
+  ></div>
 <div
   role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}"
   class="z-[48] h-[88px] w-screen top-0 fixed bg-gradient-to-b from-on-surface/[16%] to-transparent"

@@ -20,12 +20,14 @@
   onMount(() => {
     if (browser) {
       document.documentElement.style.setProperty('--initial-text-color', initialNavbarTextColor);
+      document.documentElement.style.setProperty('--navbar-overlay-display', 'block');
     }
   });
 
   onDestroy(() => {
     if (browser) {
       document.documentElement.style.removeProperty('--initial-text-color');
+      document.documentElement.style.setProperty('--navbar-overlay-display', 'none');
     }
   });
 
