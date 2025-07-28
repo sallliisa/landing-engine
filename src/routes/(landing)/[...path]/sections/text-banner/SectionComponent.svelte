@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Button from '$lib/app/components/ui/Button.svelte';
   import { m } from '$lib/paraglide/messages';
 
   const {section} = $props()
@@ -16,10 +17,18 @@
       </div>
       {#if section.data.content.description}<p class="rtf-content m-base">{@html section.data.content.description}</p>{/if}
       {#if section.data.content.url}
-        <div class="flex flex-row items-center justify-end">
-          <a href={section.data.content.url} class="font-semibold underline">{section.data.content.url_text || m.learn_more()}</a>
-          <i class="ri-arrow-right-line"></i>
-        </div>
+        {#if section.meta.button_type === 'text'}
+          <div class="flex flex-row items-center justify-end">
+            <a href={section.data.content.url} class="font-semibold underline">{section.data.content.url_text || m.learn_more()}</a>
+            <i class="ri-arrow-right-line"></i>
+          </div>
+        {:else if section.meta.button_type === 'button'}
+          <div class="flex flex-row items-center justify-end mt-[0.5rem]">
+            <a href={section.data.content.url}>
+              <Button>{section.data.content.url_text || m.learn_more()} <i class="ri-arrow-right-line"></i></Button>
+            </a>
+          </div>
+        {/if}
       {/if}
     </div>
   </div>

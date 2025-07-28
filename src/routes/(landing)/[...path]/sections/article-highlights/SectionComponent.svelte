@@ -46,7 +46,7 @@
           <p class="col-span-full text-start text-outline">{m.no_articles_to_display()}</p>
         {/if}
       </div>  -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-base w-full">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-base w-full">
         {#each section.data.article as article (article.id)}
           <ArticleItem
             title={article.title}

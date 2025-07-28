@@ -4,7 +4,7 @@ import type { Language, MenuItemTranslation } from "@prisma/client";
 
 export default {
   allow: true,
-  fields: ['id', 'menu_item_id', 'language', 'name'],
+  fields: ['id', 'menu_item_id', 'language', 'name', 'description', 'media'],
 
   create: {
     allow: false,
@@ -12,7 +12,7 @@ export default {
 
   update: {
     by: ['id'],
-    fields: ['name'],
+    fields: ['name', 'description', 'media'],
     validation: {
       name: [
         {
@@ -37,6 +37,6 @@ export default {
 
   detail: {
     by: ['menu_item_id', 'language'],
-    fields: ['id', 'menu_item_id', 'language', 'name'],
+    fields: ['id', 'menu_item_id', 'language', 'name', 'description', 'media'],
   },
 } as ModelConfig<MenuItemTranslation>

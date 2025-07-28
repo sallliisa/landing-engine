@@ -122,7 +122,7 @@
 </div>
 
 {#snippet ProjectItemImageCard(project: Record<string, any>)}
-  <a href={project.url} class="group/projectItem overlay before:bg-surface/5 active:before:bg-surface/10 flex flex-col p-6 items-start justify-end w-[290px] aspect-square bg-center bg-cover text-surface relative overflow-hidden" style="background-image: linear-gradient(rgba(0,0,0,0.24), rgba(0,0,0,0.24)), linear-gradient(to top, rgba(17,31,85,0.2) 0%, rgba(17,31,85,0) 50%), url('{project.media}');">
+  <a href={project.url} class="rounded-sm group/projectItem overlay before:bg-surface/5 active:before:bg-surface/10 flex flex-col p-6 items-start justify-end w-[290px] aspect-square bg-center bg-cover text-surface relative overflow-hidden" style="background-image: linear-gradient(rgba(0,0,0,0.24), rgba(0,0,0,0.24)), linear-gradient(to top, rgba(17,31,85,0.2) 0%, rgba(17,31,85,0) 50%), url('{project.media}');">
     <div class="flex flex-col gap-xs z-10 w-full transition-all translate-y-[0px] group-hover/projectItem:translate-y-[-28px]">
       <p class="text-lg font-bold">{project.title}</p>
       <div class="flex flex-row items-center gap-base">

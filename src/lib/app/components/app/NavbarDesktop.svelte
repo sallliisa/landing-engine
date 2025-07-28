@@ -94,6 +94,7 @@
   <!-- <div role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed backdrop-blur-md bg-on-surface/[8%]"></div> -->
   <div role="none" transition:fade onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}" class="z-[48] h-screen w-screen top-0 fixed bg-on-surface/[16%]"></div>
 {/if}
+<div class="w-full fixed top-0 left-0 z-[1] transition-all" style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.36) 0%, rgba(0, 0, 0, 0.18) 30%, rgba(0, 0, 0, 0) 100%); height: {isMenuExpanded ? 0 : windowScrollY != 0 ? 0 : 200}px;"></div>
 <div
   role="none" transition:blur onmouseenter="{() => debouncedMenuExpandMouseHover(-1, 'shrink')}"
   class="z-[48] h-[88px] w-screen top-0 fixed bg-gradient-to-b from-on-surface/[16%] to-transparent"
@@ -109,7 +110,12 @@
   >
     <div class="flex flex-row items-center justify-between w-full px-12 py-6 max-w-screen-xl">
       <a href="{page.data.primaryMenuPath}">
-        <img src="/assets/logo/hkr.svg" class="w-[64px] h-[27px]" alt="HK Realtindo"/>
+        <!-- {#if isMenuExpanded ? containerHeight + 152 : windowScrollY != 0 ? 88 : 0} -->
+        {#if isMenuExpanded || windowScrollY != 0}
+          <img src="/assets/logo/hkr-sil.svg" class="w-[64px] h-[27px]" alt="HK Realtindo"/>
+        {:else}
+          <img src="/assets/logo/hkr-w.svg" class="w-[64px] h-[27px]" alt="HK Realtindo"/>
+        {/if}
       </a>
       <div class="flex flex-row items-center gap-base text-sm xl:text-base">
         {#each page.data.menu as menu, index}
@@ -123,22 +129,22 @@
                     onfocus="{() => {}}"
                     role="menu"
                     tabindex="{index}"
-                    onmouseover="{() => debouncedMenuExpandMouseHover(index, menu.children?.length > 1 ? 'expand' : 'shrink')}"
+                    onmouseover="{() => debouncedMenuExpandMouseHover(index, menu.children?.length ? 'expand' : 'shrink')}"
                     class="flex flex-row gap-xs cursor-default"
                   >
                     <p>{menu.name}</p>
-                    {#if menu.children?.length > 1}<i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>{/if}
+                    {#if menu.children?.length}<i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>{/if}
                   </div>
                 {:else}
                   <a
                     onfocus="{() => {}}"
-                    onmouseover="{() => debouncedMenuExpandMouseHover(index, menu.children?.length > 1 ? 'expand' : 'shrink')}"
+                    onmouseover="{() => debouncedMenuExpandMouseHover(index, menu.children?.length ? 'expand' : 'shrink')}"
                     onclick="{() => isMenuExpanded = false}"
                     href="/{menu.slug}"
                     class="flex flex-row gap-xs"
                   > 
                   <p>{menu.name}</p>
-                    {#if menu.children?.length > 1}<i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>{/if}
+                    {#if menu.children?.length}<i class="ri-arrow-down-s-line {activeLevel1Index === index ? 'rotate-180' : 'rotate-0'} transition-transform"></i>{/if}
                   </a>
                 {/if}
               </div>
@@ -147,7 +153,7 @@
         {/each}
       </div>
       <div>
-        <button onclick="{() => getLocale() === 'id' ? setLocale('en') : setLocale('id')}" class="bg-surface outline outline-outline-variant flex flex-row items-center justify-between gap-sm px-3 py-2">
+        <button onclick="{() => getLocale() === 'id' ? setLocale('en') : setLocale('id')}" class="bg-surface outline outline-outline-variant flex flex-row items-center justify-between gap-sm px-3 py-2 rounded-full">
           <img src="/assets/i18n/flags/{getLocale()}.svg" alt="{getLocale()}" class="rounded-full aspect-square w-4 outline outline-outline-variant object-center object-cover"/>
           <p class="font-bold uppercase text-on-surface">{getLocale()}</p>
         </button>
@@ -177,8 +183,9 @@
               <div 
                 class="w-full pt-6 pb-10 px-12 grid grid-cols-3 gap-lg"
               >
-                <div>
+                <div class="flex flex-col gap-xs">
                   <p class="text-lg xl:text-xl font-bold">{menu.name}</p>
+                  <p class="text-sm text-outline">{menu.description}</p>
                 </div>
                 <div class="flex flex-col gap-base" bind:this="{level1MenuContentElements[level1Index]}">
                   {#each menu.children as level2Child, level2Index}

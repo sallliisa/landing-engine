@@ -58,7 +58,7 @@
                   </div>
                 {/if}
                 {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url}
-                  <a href={section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url} class="flex flex-row items-center gap-sm flex-shrink-0">
+                  <a href={section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url} target="_blank" class="flex flex-row items-center gap-sm flex-shrink-0">
                     <p class="font-semibold underline">{section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].content.url_text || m.learn_more()}
                     <i class="ri-arrow-right-line"></i>
                   </a>
@@ -114,7 +114,7 @@
                   {#each section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].gallery as gallery, i}
                     <ImagePreview src={gallery.media} title={gallery.title} description={gallery.description} class="">
                       {#snippet trigger()}
-                        <Carousel.Item class="flex-shrink-0 overlay before:bg-surface/5 active:before:bg-surface/10 w-[192px] basis-[9/2] aspect-square bg-center ml-2 bg-cover" style="background-image: url('{gallery.media}');">
+                        <Carousel.Item class="flex-shrink-0 overlay before:bg-surface/5 active:before:bg-surface/10 w-[192px] basis-[9/2] rounded-sm aspect-square bg-center ml-2 bg-cover" style="background-image: url('{gallery.media}');">
                           <!-- <img class="object-center object-cover w-full h-full" src={gallery.media} alt={gallery.title} /> -->
                         </Carousel.Item>
                       {/snippet}

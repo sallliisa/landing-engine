@@ -14,7 +14,10 @@
   import NumberInput from '$lib/app/components/input/NumberInput.svelte';
   import FileInput from '$lib/app/components/input/FileInput.svelte';
   import ImageInput from '$lib/app/components/input/ImageInput.svelte';
+  import FloatingContactButton from './[...path]/sections/floating-contact-button/SectionComponent.svelte';
   import FloatingContact from '$lib/app/components/app/FloatingContact.svelte';
+  import { browser } from '$app/environment';
+  import Button from '$lib/app/components/ui/Button.svelte';
 
 	let wInnerWidth = $state(0)
 	
@@ -36,6 +39,37 @@
 			console.log('nav', navigating.from, 'to', navigating.to)
 		}
 	})
+
+	let generalFloatingContactShouldDisplay = $state(true)
+
+	let portalObserver: MutationObserver;
+
+	$effect(() => {
+		if (!browser) return;
+
+		const portalElement = document.getElementById('floating-contact-portal');
+		if (!portalElement) return;
+
+		// Initial check
+		generalFloatingContactShouldDisplay = portalElement.children.length === 0;
+
+		// Set up mutation observer to watch for changes in the portal
+		portalObserver = new MutationObserver((mutations) => {
+			generalFloatingContactShouldDisplay = portalElement.children.length === 0;
+		});
+
+		// Start observing the portal for child list changes
+		portalObserver.observe(portalElement, { childList: true });
+		
+		console.log('observing', )
+
+		// Cleanup function
+		return () => {
+			if (portalObserver) {
+				portalObserver.disconnect();
+			}
+		};
+	});
 </script>
 
 <div class="bg-surface text-on-surface min-h-screen flex flex-col justify-between">
@@ -54,6 +88,7 @@
 		{/if}
 		{@render children()}
 	</div>
+	<!-- Portal target for floating contact button -->
 	<!-- <div class="mt-[400px]"></div>
 	<div class="w-full flex items-center justify-center">
 		<div class="w-full max-w-screen-2xl flex flex-col gap-12">
@@ -67,6 +102,25 @@
 			<ImageInput bind:value={testValue.input5}/>
 		 </div>
 	</div> -->
+	<!-- <div class="flex items-center justify-center py-8">
+		<div class="grid grid-cols-4 gap-4">
+			<Button class="max-w-fit">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit" variant="tonal">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit" variant="outlined">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit" variant="text">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-lg">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-lg" variant="tonal">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-lg" variant="outlined">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-lg" variant="text">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-full">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-full" variant="tonal">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-full" variant="outlined">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+			<Button class="max-w-fit rounded-full" variant="text">Lebih Banyak <i class="ri-arrow-right-line"></i></Button>
+		</div>
+	</div> -->
 	<Footer/>
-	<FloatingContact />
+	{#if generalFloatingContactShouldDisplay}
+		<FloatingContact />
+	{/if}
+	<div id="floating-contact-portal" class="z-[100]"></div>
 </div>

@@ -16,7 +16,7 @@
 </div>
 
 {#snippet testimonialItem(data: any)}
-  <div class="h-full outline outline-outline-variant flex flex-col gap-6 justify-between p-8">
+  <div class="h-full outline outline-outline-variant flex flex-col gap-6 justify-between p-8 rounded-sm">
     <p class="rtf-content m-base">{@html data.description}</p>
     <div class="flex flex-row items-center gap-base">
       {#if data.media}

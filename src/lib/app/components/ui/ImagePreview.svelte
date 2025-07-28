@@ -26,11 +26,11 @@
 <Dialog.Root>
   <Dialog.Trigger class={restProps.class} type="button">
     {#if !trigger }
-      <div class="text-surface text-shadow-outline-variant bg-center h-full bg-cover flex flex-col text-start items-start group/item justify-end p-6" style="background-image: {((title || description || subtitle) && !hideTextOnPreview) ? `linear-gradient(to top, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0) 50%), ` : ``} url('{src}');">
+      <div class="text-surface text-shadow-outline-variant bg-center h-full bg-cover flex flex-col text-start items-start group/item justify-end p-6 rounded-sm" style="background-image: {((title || description || subtitle) && !hideTextOnPreview) ? `linear-gradient(to top, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0) 50%), ` : ``} url('{src}');">
         {#if !hideTextOnPreview}
-          {#if subtitle}<p class="text-sm translate-y-5 group-hover/item:translate-y-0 transition-all">{subtitle}</p>{/if}
-          {#if title}<p class="font-semibold translate-y-5 group-hover/item:translate-y-0 transition-all">{title}</p>{/if}
-          <!-- {#if description}<p class="text-sm translate-y-5 group-hover/item:translate-y-0 transition-all rtf-content m-base text-start">{@html description}</p>{/if} -->
+        <!-- {#if description}<p class="text-sm translate-y-5 group-hover/item:translate-y-0 transition-all rtf-content m-base text-start">{@html description}</p>{/if} -->
+          <p class="text-xs">{subtitle}</p>
+          <p class="font-semibold translate-y-5 group-hover/item:translate-y-0 transition-all">{title}</p>
           <p class="text-xs mt-2 opacity-0 translate-y-5 transition-all group-hover/item:opacity-100 group-hover/item:translate-y-0"><i class="ri-arrow-right-up-line"></i></p>
         {/if}
       </div>

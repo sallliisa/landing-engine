@@ -86,7 +86,7 @@ export default {
         return body
       },
       post: async (body, data) => {
-        if (body.visible && body.role) {
+        if (body.visible && body.role === 'primary') {
           await prisma.menuItem.update({
             where: {id: body.id},
             data: {visible: false}

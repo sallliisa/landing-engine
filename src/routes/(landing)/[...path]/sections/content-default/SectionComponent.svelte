@@ -54,6 +54,6 @@
 
 {#snippet ContentImage()}
   {#if section.data.content.media}
-    <img src={section.data.content.media} alt={section.data.content.title} class="{!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
+    <img src={section.data.content.media} alt={section.data.content.title} class="{!section.meta.remove_outline_on_images ? 'outline outline-outline-variant rounded-sm' : ''} "/>
   {/if}
 {/snippet}
