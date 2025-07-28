@@ -26,6 +26,7 @@
     window.addEventListener('resize', () => {
       wInnerWidth = window.innerWidth
     })
+		document.documentElement.style.setProperty('--navbar-overlay-display', 'none');
   })
 
 	let { children, data } = $props();
