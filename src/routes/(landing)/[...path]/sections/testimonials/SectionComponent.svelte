@@ -17,7 +17,7 @@
 </div>
 
 {#snippet testimonialItem(data: any)}
-  <div class="h-full outline outline-outline-variant relative flex flex-col gap-6 justify-between p-8 rounded-sm {data.url ? 'cursor-pointer overlay before:bg-on-surface/5 active:before:bg-on-surface/10 transition-colors' : ''}">
+  <svelte:element this={data.url ? 'a' : 'div'} href={data.url || ''} class="h-full outline outline-outline-variant relative flex flex-col gap-6 justify-between p-8 rounded-sm {data.url ? 'cursor-pointer overlay before:bg-on-surface/5 active:before:bg-on-surface/10 transition-colors' : ''}">
     <p class="rtf-content m-base">{@html data.description}</p>
     <div class="flex flex-row items-center gap-base">
       {#if data.media}
@@ -34,7 +34,7 @@
         {#if data.url}<p class="bottom-0 right-0 text-sm text-outline">{data.url_text || m.learn_more()} <i class="ri-arrow-right-line"></i></p>{/if}
       </div>
     </div>
-  </div>
+  </svelte:element>
 {/snippet}
 
 <!-- <div class="flex items-center justify-center w-full">
