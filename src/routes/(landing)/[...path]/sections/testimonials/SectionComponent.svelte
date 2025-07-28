@@ -1,5 +1,6 @@
 <script lang="ts">
   import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
+  import { m } from "$lib/paraglide/messages";
 
   const {section} = $props()
 </script>
@@ -7,7 +8,7 @@
 <div class="flex items-center justify-center w-full">
   <div class="w-full max-w-screen-xl flex flex-col gap-6 py-6 lg:py-12 px-6 lg:px-12">
     <SectionHeader header={section.data.content} defaultAlign="center"/>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-base">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-base items-center justify-center">
       {#each section.data.gallery as item, i (item.id || `testimonial-${i}`)}
         {@render testimonialItem(item)}
       {/each}
@@ -16,7 +17,7 @@
 </div>
 
 {#snippet testimonialItem(data: any)}
-  <div class="h-full outline outline-outline-variant flex flex-col gap-6 justify-between p-8 rounded-sm">
+  <div class="h-full outline outline-outline-variant relative flex flex-col gap-6 justify-between p-8 rounded-sm {data.url ? 'cursor-pointer overlay before:bg-on-surface/5 active:before:bg-on-surface/10 transition-colors' : ''}">
     <p class="rtf-content m-base">{@html data.description}</p>
     <div class="flex flex-row items-center gap-base">
       {#if data.media}
@@ -28,7 +29,10 @@
           </svg>
         </div>
       {/if}
-      <p>{data.title}</p>
+      <div>
+        <p>{data.title}</p>
+        {#if data.url}<p class="bottom-0 right-0 text-sm text-outline">{data.url_text || m.learn_more()} <i class="ri-arrow-right-line"></i></p>{/if}
+      </div>
     </div>
   </div>
 {/snippet}
