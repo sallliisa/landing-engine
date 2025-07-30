@@ -6,7 +6,7 @@ export default {
     by: ['id'],
     fieldsForeign: {
       contents: {
-        fields: ['id', 'order'],
+        fields: ['id', 'order', 'gallery_id'],
       },
       galleries: {
         fields: ['id', 'order']
