@@ -90,7 +90,7 @@
             {/if}
           </div>
           {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].feature.length > 0}
-            <div class="flex flex-row gap-xl flex-wrap items-center justify-center px-6r">
+            <div class="flex flex-row gap-xl flex-wrap items-center justify-center px-6">
               {#each section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex].feature as feature}
                 <div class="flex flex-col gap-sm items-center justify-center">
                   <i class={feature.media}></i>
