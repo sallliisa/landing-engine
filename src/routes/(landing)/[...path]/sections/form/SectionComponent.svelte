@@ -57,7 +57,7 @@
           <p class="text-xs text-outline">{contactItem.title}</p>
           <div class="flex flex-row items-center gap-sm">
             <i class={contactItem.media}></i>
-            <a href={contactItem.url} data-analytics-contact={contactItem.url} class="{contactItem.url ? 'underline' : ''} text-sm">{contactItem.content}</a>
+            <a href={contactItem.url} data-analytics-contact={contactItem.url} aria-label="Contact" target="_blank" class="{contactItem.url ? 'underline' : ''} text-sm">{contactItem.content}</a>
           </div>
         </div>
       {/each}
