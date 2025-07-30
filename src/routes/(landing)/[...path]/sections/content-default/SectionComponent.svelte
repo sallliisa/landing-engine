@@ -11,7 +11,6 @@
       content: {
         container: 'flex flex-col items-start justify-center',
         content: 'text-left',
-        url: 'justify-start'
       }
     },
     center: {
@@ -19,7 +18,6 @@
       content: {
         container: 'flex flex-col items-center justify-center',
         content: 'text-center',
-        url: 'justify-center'
       }
     },
     right: {
@@ -27,13 +25,18 @@
       content: {
         container: 'flex flex-col items-end justify-center',
         content: 'text-right',
-        url: 'justify-end'
       }
     }
   }
 
+  const urlJustifyClassMap: any = {
+    left: 'justify-start',
+    center: 'justify-center',
+    right: 'justify-end'
+  }
+
   const layoutDirectionClassMap: any = {
-    horizontal: 'grid md:grid-cols-2 grid-cols-1 gap-6',
+    horizontal: 'grid md:grid-cols-2 grid-cols-1 gap-lg',
     vertical: 'flex flex-col gap-6'
   }
 </script>
@@ -56,12 +59,12 @@
         {/if}
         {#if section.data.content.url}
           {#if section.meta.button_type === 'text'}
-            <div class="flex flex-row items-center {(contentAlignClassMap as any)[section.meta.content_align].content.url}">
+            <div class="flex flex-row items-center {(urlJustifyClassMap as any)[section.meta.url_justify]}">
               <a href={section.data.content.url} class="font-semibold underline">{section.data.content.url_text || m.learn_more()}</a>
               <i class="ri-arrow-right-line"></i>
             </div>
           {:else}
-            <div class="flex flex-row items-center {(contentAlignClassMap as any)[section.meta.content_align].content.url}">
+            <div class="flex flex-row items-center {(urlJustifyClassMap as any)[section.meta.url_justify]}">
               <a href={section.data.content.url}>
                 <Button>{section.data.content.url_text || m.learn_more()} <i class="ri-arrow-right-line"></i></Button>
               </a>
@@ -78,6 +81,6 @@
 
 {#snippet ContentImage()}
   {#if section.data.content.media}
-    <img src={section.data.content.media} alt={section.data.content.title} class="{!section.meta.remove_outline_on_images ? 'outline outline-outline-variant rounded-sm' : ''} "/>
+    <img src={section.data.content.media} alt={section.data.content.title} class="w-full object-cover object-center rounded-sm {!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
   {/if}
 {/snippet}
