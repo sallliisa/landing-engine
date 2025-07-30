@@ -7,6 +7,7 @@
   import CardView from "./_layouts/CardView.svelte";
   import MediaView from "./_layouts/MediaView.svelte";
   import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
+  import { widthPresetClassMap } from "$lib/utils/uicommon";
 
   const {section} = $props()
 
@@ -48,10 +49,12 @@
     card: 'max-w-screen-lg',
     media: 'max-w-screen-xl',
   }
+
+  section.meta.width_preset = 'xl'
 </script>
 
 <div class="w-full flex items-center justify-center">
-  <Accordion.Root type="multiple" bind:value={openItems} class="w-full {maxWidthMap[section.meta.type]} flex flex-col {section.meta.title ? 'sm:gap-lg gap-sm' : 'gap-base'} py-6 lg:py-12 px-6 lg:px-12">
+  <Accordion.Root type="multiple" bind:value={openItems} class="w-full {widthPresetClassMap[section.meta.width_preset]} flex flex-col {section.meta.title ? 'sm:gap-lg gap-sm' : 'gap-base'} py-6 lg:py-12 px-6 lg:px-12">
     {#if section.data.content}<SectionHeader header={section.data.content}/>{/if}
     {#if section.meta.searchable || section.meta.title}
       <div class="flex flex-col gap-base sm:flex-row items-center justify-between">
