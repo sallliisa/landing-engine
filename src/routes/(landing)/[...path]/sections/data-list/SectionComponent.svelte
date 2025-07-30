@@ -42,19 +42,17 @@
     openItems = filteredChildSections.map((cs: any) => cs.id || cs.name);
   });
 
-  const maxWidthMap: any = {
-    list: 'max-w-screen-lg',
-    gallery: 'max-w-[1121px]',
-    content: 'max-w-screen-xl',
-    card: 'max-w-screen-lg',
-    media: 'max-w-screen-xl',
-  }
-
-  section.meta.width_preset = 'xl'
+  // const maxWidthMap: any = {
+  //   list: 'max-w-screen-lg',
+  //   gallery: 'max-w-[1121px]',
+  //   content: 'max-w-screen-xl',
+  //   card: 'max-w-screen-lg',
+  //   media: 'max-w-screen-xl',
+  // }
 </script>
 
 <div class="w-full flex items-center justify-center">
-  <Accordion.Root type="multiple" bind:value={openItems} class="w-full {widthPresetClassMap[section.meta.width_preset]} flex flex-col gap-lg py-6 lg:py-12 px-6 lg:px-12">
+  <Accordion.Root type="multiple" bind:value={openItems} class="w-full {section.meta.width_preset ? widthPresetClassMap[section.meta.width_preset] : widthPresetClassMap['xl']} flex flex-col gap-lg py-6 lg:py-12 px-6 lg:px-12">
     {#if section.data.content}<SectionHeader header={section.data.content}/>{/if}
     <div class="flex flex-col {section.meta.title ? 'sm:gap-lg gap-sm' : 'gap-base'}">
       {#if section.meta.searchable || section.meta.title}
