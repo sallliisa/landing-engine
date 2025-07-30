@@ -44,7 +44,7 @@
 <div class="flex items-center justify-center w-full">
   <div class="w-full {widthPresetClassMap[section.meta.width_preset]} {section.meta.layout_direction ? layoutDirectionClassMap[section.meta.layout_direction] : layoutDirectionClassMap['vertical']} lg:py-12 px-6 lg:px-12 {(contentAlignClassMap as any)[section.meta.content_align].container} justify-center">
     {#if section.meta.content_order === 'image-text'}
-      {@render ContentIcon()}
+      {@render ContentImage()}
     {/if}
     {#if section.data.content.title || section.data.content.subtitle || section.data.content.description}
       <div class="flex flex-col gap-4 {(contentAlignClassMap as any)[section.meta.content_align].content.container}">
@@ -74,19 +74,13 @@
       </div>
     {/if}
     {#if section.meta.content_order === 'text-image'}
-      {@render ContentIcon()}
+      {@render ContentImage()}
     {/if}
   </div>
 </div>
 
-{#snippet ContentIcon()}
-  <div class="flex flex-row gap-xl flex-wrap items-center justify-center">
-    {#each section.data.icons as icon}
-      <div class="flex flex-col gap-sm items-center justify-center">
-        <i class={icon.media}></i>
-        <p class="font-bold text-lg">{icon.title}</p>
-        <p>{icon.subtitle}</p>
-      </div>
-    {/each}
-  </div>
+{#snippet ContentImage()}
+  {#if section.data.content.media}
+    <img src={section.data.content.media} alt={section.data.content.title} class="w-full object-cover object-center rounded-sm {!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
+  {/if}
 {/snippet}
