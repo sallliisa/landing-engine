@@ -59,12 +59,12 @@
         {/if}
         {#if section.data.content.url}
           {#if section.meta.button_type === 'text'}
-            <div class="flex flex-row items-center {(urlJustifyClassMap as any)[section.meta.url_justify]}">
+            <div class="flex flex-row items-center w-full {(urlJustifyClassMap as any)[section.meta.url_justify]}">
               <a href={section.data.content.url} class="font-semibold underline">{section.data.content.url_text || m.learn_more()}</a>
               <i class="ri-arrow-right-line"></i>
             </div>
           {:else}
-            <div class="flex flex-row items-center {(urlJustifyClassMap as any)[section.meta.url_justify]}">
+            <div class="flex flex-row items-center w-full {(urlJustifyClassMap as any)[section.meta.url_justify]}">
               <a href={section.data.content.url}>
                 <Button>{section.data.content.url_text || m.learn_more()} <i class="ri-arrow-right-line"></i></Button>
               </a>
