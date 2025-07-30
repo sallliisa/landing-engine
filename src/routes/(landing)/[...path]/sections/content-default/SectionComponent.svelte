@@ -1,35 +1,45 @@
 <script lang="ts">
+  import Button from "$lib/app/components/ui/Button.svelte";
+  import { m } from "$lib/paraglide/messages";
   import { widthPresetClassMap } from "$lib/utils/uicommon";
 
   const {section} = $props()
 
-  const contentAlignClassMap = {
+  const contentAlignClassMap:any  = {
     left: {
-      container: 'flex-col items-start justify-center',
+      container: 'items-start',
       content: {
         container: 'flex flex-col items-start justify-center',
-        content: 'text-left'
+        content: 'text-left',
+        url: 'justify-start'
       }
     },
     center: {
-      container: 'flex-col items-center justify-center',
+      container: 'items-center',
       content: {
         container: 'flex flex-col items-center justify-center',
-        content: 'text-center'
+        content: 'text-center',
+        url: 'justify-center'
       }
     },
     right: {
-      container: 'flex-col items-end justify-center',
+      container: 'items-end',
       content: {
         container: 'flex flex-col items-end justify-center',
-        content: 'text-right'
+        content: 'text-right',
+        url: 'justify-end'
       }
     }
+  }
+
+  const layoutDirectionClassMap: any = {
+    horizontal: 'grid md:grid-cols-2 grid-cols-1 gap-6',
+    vertical: 'flex flex-col gap-6'
   }
 </script>
 
 <div class="flex items-center justify-center w-full">
-  <div class="w-full {widthPresetClassMap[section.meta.width_preset]} flex flex-col gap-6 py-6 lg:py-12 px-6 lg:px-12 {(contentAlignClassMap as any)[section.meta.content_align].container}">
+  <div class="w-full {widthPresetClassMap[section.meta.width_preset]} {section.meta.layout_direction ? layoutDirectionClassMap[section.meta.layout_direction] : layoutDirectionClassMap['vertical']} lg:py-12 px-6 lg:px-12 {(contentAlignClassMap as any)[section.meta.content_align].container} justify-center">
     {#if section.meta.content_order === 'image-text'}
       {@render ContentImage()}
     {/if}
@@ -43,6 +53,20 @@
         {/if}
         {#if section.data.content.description}
           <p class="rtf-content -mt-4 {section.meta.remove_margin ? 'm-base' : ''} {(contentAlignClassMap as any)[section.meta.content_align].content.content}">{@html section.data.content.description}</p>
+        {/if}
+        {#if section.data.content.url}
+          {#if section.meta.button_type === 'text'}
+            <div class="flex flex-row items-center {(contentAlignClassMap as any)[section.meta.content_align].content.url}">
+              <a href={section.data.content.url} class="font-semibold underline">{section.data.content.url_text || m.learn_more()}</a>
+              <i class="ri-arrow-right-line"></i>
+            </div>
+          {:else}
+            <div class="flex flex-row items-center {(contentAlignClassMap as any)[section.meta.content_align].content.url}">
+              <a href={section.data.content.url}>
+                <Button>{section.data.content.url_text || m.learn_more()} <i class="ri-arrow-right-line"></i></Button>
+              </a>
+            </div>
+          {/if}
         {/if}
       </div>
     {/if}
