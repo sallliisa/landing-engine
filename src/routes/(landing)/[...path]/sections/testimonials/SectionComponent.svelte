@@ -17,7 +17,7 @@
 </div>
 
 {#snippet testimonialItem(data: any)}
-  <svelte:element this={data.url ? 'a' : 'div'} href={data.url || ''} class="outline outline-outline-variant relative flex flex-col gap-6 justify-between p-8 rounded-sm w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)] {data.url ? 'cursor-pointer overlay before:bg-on-surface/5 active:before:bg-on-surface/10 transition-colors' : ''}">
+  <svelte:element this={data.url ? 'a' : 'div'} href={data.url || ''} target="_blank" class="outline outline-outline-variant relative flex flex-col gap-6 justify-between p-8 rounded-sm w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)] {section.meta.content_align === 'vertical' ? 'items-center' : ''} {data.url ? 'cursor-pointer overlay before:bg-on-surface/5 active:before:bg-on-surface/10 transition-colors' : ''}">
     <p class="rtf-content m-base">{@html data.description}</p>
     <div class="flex flex-row items-center gap-base">
       {#if data.media}
