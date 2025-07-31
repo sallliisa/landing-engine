@@ -41,7 +41,7 @@ export default {
 
   create: {
     allow: true,
-    fields: ['categories'], // Changed 'article_category_id' to 'categories', added 'title' as it's used in post lifecycle
+    fields: ['categories', 'created_at'], // Changed 'article_category_id' to 'categories', added 'title' as it's used in post lifecycle
     lifecycle: {
       post: async (body: any, data: any) => {
         const translations = languages.map(language => ({
@@ -79,7 +79,7 @@ export default {
 
   update: {
     allow: true,
-    fields: ['categories'], // Changed 'article_category_id' to 'categories'
+    fields: ['categories', 'created_at'], // Changed 'article_category_id' to 'categories'
     by: ['id'],
     validation: {
       translations: [
