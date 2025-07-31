@@ -44,7 +44,7 @@
 <div class="flex items-center justify-center w-full">
   <div class="w-full {widthPresetClassMap[section.meta.width_preset]} {section.meta.layout_direction ? layoutDirectionClassMap[section.meta.layout_direction] : layoutDirectionClassMap['vertical']} lg:py-12 px-6 lg:px-12 {(contentAlignClassMap as any)[section.meta.content_align].container} justify-center">
     {#if section.meta.content_order === 'image-text'}
-      {@render ContentImage()}
+      {@render ContentMedia()}
     {/if}
     {#if section.data.content.title || section.data.content.subtitle || section.data.content.description}
       <div class="flex flex-col gap-4 {(contentAlignClassMap as any)[section.meta.content_align].content.container}">
@@ -74,13 +74,25 @@
       </div>
     {/if}
     {#if section.meta.content_order === 'text-image'}
-      {@render ContentImage()}
+      {@render ContentMedia()}
     {/if}
   </div>
 </div>
 
-{#snippet ContentImage()}
-  {#if section.data.content.media}
-    <img src={section.data.content.media} alt={section.data.content.title} class="w-full object-cover object-center rounded-sm {!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
+{#snippet ContentMedia()}
+  {#if section.data.content.media_type === 'embed'}
+    {#if section.data.content.attachment}
+      <div class="min-h-[300px] md:h-[450px]">
+        <div class="embed-preview">
+          <div class="h-full w-full">
+            {@html section.data.content.attachment}
+          </div>
+        </div>
+      </div>
+    {/if}
+  {:else}
+    {#if section.data.content.media}
+      <img src={section.data.content.media} alt={section.data.content.title} class="w-full object-cover object-center rounded-sm {!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
+    {/if}
   {/if}
 {/snippet}
