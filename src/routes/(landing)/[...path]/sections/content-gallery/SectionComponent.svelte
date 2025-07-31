@@ -80,18 +80,22 @@
 </div>
 
 {#snippet ContentMedia()}
-  {#if section.data.content.media}
-    {#if section.data.content.media_type === 'embed'}
-      <div class="min-h-[300px] md:h-[450px] w-full">
-        <div class="embed-preview">
-          <div class="h-full w-full">{@html section.data.content.media}</div>
-        </div>
-      </div>
-    {:else}
-      {#if section.data.content.media}
-        <img src={section.data.content.media} alt={section.data.content.title} class="w-full object-cover object-center rounded-sm {!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
+  {#if section.data.gallery.length}
+    {#each section.data.gallery as content}
+      {#if content.media}
+        {#if content.media_type === 'embed'}
+          <div class="min-h-[300px] md:h-[450px] w-full">
+            <div class="embed-preview">
+              <div class="h-full w-full">{@html content.media}</div>
+            </div>
+          </div>
+        {:else}
+          {#if content.media}
+            <img src={content.media} alt={content.title} class="w-full object-cover object-center rounded-sm {!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
+          {/if}
+        {/if}
       {/if}
-    {/if}
+    {/each}
   {/if}
 {/snippet}
 
