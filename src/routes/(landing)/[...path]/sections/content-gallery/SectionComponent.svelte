@@ -100,7 +100,7 @@
 {/snippet}
 
 {#snippet ContentEmbed()}
-  <div class="flex flex-col gap-base">
+  <div class="flex flex-col gap-base w-full">
     {#each section.data.gallery as embed}
       <div class="min-h-[300px] md:h-[450px] w-full">
         <div class="embed-preview">
