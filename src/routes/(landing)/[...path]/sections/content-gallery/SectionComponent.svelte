@@ -96,12 +96,12 @@
     {#each section.data.gallery as image}
       <div class="flex flex-col gap-base items-center justify-center">
         <img src={image.media} alt={image.title} class="w-full object-cover object-center rounded-sm {!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
-        {#if image.title || image.subtitle}
+        <!-- {#if image.title || image.subtitle}
           <div class="flex flex-col gap-xs items-center justify-center">
             {#if image.subtitle}<p class="text-sm">{image.subtitle}</p>{/if}
             {#if image.title}<p class="text-2xl md:text-3xl font-bold">{image.title}</p>{/if}
           </div>
-        {/if}
+        {/if} -->
       </div>
     {/each}
   </div>
@@ -116,12 +116,12 @@
             <div class="h-full w-full">{@html embed.media}</div>
           </div>
         </div>
-        {#if embed.title || embed.subtitle}
+        <!-- {#if embed.title || embed.subtitle}
           <div class="flex flex-col gap-xs items-center justify-center">
             {#if embed.subtitle}<p class="text-sm">{embed.subtitle}</p>{/if}
             {#if embed.title}<p class="text-2xl md:text-3xl font-bold">{embed.title}</p>{/if}
           </div>
-        {/if}
+        {/if} -->
       </div>
     {/each}
   </div>
