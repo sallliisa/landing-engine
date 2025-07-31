@@ -94,18 +94,34 @@
 {#snippet ContentImage()}
   <div class="flex flex-col gap-base">
     {#each section.data.gallery as image}
-      <img src={image.media} alt={image.title} class="w-full object-cover object-center rounded-sm {!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
+      <div class="flex flex-col gap-base items-center justify-center">
+        <img src={image.media} alt={image.title} class="w-full object-cover object-center rounded-sm {!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
+        {#if image.title || image.subtitle}
+          <div class="flex flex-col gap-xs items-center justify-center">
+            {#if image.subtitle}<p class="text-sm">{image.subtitle}</p>{/if}
+            {#if image.title}<p class="text-2xl md:text-3xl font-bold">{image.title}</p>{/if}
+          </div>
+        {/if}
+      </div>
     {/each}
   </div>
 {/snippet}
 
 {#snippet ContentEmbed()}
-  <div class="flex flex-col gap-base w-full">
+  <div class="flex flex-col gap-lg w-full">
     {#each section.data.gallery as embed}
-      <div class="min-h-[300px] md:h-[450px] w-full">
-        <div class="embed-preview">
-          <div class="h-full w-full">{@html embed.media}</div>
+      <div class="flex flex-col gap-base">
+        <div class="min-h-[300px] md:h-[450px] w-full">
+          <div class="embed-preview">
+            <div class="h-full w-full">{@html embed.media}</div>
+          </div>
         </div>
+        {#if embed.title || embed.subtitle}
+          <div class="flex flex-col gap-xs items-center justify-center">
+            {#if embed.subtitle}<p class="text-sm">{embed.subtitle}</p>{/if}
+            {#if embed.title}<p class="text-2xl md:text-3xl font-bold">{embed.title}</p>{/if}
+          </div>
+        {/if}
       </div>
     {/each}
   </div>
