@@ -79,23 +79,47 @@
   </div>
 </div>
 
+{#snippet ContentIcon()}
+  <div class="flex flex-row gap-xl flex-wrap items-center justify-center">
+    {#each section.data.gallery as icon}
+      <div class="flex flex-col gap-sm items-center justify-center">
+        <i class={icon.media}></i>
+        <p class="font-bold text-lg">{icon.title}</p>
+        <p>{icon.subtitle}</p>
+      </div>
+    {/each}
+  </div>
+{/snippet}
+
+{#snippet ContentImage()}
+  <div class="flex flex-col gap-base">
+    {#each section.data.gallery as image}
+      <img src={image.media} alt={image.title} class="w-full object-cover object-center rounded-sm {!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
+    {/each}
+  </div>
+{/snippet}
+
+{#snippet ContentEmbed()}
+  <div class="flex flex-col gap-base">
+    {#each section.data.gallery as embed}
+      <div class="min-h-[300px] md:h-[450px] w-full">
+        <div class="embed-preview">
+          <div class="h-full w-full">{@html embed.media}</div>
+        </div>
+      </div>
+    {/each}
+  </div>
+{/snippet}
+
 {#snippet ContentMedia()}
   {#if section.data.gallery.length}
-    {#each section.data.gallery as content}
-      {#if content.media}
-        {#if content.media_type === 'embed'}
-          <div class="min-h-[300px] md:h-[450px] w-full">
-            <div class="embed-preview">
-              <div class="h-full w-full">{@html content.media}</div>
-            </div>
-          </div>
-        {:else}
-          {#if content.media}
-            <img src={content.media} alt={content.title} class="w-full object-cover object-center rounded-sm {!section.meta.remove_outline_on_images ? 'outline outline-outline-variant' : ''} "/>
-          {/if}
-        {/if}
-      {/if}
-    {/each}
+    {#if section.meta.gallery_media_type === 'embed'}
+      {@render ContentEmbed()}
+    {:else if section.meta.gallery_media_type === 'image'}
+      {@render ContentImage()}
+    {:else if section.meta.gallery_media_type === 'icon'}
+      {@render ContentIcon()}
+    {/if}
   {/if}
 {/snippet}
 
