@@ -112,7 +112,7 @@ export default {
     lifecycle: {
       post: async (data, total, locals) => {
         const userRoleId = locals?.user?.role_id;
-        const isAdmin = locals?.user?.role.role_group_id === 1;
+        const isAdmin = locals?.user?.role.role_group_id <= 2;
 
         // To add the 'can_edit' property, we must map over the data array
         // and return new objects, as the original `data` is read-only.
@@ -170,7 +170,7 @@ export default {
     lifecycle: {
       async post(data: Record<string, any>, _total?: number, locals?: Record<string, any>) {
         const userRoleId = locals?.user?.role_id;
-        const isAdmin = locals?.user?.role?.role_group_id === 1;
+        const isAdmin = locals?.user?.role?.role_group_id <= 2;
         let can_edit = false;
 
         if (isAdmin) {
