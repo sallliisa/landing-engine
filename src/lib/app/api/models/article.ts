@@ -112,7 +112,7 @@ export default {
       }
     },
     where: async (event) => {
-      if (event.locals.user?.role.role_group_id === 1) return undefined;
+      if (event.locals.user?.role.role_group_id <= 2) return undefined;
       
       // Get all category IDs that the user's role has access to
       const roleWithCategories = await prisma.role.findUnique({

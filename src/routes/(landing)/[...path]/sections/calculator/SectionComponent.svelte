@@ -15,7 +15,7 @@
 
 <div class="flex w-full items-center justify-center">
   <div class="w-full max-w-screen-xl py-6 lg:py-12 px-6 lg:px-12">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-lg w-full px-6 py-6 lg:py-12 outline outline-outline-variant">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-lg w-full px-6 py-6 lg:py-12 outline rounded-sm outline-outline-variant">
       <div class="flex flex-col col-span-1">
         <div class="flex flex-col gap-lg">
           <SectionHeader header={section.data.content} defaultAlign="left" titleSize="xl"/>
