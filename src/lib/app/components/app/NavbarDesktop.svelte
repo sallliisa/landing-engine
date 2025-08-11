@@ -130,7 +130,7 @@
               <a href={menu.url} class="">{menu.name}</a>
             {:else if menu.menu_item_type == 'page'}
               <div class="relative">
-                {#if !menu.page}
+                {#if !menu.page?.translations?.length}
                   <div
                     onfocus="{() => {}}"
                     role="menu"

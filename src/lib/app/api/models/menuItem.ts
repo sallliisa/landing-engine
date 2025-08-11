@@ -47,6 +47,7 @@ export default {
 
         body.order = (maxOrderItem?.order ?? 0) + 1;
         body.slug = parseSlug(body.name); // Add this line to set the slug based on the name
+        body.visible = false
         return body;
       },
       post: async (body: any, data: any) => {
@@ -149,7 +150,7 @@ export default {
         fields: ['id'],
         fieldsForeign: {
           translations: {
-            fields: ['id', 'language'],
+            fields: ['id', 'language', 'status_code'],
             fieldsForeign: {
               sectionGroups: {
                 fields: ['id']
@@ -179,7 +180,16 @@ export default {
           can_edit = data.allowedRoles.some((role: { id: string }) => role.id === userRoleId);
         }
 
-        console.log(userRoleId, data.allowedRoles)
+        if (data.page?.[0]?.translations) {
+          const prioritizedTranslations = new Map();
+          for (const translation of data.page[0].translations) {
+            const existing = prioritizedTranslations.get(translation.language);
+            if (!existing || translation.status_code === 'DRAFT') {
+              prioritizedTranslations.set(translation.language, translation);
+            }
+          }
+          data.page[0].translations = Array.from(prioritizedTranslations.values());
+        }
 
         return { 
           ...data, 

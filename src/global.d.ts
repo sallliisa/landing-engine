@@ -116,7 +116,11 @@ declare global {
     // Main update operation
     // Ex. use case: Different fields to assign depending on a value of a field
     // body: What's returned by pre
-    main?: (body: Record<string, any>, locals?: Record<string, any>) => Promise<Record<string, any>>,
+    main?: (
+			body: Record<string, any>,
+			locals?: Record<string, any>,
+			where?: Record<string, any>
+		) => Promise<Record<string, any>>,
     // What to do after the main operation
     // Ex. use case: Create on another model depending on the value of what's being returned from main
     // body: What's returned by main
@@ -170,10 +174,25 @@ declare global {
   type DetailConfig<T> = BaseOperationConfig<T> & ViewOperationConfig<T> & {
     lifecycle?: DetailLifecycleConfig,
   }
-  type DeleteConfig<T> = Pick<BaseOperationConfig<T>, 'by' | 'allow' | 'where'>
+  type DeleteConfig<T> = Pick<BaseOperationConfig<T>, 'by' | 'allow' | 'where'> & TransactionOperationConfig<T>
 
   type ReorderConfig<T> = Pick<BaseOperationConfig<T>, 'by' | 'allow'> & {
     axis: (keyof T)[],
+    lifecycle?: TransactionLifecycleConfig
+  }
+
+  type VerifyConfig<T> = Pick<BaseOperationConfig<T>, 'allow'> & {
+    by: (keyof T),
+    stateField: keyof T;
+    initialState: string;
+    states: string[];
+    transitions: {
+      [action: string]: {
+        from: string | string[];
+        to: string;
+      };
+    };
+    lifecycle?: TransactionLifecycleConfig;
   }
 
   type ModelConfig<T> = BaseOperationConfig<T> & {
@@ -201,7 +220,8 @@ declare global {
     list?: ListConfig<T>,
     detail?: DetailConfig<T>,
     delete?: DeleteConfig<T>,
-    reorder?: ReorderConfig<T>
+    reorder?: ReorderConfig<T>,
+    verify?: VerifyConfig<T>
   }
 }
 

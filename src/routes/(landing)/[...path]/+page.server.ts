@@ -32,7 +32,7 @@ export async function load({ params, parent, url }) {
        page: {
           include: {
              translations: {
-                where: { language: locale },
+                where: { language: locale, status_code: 'PUBLISHED' },
                 include: {
                    sectionGroups: true
                 }

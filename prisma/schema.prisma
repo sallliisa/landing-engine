@@ -84,6 +84,7 @@ model User {
   role    Role @relation(fields: [role_id], references: [id])
 
   sessions Session[]
+  verifications VerificationLog[]
 }
 
 model Session {
@@ -141,8 +142,24 @@ model PageTranslation {
   page_id       String
   language      Language
   page          Page           @relation(fields: [page_id], references: [id], onDelete: Cascade)
-  // Instead of sections, each PageTranslation now holds SectionGroups.
   sectionGroups SectionGroup[]
+
+  // Verification & Draft/Publish
+  status_code   String           @default("PUBLISHED")
+  live_for_id   String?          @unique
+  liveFor       PageTranslation? @relation("PageTranslationLiveDraft", fields: [live_for_id], references: [id], onDelete: SetNull)
+  draft         PageTranslation? @relation("PageTranslationLiveDraft")
+}
+
+model VerificationLog {
+  id                  String             @id @default(cuid())
+  action              String
+  description         String?
+  verifier_id         Int
+  verifier            User               @relation(fields: [verifier_id], references: [id], onDelete: NoAction)
+  created_at          DateTime           @default(now())
+  model               String
+  data_id             String
 }
 
 model SectionType {
@@ -379,9 +396,15 @@ model ArticleTranslation {
   content    String?  @db.Text
   excerpt    String?
   thumbnail  String?
+  status_code   String        @default("PUBLISHED")
   article    Article  @relation(fields: [article_id], references: [id], onDelete: Cascade)
 
-  @@unique([language, slug])
+  // Verification & Draft/Publish
+  live_for_id   String?             @unique
+  liveFor       ArticleTranslation? @relation("ArticleTranslationLiveDraft", fields: [live_for_id], references: [id], onDelete: SetNull)
+  draft         ArticleTranslation? @relation("ArticleTranslationLiveDraft")
+
+  @@unique([language, slug, status_code])
 }
 
 ///

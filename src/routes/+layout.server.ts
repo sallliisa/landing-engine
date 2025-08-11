@@ -47,6 +47,7 @@ export async function load({params, url, untrack}) {
             translations: {
               where: {
                 language: getLocale(),
+                status_code: 'PUBLISHED',
               },
               select: {
                 id: true,
@@ -82,6 +83,7 @@ export async function load({params, url, untrack}) {
                 translations: {
                   where: {
                     language: getLocale(),
+                    status_code: 'PUBLISHED',
                   },
                   select: {
                     id: true,
@@ -117,6 +119,7 @@ export async function load({params, url, untrack}) {
                     translations: {
                       where: {
                         language: getLocale(),
+                        status_code: 'PUBLISHED',
                       },
                       select: {
                         id: true,

@@ -1,4 +1,21 @@
 import type { Prisma } from "@prisma/client";
+import { ensureDraftState } from '$lib/utils/page';
+
+const ensureDraftPreHook = async (body: any) => {
+	const { id, page_translation_id, ...rest } = body;
+	if (!page_translation_id) return body;
+
+	const { idMap } = await ensureDraftState(page_translation_id);
+
+	if (idMap) {
+		const newId = idMap.get(id);
+		if (newId) {
+			return { id: newId, page_translation_id, ...rest };
+		}
+	}
+
+	return body;
+};
 
 export default {
   detail: {
@@ -45,17 +62,26 @@ export default {
 
   delete: {
     allow: true,
-    by: ['id']
+    by: ['id'],
+    lifecycle: {
+      pre: ensureDraftPreHook
+    }
   },
 
   update: {
     allow: true,
     by: ['id'],
-    fields: ['name', 'description', 'visible', 'meta']
+    fields: ['name', 'description', 'visible', 'meta'],
+    lifecycle: {
+      pre: ensureDraftPreHook
+    }
   },
 
   reorder: {
     allow: true,
-    axis: ['section_group_id']
+    axis: ['section_group_id', 'parent_section_id'],
+    lifecycle: {
+      pre: ensureDraftPreHook
+    }
   }
 } as ModelConfig<Prisma.SectionGetPayload<{include: {contents: true, galleries: true, childSections: true, childSectionGroups: true}}>>
