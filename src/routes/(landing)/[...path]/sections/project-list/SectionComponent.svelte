@@ -154,14 +154,14 @@
     </div>
     <div class="flex flex-col items-center gap-xs">
       <p class="font-semibold text-center flex items-center">{project.title}</p>
-      <div class="flex flex-row items-center gap-base">
+      <div class="flex flex-col sm:flex-row items-center gap-xs sm:gap-base">
         <div class="flex flex-row items-center gap-xs">
           <i class="ri-building-4-line"></i>
-          <p class="text-xs">{categoryFilterNameMap[project?.category]}</p>
+          <p class="text-xs whitespace-nowrap">{categoryFilterNameMap[project?.category]}</p>
         </div>
         <div class="flex flex-row items-center gap-xs">
           <i class="ri-map-pin-line"></i>
-          <p class="text-xs">{locationFilterNameMap[project?.location]}</p>
+          <p class="text-xs whitespace-nowrap">{locationFilterNameMap[project?.location]}</p>
         </div>
       </div>
       {#if project.description}<p class="text-xs text-muted text-center rtf-content">{@html project.description}</p>{/if}

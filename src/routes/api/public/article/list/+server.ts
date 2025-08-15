@@ -35,6 +35,7 @@ export async function GET({ url }) {
         // If searchQuery is present, the title of that translation must match.
         translations: {
           some: {
+            status_code: 'PUBLISHED',
             language: locale,
             ...(searchQuery && {
               title: {
@@ -55,6 +56,7 @@ export async function GET({ url }) {
           translations: {
             where: {
               language: locale,
+              status_code: 'PUBLISHED',
               ...(searchQuery && {
                 title: {
                   contains: searchQuery,
@@ -76,6 +78,8 @@ export async function GET({ url }) {
           created_at: 'desc', // Default order, can be made configurable
         },
       });
+      
+      console.log('articles', articles)
 
       const total = await prisma.article.count({
         where: whereClause,

@@ -15,7 +15,9 @@ export async function load({ params, url }) {
     include: {
       article: {
         include: {
-          translations: true, // Include all translations of the article
+          translations: {
+            where: { status_code: 'PUBLISHED' }
+          }, // Include all translations of the article
           categories: { // Updated: use categories (many-to-many)
             include: {
               translations: {
