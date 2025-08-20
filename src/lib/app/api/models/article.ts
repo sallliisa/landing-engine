@@ -100,7 +100,7 @@ export default {
     // fieldsForeign for list might also need categories if you display category info in the list
     fieldsForeign: {
       translations: {
-        fields: ['language', 'title', 'slug', 'excerpt', 'thumbnail']
+        fields: ['language', 'title', 'slug', 'excerpt', 'thumbnail', 'status_code']
       },
       categories: {
         fields: ['id'],
@@ -145,6 +145,20 @@ export default {
           }
         ]
       };
+    },
+    lifecycle: {
+      post: async (data, total, locals) => {
+        return data.map(item => {
+          const prioritizedTranslations = new Map();
+          for (const translation of item.translations) {
+            const existing = prioritizedTranslations.get(translation.language);
+            if (!existing || ['DRAFT', 'REVIEW'].includes(translation.status_code)) {
+              prioritizedTranslations.set(translation.language, translation);
+            }
+          }
+          return { ...item, translations: Object.fromEntries(prioritizedTranslations.entries().map(item => [item[0], item[1]])) };
+        });
+      }
     }
   },
 

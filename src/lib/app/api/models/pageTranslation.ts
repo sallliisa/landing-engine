@@ -7,8 +7,16 @@ export default {
 		by: 'id',
 		stateField: 'status_code',
 		initialState: 'DRAFT',
-		states: ['DRAFT', 'PUBLISHED'],
+		states: ['DRAFT', 'REVIEW', 'PUBLISHED'],
 		transitions: {
+			MARK_AS_UNDONE: {
+				from: 'REVIEW',
+				to: 'DRAFT'
+			},
+			MARK_AS_DONE: {
+				from: 'DRAFT',
+				to: 'REVIEW'
+			},
 			APPROVE: {
 				from: 'DRAFT',
 				to: 'PUBLISHED'
@@ -23,6 +31,28 @@ export default {
 				const { action } = body;
 
 				if (!where) throw new Error('A "where" clause must be provided for this operation.');
+
+				if (action === 'MARK_AS_UNDONE') {
+					const record = await prisma.pageTranslation.findUnique({ where: where as any });
+					if (!record) throw new Error('Record not found.');
+					return await prisma.pageTranslation.update({
+						where: where as any,
+						data: {
+							status_code: 'DRAFT',
+						}
+					});
+				}
+
+				if (action === 'MARK_AS_DONE') {
+					const record = await prisma.pageTranslation.findUnique({ where: where as any });
+					if (!record) throw new Error('Record not found.');
+					return await prisma.pageTranslation.update({
+						where: where as any,
+						data: {
+							status_code: 'REVIEW',
+						}
+					});
+				}
 
 				if (action === 'APPROVE') {
 					const record = await prisma.pageTranslation.findUnique({ where: where as any });

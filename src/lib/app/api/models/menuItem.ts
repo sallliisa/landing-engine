@@ -106,6 +106,13 @@ export default {
       translations: {
         fields: ['name', 'language']
       },
+      page: {
+        fieldsForeign: {
+          translations: {
+            fields: ['language', 'status_code']
+          }
+        }
+      },
       allowedRoles: {
         fields: ['id']
       }
@@ -119,7 +126,7 @@ export default {
         // and return new objects, as the original `data` is read-only.
         return data.map(item => {
           // We need to assert the type to get access to the 'allowedRoles' relation.
-          const menuItem = item as Prisma.MenuItemGetPayload<{ include: { allowedRoles: true } }>;
+          const menuItem = item as Prisma.MenuItemGetPayload<{ include: { allowedRoles: true, page: true } }>;
           
           let can_edit = false;
           if (isAdmin) {
@@ -131,7 +138,22 @@ export default {
           }
 
           // Return a new object with all original properties plus 'can_edit'.
-          return { ...item, can_edit };
+          // const page = {
+            
+          // }
+
+          let prioritizedTranslations;
+          if (menuItem.page[0]) {
+            prioritizedTranslations = new Map();
+            for (const translation of (menuItem.page[0] as any)?.translations) {
+              const existing = prioritizedTranslations.get(translation.language);
+              if (!existing || ['DRAFT', 'REVIEW'].includes(translation.status_code)) {
+                prioritizedTranslations.set(translation.language, translation);
+              }
+            }
+          }
+          console.log(menuItem.page)
+          return { ...item, page: prioritizedTranslations ? Object.fromEntries(prioritizedTranslations.entries().map(item => [item[0], item[1]])) : null, can_edit };
         });
       }
     }
@@ -184,7 +206,7 @@ export default {
           const prioritizedTranslations = new Map();
           for (const translation of data.page[0].translations) {
             const existing = prioritizedTranslations.get(translation.language);
-            if (!existing || translation.status_code === 'DRAFT') {
+            if (!existing || ['DRAFT', 'REVIEW'].includes(translation.status_code)) {
               prioritizedTranslations.set(translation.language, translation);
             }
           }

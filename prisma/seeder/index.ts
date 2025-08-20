@@ -110,6 +110,9 @@ const permissionList = [
 
   "list-mappingRoleArticleCategory",
   "toggle-mappingRoleArticleCategory",
+
+  "verify-page",
+  "verify-article"
 ];
 
 const prisma = new PrismaClient();
