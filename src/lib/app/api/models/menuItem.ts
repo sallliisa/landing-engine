@@ -152,8 +152,13 @@ export default {
               }
             }
           }
-          console.log(menuItem.page)
-          return { ...item, page: prioritizedTranslations ? Object.fromEntries(prioritizedTranslations.entries().map(item => [item[0], item[1]])) : null, can_edit };
+          return {
+            ...item,
+            page: prioritizedTranslations
+              ? Object.fromEntries(prioritizedTranslations.entries())
+              : null,
+            can_edit
+          };
         });
       }
     }

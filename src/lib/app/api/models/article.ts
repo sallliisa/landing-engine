@@ -156,7 +156,14 @@ export default {
               prioritizedTranslations.set(translation.language, translation);
             }
           }
-          return { ...item, translations: Object.fromEntries(prioritizedTranslations.entries().map(item => [item[0], item[1]])) };
+          return {
+            ...item,
+            translations: Object.fromEntries(
+              prioritizedTranslations instanceof Map
+                ? prioritizedTranslations.entries()
+                : Object.entries(prioritizedTranslations)
+            )
+          }
         });
       }
     }
