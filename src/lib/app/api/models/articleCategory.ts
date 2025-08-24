@@ -46,6 +46,19 @@ export default {
         fields: ['language', 'name', 'description']
       }
     },
+    where: ({locals}) => {
+      const isAdmin = locals?.user?.role.role_group_id <= 2;
+      if (isAdmin) return undefined
+      return {
+        AND: [
+          {
+            field: 'allowedRoles',
+            operator: 'some',
+            value: {id: locals.user?.role_id}
+          }
+        ]
+      }
+    }
   },
 
   detail: {

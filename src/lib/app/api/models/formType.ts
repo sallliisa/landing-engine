@@ -21,7 +21,8 @@ export default {
     orderBy: { name: 'asc' },
     filterableBy: ['id'],
     where: ({locals}) => {
-      if (locals.user?.role.role_group_id === 1) return undefined
+      const isAdmin = locals?.user?.role.role_group_id <= 2;
+      if (isAdmin) return undefined
       return {
         AND: [
           {

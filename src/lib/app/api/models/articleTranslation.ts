@@ -41,22 +41,18 @@ export default {
     by: ['article_id', 'language'],
     lifecycle: {
       async main(where) {
-        console.log('[ArticleTranslation.detail] where:', where);
         // Try to find a draft first
         const draft = await prisma.articleTranslation.findFirst({
           where: { ...where, OR: [{status_code: 'DRAFT'}, {status_code: 'REVIEW'}] }
         });
-        console.log('[ArticleTranslation.detail] draft:', draft);
         if (draft) return draft;
 
         // If no draft, try to find published
         const published = await prisma.articleTranslation.findFirst({
           where: { ...where, status_code: 'PUBLISHED' }
         });
-        console.log('[ArticleTranslation.detail] published:', published);
         if (published) return published;
 
-        console.log('[ArticleTranslation.detail] No draft or published translation found for:', where);
         throw new Error('No draft or published translation found for this article/language.');
       }
     }
