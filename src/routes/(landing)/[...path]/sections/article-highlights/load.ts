@@ -18,7 +18,12 @@ export async function load(section: any) {
                 categories: { some: { id: category.id } }
               }))
             : [])
-        ]
+        ],
+        translations: {
+          some: {
+            status_code: 'PUBLISHED',
+          },
+        },
       },
       take: 4,
       orderBy: {
