@@ -83,7 +83,7 @@
           {#each page.data.menu as menu, level1Index}
             {#if menu.visible}
               {#if menu.menu_item_type === 'link'}
-                <a href={menu.url} class="text-on-surface">{menu.name}</a>
+                <a href={menu.url} target="_blank" class="text-on-surface">{menu.name}</a>
               {:else}
                 {#if menu.children?.length > 1}
                   <button
@@ -114,39 +114,61 @@
           <!-- <div class="text-xl font-bold">{page.data.menu[activeLevel1Index].name}</div> -->
           <div class="flex flex-col gap-base">
             {#each page.data.menu[activeLevel1Index].children as level2Child}
-              {#if level2Child.children?.length}
-                <div class="flex flex-col gap-xs">
-                  {#if level2Child.page}
-                    <a
-                      href="/{page.data.menu[activeLevel1Index].slug}/{level2Child.slug}"
-                      class="text-xl font-bold text-start"
-                      onclick="{() => isMenuExpanded = false}"
-                    >
-                      {level2Child.name}
-                    </a>
+              {#if level2Child.visible}
+                {#if level2Child.menu_item_type == 'link'}
+                  <!-- External link type -->
+                  <a
+                    href="{level2Child.url}"
+                    target="_blank"
+                    class="text-xl text-on-surface text-start"
+                    onclick="{() => isMenuExpanded = false}"
+                  >
+                    {level2Child.name}
+                  </a>
+                {:else}
+                  {#if level2Child.children?.length}
+                    <div class="flex flex-col gap-xs">
+                      {#if level2Child.page}
+                        <a
+                          href="/{page.data.menu[activeLevel1Index].slug}/{level2Child.slug}"
+                          class="text-xl font-bold text-start"
+                          onclick="{() => isMenuExpanded = false}"
+                        >
+                          {level2Child.name}
+                        </a>
+                      {:else}
+                        <p class="text-xl font-bold text-outline">{level2Child.name}</p>
+                      {/if}
+                      <div class="flex flex-col gap-xs">
+                        {#each level2Child.children as level3Child}
+                          {#if level3Child.page}
+                            <a
+                              href="/{page.data.menu[activeLevel1Index].slug}/{level2Child.slug}/{level3Child.slug}"
+                              class="text-on-surface text-start"
+                              onclick="{() => isMenuExpanded = false}"
+                            >
+                              {level3Child.name}
+                            </a>
+                          {:else}
+                            <p class="text-outline">{level3Child.name}</p>
+                          {/if}
+                        {/each}
+                      </div>
+                    </div>
                   {:else}
-                    <p class="text-xl font-bold">{level2Child.name}</p>
-                  {/if}
-                  <div class="flex flex-col gap-xs">
-                    {#each level2Child.children as level3Child}
+                    {#if level2Child.page}
                       <a
-                        href="/{page.data.menu[activeLevel1Index].slug}/{level2Child.slug}/{level3Child.slug}"
-                        class="text-on-surface text-start"
+                        href="/{page.data.menu[activeLevel1Index].slug}/{level2Child.slug}"
+                        class="text-xl text-on-surface text-start"
                         onclick="{() => isMenuExpanded = false}"
                       >
-                        {level3Child.name}
+                        {level2Child.name}
                       </a>
-                    {/each}
-                  </div>
-                </div>
-              {:else}
-                <a
-                  href="/{page.data.menu[activeLevel1Index].slug}/{level2Child.slug}"
-                  class="text-xl text-on-surface text-start"
-                  onclick="{() => isMenuExpanded = false}"
-                >
-                  {level2Child.name}
-                </a>
+                    {:else}
+                      <p class="text-xl text-outline">{level2Child.name}</p>
+                    {/if}
+                  {/if}
+                {/if}
               {/if}
             {/each}
           </div>

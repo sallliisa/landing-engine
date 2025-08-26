@@ -127,7 +127,7 @@
         {#each page.data.menu as menu, index}
           {#if menu.visible}
             {#if menu.menu_item_type == 'link'}
-              <a href={menu.url} class="">{menu.name}</a>
+              <a href={menu.url} target="_blank" class="">{menu.name}</a>
             {:else if menu.menu_item_type == 'page'}
               <div class="relative">
                 {#if !menu.page?.translations?.length}
@@ -197,7 +197,7 @@
                   {#each menu.children as level2Child, level2Index}
                     {#if level2Child.visible}
                       {#if level2Child.menu_item_type == 'link'}
-                        <a href="{level2Child.url}" class="flex flex-row items-center justify-between group/menuItem {level2Child.url ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)]'}" role="menu" tabindex="{activeLevel2Index}">
+                        <a href="{level2Child.url}" target="_blank" class="flex flex-row items-center justify-between group/menuItem {level2Child.url ? 'text-on-surface' : 'text-[var(--navbar-initial-text-color)]'}" role="menu" tabindex="{activeLevel2Index}">
                           <p>{level2Child.name}</p>
                           <i class="ri-arrow-right-up-line transition-all"></i>
                         </a>
