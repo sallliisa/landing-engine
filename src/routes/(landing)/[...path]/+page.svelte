@@ -62,7 +62,7 @@
           {#await sectionComponentPromise then SectionComponent}
             {#if index != 0}
             <IntersectionObserver
-              threshold={0.1} 
+              threshold={0.05} 
               animationDelay={100} 
               animationDirection="fade-up"
               once
