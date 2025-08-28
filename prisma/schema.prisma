@@ -270,6 +270,7 @@ model FormField {
   type                 FieldType
   validation_type_code FormFieldValidationType?
   label                String
+  label_en             String?
   code                 String
   required             Boolean                  @default(false)
   helper_message        String?

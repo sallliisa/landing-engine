@@ -13,6 +13,7 @@
   import TextInput from "$lib/app/components/input/TextInput.svelte";
   import {Recaptcha, recaptcha, observer} from "$lib/app/components/util/Recaptcha";
   import { PUBLIC_RECAPTCHA_SITEKEY } from "$env/static/public";
+  import { getLocale } from "$lib/paraglide/runtime";
 
   const {onSubmit} = $props()
 
@@ -122,7 +123,7 @@
           <div class="flex flex-col gap-4" style="grid-column: span {formField.col_span} / span {formField.col_span};">
             <InputComponent
               placeholder={formField.placeholder}
-              label={formField.label}
+              label={getLocale() === 'id' ? formField.label : (formField.label_en || formField.label)}
               helperMessage={formField.helper_message}
               errorMessage={formError[formField.code]}
               required={formField.required}

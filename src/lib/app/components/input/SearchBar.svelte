@@ -3,11 +3,12 @@
   import TextInput from "./TextInput.svelte";
   import { debounce as debounceFn } from "$lib/utils/common"; // Renamed import to avoid conflict
   import { get } from "svelte/store";
+  import { m } from "$lib/paraglide/messages";
 
   let {
     value = $bindable(),
     icon,
-    placeholder = 'Cari...',
+    placeholder = `${m.search()}...`,
     debounce = true, // New prop, defaults to true
     debounceMs = 300, // Optional: allow customizing debounce time
     ...restProps

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { m } from "$lib/paraglide/messages";
   import { formatDate } from "$lib/utils/common";
 
   const {
@@ -37,7 +38,7 @@
     <div class="flex flex-col lg:flex-row lg:items-center lg:gap-1 min-w-max">
       <div class="flex flex-row items-center gap-2 text-muted">
         <i class="ri-calendar-line"></i>
-        <p class="text-xs">{new Date(created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        <p class="text-xs">{new Date(created_at).toLocaleDateString(m.locale(), { year: 'numeric', month: 'long', day: 'numeric' })}</p>
       </div>
       {#if categories?.length}
         <p class="text-muted font-semibold hidden lg:block">⋅</p>

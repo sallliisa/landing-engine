@@ -41,7 +41,7 @@
         </div>
       </div>
       <div class="flex flex-col gap-base">
-        <p class="font-bold text-xl">{m.subsidiaries()}</p>
+        <p class="font-bold text-xl">{m.others()}</p>
         {#each page.data.companyProfile.subsidiaries as subsidiary}
           <a class="underline" data-analytics-redirect={subsidiary.type === 'external' ? subsidiary.url : undefined} href={subsidiary.type === 'external' ? subsidiary.url : subsidiary.slug} target={subsidiary.type === 'external' ? '_blank' : undefined}>{subsidiary.name}</a>
         {/each}

@@ -11,6 +11,7 @@ export async function load() {
       },
     }
   })
+  console.log('rerun', getLocale(), data[0].translations)
   return {
     articleCategory: data.map(item => ({...item, name: item.translations[0].name, translations: undefined}))
   }

@@ -7,6 +7,7 @@
   import Spinner from "$lib/app/components/ui/Spinner.svelte";
   import Button from "$lib/app/components/ui/Button.svelte";
   import TabItem from "$lib/app/components/ui/tabs/TabItem.svelte";
+  import { getLocale } from "$lib/paraglide/runtime";
 
   const {section} = $props()
 
@@ -272,9 +273,9 @@
           : 'bg-transparent text-on-surface border-outline-variant hover:bg-surface-container-highest'}"
       onclick={() => handleCategoryClick(category, section.meta.filter_type as 'single' | 'multi')}
     >
-      {category.name}
+      {category.translations.find((item: any) => item.language === getLocale())?.name}
     </button>
   {:else if section.meta.filter_style === 'tab'}
-    <TabItem onclick={() => handleCategoryClick(category, section.meta.filter_type as 'single' | 'multi')} active={urlSearchParameters.article_category_ids && urlSearchParameters.article_category_ids.includes(category.id)}>{category.name}</TabItem>
+    <TabItem onclick={() => handleCategoryClick(category, section.meta.filter_type as 'single' | 'multi')} active={urlSearchParameters.article_category_ids && urlSearchParameters.article_category_ids.includes(category.id)}>{category.translations.find((item: any) => item.language === getLocale())?.name}</TabItem>
   {/if}
 {/snippet}
