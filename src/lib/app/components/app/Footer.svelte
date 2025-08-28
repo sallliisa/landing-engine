@@ -28,19 +28,19 @@
           <i class="ri-mail-line"></i>
           <a href="mailto:{page.data.companyProfile.email}" data-analytics-contact={`mailto:${page.data.companyProfile.email}`}>{page.data.companyProfile.email}</a>
         </div> -->
-        {#each contactDetailData?.slice(0, 3) as contactDetail}
+        {#each contactDetailData?.slice(0, 2) as contactDetail}
           <div class="flex flex-row gap-sm">
             <i class="{contactDetail.media}"></i>
             <a href={contactDetail.url} data-analytics-contact={contactDetail.url} aria-label={contactDetail.name} target="_blank">{contactDetail.label}</a>
           </div>
         {/each}
         <div class="flex flex-row items-center gap-2">
-          {#each contactDetailData?.slice(3) as socialMedia}
+          {#each contactDetailData?.slice(2) as socialMedia}
             <a href={socialMedia.url} data-analytics-contact={socialMedia.url} aria-label={socialMedia.name} target="_blank"><i class="{socialMedia.media} text-xl"></i></a>
           {/each}
         </div>
       </div>
-      <div class="flex flex-col gap-base">
+      <!-- <div class="flex flex-col gap-base">
         <p class="font-bold text-xl">{m.others()}</p>
         {#each page.data.companyProfile.subsidiaries as subsidiary}
           <a class="underline" data-analytics-redirect={subsidiary.type === 'external' ? subsidiary.url : undefined} href={subsidiary.type === 'external' ? subsidiary.url : subsidiary.slug} target={subsidiary.type === 'external' ? '_blank' : undefined}>{subsidiary.name}</a>
@@ -51,7 +51,18 @@
         {#each page.data.collection.find((item: any) => item.code === 'project-category')?.data as category}
           <a class="underline" href="{page.data.projectListMenuPath}?category_code={category.code}#project-list">{getLocale() === 'en' ? category.name_en : category.name_id}</a>
         {/each}
-      </div>
+      </div> -->
+      {#each page.data.collection.find((item: any) => item.code === 'footer-sections')?.data as section}
+        <div class="flex flex-col gap-base">
+          <p class="font-bold text-xl">{getLocale() === 'id' ? section.name : section.name_en}</p>
+          {#each section.links as link}
+            <a class="max-w-fit flex flex-row items-center gap-xs" data-analytics-redirect={link.url} href={link.url} target="_blank">
+              {#if link.icon}<i class={link.icon}></i>{/if}
+              <p class="underline">{getLocale() === 'id' ? link.label : link.label_en}</p>
+            </a>
+          {/each}
+        </div>
+      {/each}
     </div>
   </div>
   <div class="w-full h-[9px] bg-primary"></div>
