@@ -7,7 +7,7 @@
 <div class="flex flex-col gap-sm w-full">
   {#each childSection as child (child.id || child.name)}
     {#if child.url}
-      <a href="{child.url}" class="w-full flex flex-col justify-between group/carouselItem gap-lg bg-center bg-cover overlay before:bg-surface/5 active:before:bg-surface/10 {child.media ? 'text-surface' : 'text-on-surface'}" style="background-image: linear-gradient(rgba(0,0,0,0.16), rgba(0,0,0,0.16)), linear-gradient(to top, rgba(0,0,0,0.33) 0%, rgba(0,0,0,0) 50%), url('{child.media}')">
+      <a href="{child.url}" target="_blank" class="w-full flex flex-col justify-between group/carouselItem gap-lg bg-center bg-cover overlay before:bg-surface/5 active:before:bg-surface/10 {child.media ? 'text-surface' : 'text-on-surface'}" style="background-image: linear-gradient(rgba(0,0,0,0.16), rgba(0,0,0,0.16)), linear-gradient(to top, rgba(0,0,0,0.33) 0%, rgba(0,0,0,0) 50%), url('{child.media}')">
         {@render cardContent(child)}
       </a>
     {:else}
