@@ -1,6 +1,6 @@
 <script lang="ts">
   import { parseSearchParams } from "$lib/utils/common";
-  import { createEventDispatcher, getContext, onMount } from "svelte";
+  import { getContext, onMount } from "svelte";
   import { page } from "$app/state";
   import Button from "$lib/app/components/ui/Button.svelte";
   import { api } from "$lib/utils/services";
@@ -18,8 +18,6 @@
   const {onSubmit} = $props()
 
   let section = getContext<Record<string, any>>('section')
-
-  const RECAPTCHA_SITEKEY = "6Lftu-cqAAAAAKR33Iaonf4Kf-vknPIsTTaVWSn0"
 
   let isLoading = $state(false)
 
@@ -135,7 +133,7 @@
           </div>
         {/if}
       {/each}
-    </div>
+    </div> 
     <div class="flex flex-row items-center justify-end w-full">
       <Button disabled={!isFormClientValid || isLoading} type="submit">Kirim <i class="ml-2 ri-arrow-right-line"></i></Button>
     </div>
