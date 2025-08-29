@@ -14,6 +14,7 @@
   import {Recaptcha, recaptcha, observer} from "$lib/app/components/util/Recaptcha";
   import { PUBLIC_RECAPTCHA_SITEKEY } from "$env/static/public";
   import { getLocale } from "$lib/paraglide/runtime";
+  import { m } from "$lib/paraglide/messages";
 
   const {onSubmit} = $props()
 
@@ -135,7 +136,7 @@
       {/each}
     </div> 
     <div class="flex flex-row items-center justify-end w-full">
-      <Button disabled={!isFormClientValid || isLoading} type="submit">Kirim <i class="ml-2 ri-arrow-right-line"></i></Button>
+      <Button disabled={!isFormClientValid || isLoading} type="submit">{m.send()} <i class="ml-2 ri-arrow-right-line"></i></Button>
     </div>
   </form>
   <!-- {#if section.meta.show_hkr_contact_detail}
