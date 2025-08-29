@@ -14,5 +14,12 @@
 	"others": "Lainnya",
 	"search": "Cari",
 	"locale": "id-ID",
-	"request_access": "Ajukan Akses"
+	"request_access": "Ajukan Akses",
+	"all_categories": "Semua Kategori",
+	"select_category": "Pilih Kategori",
+	"select_location": "Pilih Lokasi",
+	"all_location": "Semua Lokasi",
+	"see_more": "Lihat Selengkapnya",
+	"find_projects": "Cari Proyek",
+	"project_not_found": "Proyek tidak ditemukan"
 }

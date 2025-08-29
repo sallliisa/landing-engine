@@ -274,6 +274,7 @@ model FormField {
   code                 String
   required             Boolean                  @default(false)
   helper_message        String?
+  helper_message_en     String?
   data                 Json?
 }
 

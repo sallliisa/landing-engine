@@ -6,6 +6,7 @@
   import { onDestroy, onMount } from "svelte";
   import { blur, fade, fly } from "svelte/transition";
   import { createEventDispatcher } from 'svelte';
+  import { m } from "$lib/paraglide/messages";
 
   const {section} = $props()
 
@@ -199,20 +200,20 @@
           }}
         >
           <SelectInput
-            data={[{code: 'all', name_id: 'Semua Kategori'}, ...(section.data.filter.category || [])]}
+            data={[{code: 'all', name_id: 'Semua Kategori', name_en: 'All Categories'}, ...(section.data.filter.category || [])]}
             bind:value={categoryActiveCode}
-            view="name_id"
+            view="name_{getLocale()}"
             pick="code"
-            placeholder="Pilih Kategori"
+            placeholder={m.select_category()}
             class="w-full lg:w-[280px] outline-none !p-0"
           />
           <div class="h-[24px] w-[1px] border-outline-variant border-l"></div>
           <SelectInput
-            data={[{code: 'all', name: 'Semua Lokasi'}, ...(section.data.filter.location || [])]} 
+            data={[{code: 'all', name: m.all_location()}, ...(section.data.filter.location || [])]} 
             bind:value={locationActiveCode} 
             view="name"
             pick="code" 
-            placeholder="Pilih Lokasi"
+            placeholder={m.select_location()}
             class="w-full lg:w-[280px] outline-none !p-0"
           />
         </div>

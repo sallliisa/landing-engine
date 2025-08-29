@@ -6,6 +6,7 @@
   import { page } from "$app/stores";
   import { onMount } from "svelte";
   import SectionHeader from "$lib/app/components/app/SectionHeader.svelte";
+  import { m } from "$lib/paraglide/messages";
 
   const {section} = $props()
 
@@ -84,19 +85,19 @@
     {#if section.meta.enable_filter}
       <div class="flex flex-col sm:flex-row items-center gap-4 justify-center sm:justify-between">
         <SelectInput 
-          data={[{code: '', name: 'Semua Lokasi'}, ...(section.data.filter.location || [])]} 
+          data={[{code: '', name: m.all_location()}, ...(section.data.filter.location || [])]} 
           bind:value={locationActiveCode} 
           view="name" 
           pick="code" 
-          placeholder="Semua Lokasi"
+          placeholder={m.all_location()}
           class="w-full sm:w-[280px]"
         />
-        <SearchBar bind:value={searchQuery} placeholder="Cari proyek..." class="min-w-[280px] w-full sm:w-[280px]"/>
+        <SearchBar bind:value={searchQuery} placeholder="{m.find_projects()}..." class="min-w-[280px] w-full sm:w-[280px]"/>
       </div>
       <div class="w-full max-w-full overflow-auto flex items-center justify-center">
-        <Tabs data={[{code: '', name_id: 'Semua Kategori'}, ...(section.data.filter.category || [])]} bind:activeTabIndex={categoryActiveTabIndex}>
+        <Tabs data={[{code: '', name_id: 'Semua Kategori', name_en: 'All Categories'}, ...(section.data.filter.category || [])]} bind:activeTabIndex={categoryActiveTabIndex}>
           {#snippet tabItem(item: Record<string, any>)}
-            <p>{item.name_id}</p>
+            <p>{locale === 'id' ? item.name_id : item.name_en}</p>
           {/snippet}
         </Tabs>
       </div>
@@ -116,7 +117,7 @@
         </div>
       {/if}
     {:else}
-      <p class="text-outline text-center py-6 lg:py-12">Proyek tidak ditemukan</p>
+      <p class="text-outline text-center py-6 lg:py-12">{m.project_not_found()}</p>
     {/if}
   </div>
 </div>
@@ -137,7 +138,7 @@
       </div>
     </div>
     <div class="absolute bottom-6 left-6 right-6 flex flex-row items-center gap-2 text-sm font-medium opacity-0 group-hover/projectItem:opacity-100 translate-y-[28px] group-hover/projectItem:translate-y-0 transition-all">
-      <p>Lihat Selengkapnya</p>
+      <p>{m.see_more()}</p>
       <i class="ri-arrow-right-up-line"></i>
     </div>
   </a>
