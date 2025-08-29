@@ -122,7 +122,7 @@
             <InputComponent
               placeholder={formField.placeholder}
               label={getLocale() === 'id' ? formField.label : (formField.label_en || formField.label)}
-              helperMessage={formField.helper_message}
+              helperMessage={getLocale() === 'id' ? formField.helper_message : (formField.helper_message_en || formField.helper_message)}
               errorMessage={formError[formField.code]}
               required={formField.required}
               bind:value={formField.value}
