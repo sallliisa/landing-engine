@@ -49,13 +49,12 @@ export async function GET(event) {
           : undefined
       ),
       ...(
-        config.list?.searchableBy
-          ? Object.fromEntries(
-              config.list.searchableBy.map(field => {
-                if (!urlSearchParams['search']) return;
-                return [field, { contains: urlSearchParams['search'], mode: 'insensitive' }];
-              }).filter(item => !!item)
-            )
+        config.list?.searchableBy?.length && urlSearchParams['search']
+          ? {
+              OR: config.list.searchableBy.map(field => ({
+                [field]: { contains: urlSearchParams['search'], mode: 'insensitive' }
+              }))
+            }
           : undefined
       ),
       ...(customWhereObject ? buildWhereClause(customWhereObject) : undefined)

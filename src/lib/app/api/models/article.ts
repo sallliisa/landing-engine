@@ -95,7 +95,7 @@ export default {
 
   list: {
     allow: true,
-    filterableBy: ['categories'], // Changed 'article_category_id' to 'categories'
+    filterableBy: ['categories'], // Changed 'article_category_id' to 'categories' 
     orderBy: { created_at: 'desc' },
     // fieldsForeign for list might also need categories if you display category info in the list
     fieldsForeign: {
@@ -112,7 +112,13 @@ export default {
       }
     },
     where: async (event) => {
-      if (event.locals.user?.role.role_group_id <= 2) return undefined;
+      const searchWhere = {
+        field: 'translations',
+        operator: 'some' as const,
+        value: {title: { contains: event.url.searchParams.get('search'), mode: 'insensitive' }}
+      }
+
+      if (event.locals.user?.role.role_group_id <= 2) return {AND: [searchWhere]};
       
       // Get all category IDs that the user's role has access to
       const roleWithCategories = await prisma.role.findUnique({
@@ -138,6 +144,7 @@ export default {
       // Check that the article has ALL the categories that the role has access to
       return {
         AND: [
+          searchWhere,
           {
             field: 'categories',
             operator: 'some' as const,

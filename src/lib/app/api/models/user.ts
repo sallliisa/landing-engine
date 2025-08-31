@@ -17,10 +17,9 @@ export default {
   },
   
   list: {
-    searchableBy: ['email', 'name', 'role_id'],
+    searchableBy: ['email', 'name'],
     filterableBy: ['role_id'],
   },
-
   create: {
     fields: ['name', 'email', 'role_id', 'password'],
     validation: {
