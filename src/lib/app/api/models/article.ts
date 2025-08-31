@@ -112,13 +112,15 @@ export default {
       }
     },
     where: async (event) => {
-      const searchWhere = {
-        field: 'translations',
-        operator: 'some' as const,
-        value: {title: { contains: event.url.searchParams.get('search'), mode: 'insensitive' }}
-      }
+      const searchWhere = event.url.searchParams.get('search')
+        ? {
+            field: 'translations',
+            operator: 'some' as const,
+            value: {title: { contains: event.url.searchParams.get('search'), mode: 'insensitive' }}
+          }
+        : undefined;
 
-      if (event.locals.user?.role.role_group_id <= 2) return {AND: [searchWhere]};
+      if (event.locals.user?.role.role_group_id <= 2) return event.url.searchParams.get('search') ? {AND: [searchWhere]} : undefined;
       
       // Get all category IDs that the user's role has access to
       const roleWithCategories = await prisma.role.findUnique({
