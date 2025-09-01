@@ -24,6 +24,10 @@ export default {
 			REVISE: {
 				from: 'DRAFT',
 				to: 'DRAFT'
+			},
+			RESET: {
+				from: 'DRAFT',
+				to: 'PUBLISHED'
 			}
 		},
 		lifecycle: {
@@ -86,6 +90,15 @@ export default {
 					const record = await prisma.pageTranslation.findUnique({ where: where as any });
 					if (!record) throw new Error('Record not found');
 					return record;
+				} else if (action === 'RESET') {
+					// Delete the current Draft/Review record, so that it goes back to the current published
+					// ONLY DELETE if there is a published record
+					const current = await prisma.pageTranslation.findFirst({ where: { ...where } });
+					if (!current?.live_for_id) throw new Error('Tidak ada halaman yang sudah dipublish untuk menggantikan halaman ini');
+					const published = await prisma.pageTranslation.findFirst({ where: { id: current.live_for_id } });
+					if (!published) throw new Error('Tidak ada halaman yang sudah dipublish untuk menggantikan halaman ini');
+					else await prisma.pageTranslation.delete({ where: where as any });
+					return {};
 				}
 
 				return {};
