@@ -152,7 +152,7 @@ export default {
             operator: 'some' as const,
             value: { id: { in: accessibleCategoryIds } }
           }
-        ]
+        ].filter(Boolean)
       };
     },
     lifecycle: {
