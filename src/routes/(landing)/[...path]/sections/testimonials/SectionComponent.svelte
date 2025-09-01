@@ -17,9 +17,9 @@
 </div>
 
 {#snippet testimonialItem(data: any)}
-  <svelte:element this={data.url ? 'a' : 'div'} href={data.url || ''} target="_blank" class="outline outline-outline-variant relative flex flex-col gap-6 justify-between p-8 rounded-sm w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)] {section.meta.content_align === 'vertical' ? 'items-center' : ''} {data.url ? 'cursor-pointer overlay before:bg-on-surface/5 active:before:bg-on-surface/10 transition-colors' : ''}">
-    <p class="rtf-content m-base">{@html data.description}</p>
-    <div class="flex flex-row items-center gap-base">
+  <svelte:element this={data.url ? 'a' : 'div'} href={data.url || ''} target="_blank" class="outline outline-outline-variant relative overflow-hidden flex flex-col gap-6 justify-between p-8 rounded-sm w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)] before:content-[''] before:absolute before:inset-0 before:z-0 before:pointer-events-none before:bg-gradient-to-br before:from-red-500/5 before:to-orange-500/5 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300 before:ease-in-out transition-colors duration-300 {section.meta.content_align === 'vertical' ? 'items-center' : ''} {data.url ? 'cursor-pointer' : ''}">
+    <p class="rtf-content m-base relative z-10">{@html data.description}</p>
+    <div class="flex flex-row items-center gap-base relative z-10">
       {#if data.media}
         <img src="{data.media}" class="w-[48px] h-[48px] rounded-full object-cover" alt="{data.title}" />
       {:else}
