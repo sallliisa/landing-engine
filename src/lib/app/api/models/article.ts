@@ -184,7 +184,7 @@ export default {
     // Ensure fieldsForeign for detail also reflects 'categories'
     fieldsForeign: {
       translations: {
-        fields: ['language', 'title', 'slug', 'excerpt', 'thumbnail', 'content'] // Added content for detail view
+        fields: ['id', 'language', 'title', 'slug', 'excerpt', 'thumbnail', 'content', 'status_code'] // Added content for detail view and status_code for prioritization
       },
       categories: {
         fields: ['id'],
@@ -193,6 +193,25 @@ export default {
             fields: ['name', 'language', 'description'] // Added description for category detail
           }
         }
+      }
+    },
+    lifecycle: {
+      post: async (data) => {
+        if (data?.translations && Array.isArray(data.translations)) {
+          const prioritizedTranslations = new Map<string, any>();
+          for (const translation of data.translations) {
+            const existing = prioritizedTranslations.get(translation.language);
+            if (!existing || ['DRAFT', 'REVIEW'].includes(translation.status_code)) {
+              prioritizedTranslations.set(translation.language, translation);
+            }
+          }
+          data.translations = Object.fromEntries(
+            prioritizedTranslations instanceof Map
+              ? prioritizedTranslations.entries()
+              : Object.entries(prioritizedTranslations as any)
+          );
+        }
+        return data;
       }
     }
   },
