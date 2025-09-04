@@ -127,7 +127,7 @@
               errorMessage={formError[formField.code]}
               required={formField.required}
               bind:value={formField.value}
-              data={formField.data}
+              data={formField.data?.map((item: any) => ({value: item.value, label: item.value}))}
               pick="value"
               view="label"
             />
