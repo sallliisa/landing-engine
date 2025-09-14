@@ -190,6 +190,7 @@ model Section {
 
   contents           Content[]
   galleries          Gallery[]
+  updated_at         DateTime  @updatedAt @default(now())
   childSectionGroups SectionGroup[] @relation("SectionToGroups")
 }
 

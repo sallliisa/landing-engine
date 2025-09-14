@@ -9,7 +9,7 @@ export default {
   view: {
     fieldsForeign: {
       fields: {
-        fields: ['id', 'label']
+        fields: ['id', 'label', 'type']
       }
     }
   },
