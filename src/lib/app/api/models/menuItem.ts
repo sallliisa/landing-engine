@@ -66,7 +66,7 @@ export default {
 
   update: {
     by: ['id'],
-    fields: ['visible', 'role', 'show_submenu_below_navbar'],
+    fields: ['visible', 'url', 'role', 'show_submenu_below_navbar'],
     validation: {
       order: [
         {
