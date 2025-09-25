@@ -4,7 +4,11 @@ import {sectionLoaders} from './sections/index.js'
 import { getLocale } from '$lib/paraglide/runtime.js';
 import { parseSearchParams } from '$lib/utils/common.js';
 
-export async function load({ params, parent, url }) {
+export async function load({ params, parent, url, cookies }) {
+  console.debug('[DEBUG]', {
+    cookies: cookies.getAll(),
+    getLocale: getLocale()
+  })
   const slugs = url.pathname.split('/').slice(1).filter(Boolean);
   const locale = getLocale();
 
