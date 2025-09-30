@@ -23,7 +23,7 @@
       <div class="pr-4 hidden md:block">
         <SectionHeader header={section.data.content} defaultAlign="left"/>
       </div>
-      <div class="flex flex-row md:flex-col gap-base items-center justify-center md:items-start md:justify-start w-full">
+      <div class="flex flex-row md:flex-col gap-base items-center overflow-x-auto md:items-start md:justify-start w-full">
         {#each section.data.productType as productType, index}
           <button class="flex flex-row items-center gap-sm md:w-full" onclick={() => activeProductTypeIndex = index}>
             <p class="text-lg min-w-max {activeProductTypeIndex === index ? 'font-semibold' : 'text-outline'}">{productType.name}</p>
@@ -36,11 +36,13 @@
     </div>
     <div class="col-span-3 flex flex-col gap-lg md:border-r md:border-outline-variant">
       {#if section.data.productType[activeProductTypeIndex].sections.length > 0}
-        <Tabs data={section.data.productType[activeProductTypeIndex].sections} bind:activeTabIndex={activeProductTypeDetailMenuIndex}>
-          {#snippet tabItem(tabItem: any)}
-            <p>{tabItem.name}</p>
-          {/snippet}
-        </Tabs>
+        <div class="w-full max-w-full overflow-auto flex items-center justify-center">
+          <Tabs data={section.data.productType[activeProductTypeIndex].sections} bind:activeTabIndex={activeProductTypeDetailMenuIndex}>
+            {#snippet tabItem(tabItem: any)}
+              <p>{tabItem.name}</p>
+            {/snippet}
+          </Tabs>
+        </div>
       {/if}
       {#if section.data.productType[activeProductTypeIndex].sections[activeProductTypeDetailMenuIndex]}
         <div class="flex flex-col gap-lg">
