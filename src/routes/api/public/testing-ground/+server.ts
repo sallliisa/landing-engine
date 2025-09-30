@@ -1,6 +1,22 @@
 import prisma from '$lib/utils/prisma.js';
 import { success } from '$lib/utils/response';
 
+export async function PUT({cookies}) {
+  return success({message: 'Success', cookies: cookies.getAll()})
+}
+
+export async function GET({cookies}) {
+  return success({message: 'Success', cookies: cookies.getAll()})
+}
+
+export async function POST({cookies}) {
+  return success({message: 'Success', cookies: cookies.getAll()})
+}
+
+export async function DELETE({cookies}) {
+  return success({message: 'Success', cookies: cookies.getAll()})
+}
+
 // export async function GET({}) {
   // const data = await prisma.role.findFirst({
   //   where: {
