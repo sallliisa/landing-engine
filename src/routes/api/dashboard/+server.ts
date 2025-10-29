@@ -77,8 +77,8 @@ export const GET: RequestHandler = async ({ url }) => {
 		} else {
 			const groupByField = {
 				page_view: 'source',
-				cta_click: 'name',
-				contact_click: 'name',
+				cta_click: 'target',
+				contact_click: 'target',
 				calculator_usage: 'source',
 				form_submission: 'name',
 				aggregate_form_submission: 'name'
@@ -89,7 +89,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			}
 
 			const result = await prisma.analyticsEvent.groupBy({
-				by: [groupByField as 'name' | 'source'],
+				by: [groupByField as 'name' | 'source' | 'target'],
 				where: {
 					type: eventType,
 					timestamp: {
@@ -110,7 +110,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			});
 
 			data = result.map((item) => {
-				const rawLabel = item[groupByField as 'name' | 'source'] || 'Unknown';
+				const rawLabel = item[groupByField as 'name' | 'source' | 'target'] || 'Unknown';
 				let finalLabel = rawLabel;
 
 				// If grouping by source, extract the slug from the URL path.
