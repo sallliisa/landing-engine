@@ -1,0 +1,66 @@
+@startuml Collection Update Sequence Diagram
+
+!define BLUE_COLOR #4A90E2
+!define GREEN_COLOR #7ED321
+!define ORANGE_COLOR #F5A623
+!define PURPLE_COLOR #9013FE
+
+actor "User" as User BLUE_COLOR
+participant "Frontend\nApplication" as Frontend ORANGE_COLOR
+participant "API Engine\n(/api/[model])" as APIEngine PURPLE_COLOR
+participant "Collection\nConfig" as Config GREEN_COLOR
+participant "Database\n(PostgreSQL)" as Database GREEN_COLOR
+
+== Collection Update Operation ==
+box "Update Collection" #LightGreen
+    User -> Frontend: Edit collection properties\n(name, code, data)
+    Frontend -> APIEngine: PUT /api/collection/update/{code}\n{ updatedCollectionFields }
+    activate APIEngine
+
+    APIEngine -> Config: Load Collection configuration
+    Config -> Config: Validate update access permissions
+    Config -> Config: Validate allowed update fields\n- name: Collection display name\n- code: Unique collection identifier\n- data: Collection configuration data
+    Config -> Database: Update collection record by code
+    activate Database
+    Database --> Config: Collection updated successfully
+    deactivate Database
+
+    APIEngine --> Frontend: Return updated collection data
+    deactivate APIEngine
+    Frontend -> Frontend: Refresh collection display
+    Frontend --> User: Show updated collection
+end box
+
+== Error Handling ==
+alt Update Fails
+    APIEngine -> Frontend: Return error response\n(400, 403, 404, 500)
+    Frontend -> Frontend: Handle error state
+    Frontend --> User: Display error message
+end alt
+
+== Notes ==
+note over Frontend, Database
+    **Collection Update Features:**
+    - Simple field-based updates
+    - Code-based identification for updates
+    - Direct database modifications
+
+    **Allowed Update Fields:**
+    - name: Human-readable collection name
+    - code: Unique identifier (used for updates)
+    - data: Collection configuration and settings
+
+    **Update Characteristics:**
+    - No complex lifecycle hooks
+    - No draft state management
+    - Direct field validation
+    - Simple permission checking
+
+    **Use Cases:**
+    - Updating collection metadata
+    - Modifying collection configuration
+    - Renaming collections
+    - Updating collection data structures
+end note
+
+@enduml

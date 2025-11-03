@@ -1,0 +1,144 @@
+@startuml Section Management Sequence Diagram
+
+!define BLUE_COLOR #4A90E2
+!define GREEN_COLOR #7ED321
+!define RED_COLOR #D0021B
+!define ORANGE_COLOR #F5A623
+!define PURPLE_COLOR #9013FE
+
+actor "User" as User BLUE_COLOR
+participant "Frontend\nApplication" as Frontend ORANGE_COLOR
+participant "API Engine\n(/api/[model])" as APIEngine PURPLE_COLOR
+participant "Section\nConfig" as Config GREEN_COLOR
+participant "Database\n(PostgreSQL)" as Database GREEN_COLOR
+participant "Draft State\nManager" as DraftManager ORANGE_COLOR
+
+== Section Detail View ==
+box "Detail Operation" #LightBlue
+    User -> Frontend: Request section details
+    Frontend -> APIEngine: GET /api/section/detail/{id}
+    activate APIEngine
+
+    APIEngine -> Config: Load Section configuration
+    Config -> Database: Query section with relations\n(contents, galleries, childSections, childSectionGroups)
+    activate Database
+    Database --> Config: Section data with all related content
+    deactivate Database
+    Config -> Config: Execute post-lifecycle processing\n- Sort all collections by order\n- Merge into unified structure array\n- Transform to {type, order, config} format
+    Config -> Config: Return structured data\n(structure: [...], contents/sections undefined)
+
+    APIEngine --> Frontend: Return organized section structure
+    deactivate APIEngine
+    Frontend -> Frontend: Render section with nested content
+    Frontend --> User: Display section with organized content blocks
+end box
+
+== Update Section ==
+box "Update Operation" #LightGreen
+    User -> Frontend: Edit section properties
+    Frontend -> APIEngine: PUT /api/section/update/{id}\n{ name, description, visible, meta }
+    activate APIEngine
+
+    APIEngine -> Config: Load Section configuration
+    Config -> DraftManager: Execute ensureDraftPreHook\n- Check page translation state\n- Handle draft/ID mapping
+    activate DraftManager
+    DraftManager --> Config: Processed body with draft state
+    deactivate DraftManager
+    Config -> Config: Validate allowed fields only\n(name, description, visible, meta)
+    Config -> Database: Update section record
+    activate Database
+    Database --> Config: Section updated
+    deactivate Database
+
+    APIEngine --> Frontend: Return updated section
+    deactivate APIEngine
+    Frontend --> User: Display updated section properties
+end box
+
+== Delete Section ==
+box "Delete Operation" #LightRed
+    User -> Frontend: Request section deletion
+    Frontend -> APIEngine: DELETE /api/section/delete/{id}
+    activate APIEngine
+
+    APIEngine -> Config: Load Section configuration
+    Config -> DraftManager: Execute ensureDraftPreHook\n- Handle draft state validation
+    activate DraftManager
+    DraftManager --> Config: Validated deletion request
+    deactivate DraftManager
+    Config -> Database: Delete section record
+    activate Database
+    Database --> Config: Section deleted
+    deactivate Database
+    Config -> Database: Cleanup related content\n(contents, galleries, child relations)
+    activate Database
+    Database --> Config: Related content removed
+    deactivate Database
+
+    APIEngine --> Frontend: Return deletion confirmation
+    deactivate APIEngine
+    Frontend --> User: Display deletion success
+end box
+
+== Reorder Sections ==
+box "Reorder Operation" #LightYellow
+    User -> Frontend: Drag section to new position
+    Frontend -> APIEngine: POST /api/section/reorder/{id}\n{ newOrder, section_group_id/parent_section_id }
+    activate APIEngine
+
+    APIEngine -> Config: Load Section configuration
+    Config -> DraftManager: Execute ensureDraftPreHook\n- Validate draft state for reorder
+    activate DraftManager
+    DraftManager --> Config: Validated reorder request
+    deactivate DraftManager
+    Config -> Config: Validate reorder constraints\n- Check axis (section_group_id or parent_section_id)\n- Validate new order position
+    Config -> Database: Update section order
+    activate Database
+    Database --> Config: Section order updated
+    deactivate Database
+    Config -> Database: Update sibling sections order
+    activate Database
+    Database --> Config: Sibling orders adjusted
+    deactivate Database
+
+    APIEngine --> Frontend: Return reorder confirmation
+    deactivate APIEngine
+    Frontend -> Frontend: Refresh section list display
+    Frontend --> User: Display reordered sections
+end box
+
+== Error Handling ==
+alt Any Operation Fails
+    APIEngine -> Frontend: Return error response\n(400, 403, 404, 500)
+    Frontend -> Frontend: Handle error state
+    Frontend --> User: Display error message
+end alt
+
+== Notes ==
+note over Frontend, Database
+    **Section Model Features:**
+    - Content organization and structure
+    - Hierarchical content blocks (contents, galleries, child sections)
+    - Draft state management integration
+    - Order-based sorting and positioning
+    - Unified structure transformation
+
+    **Content Types Supported:**
+    - Content blocks (text, media)
+    - Gallery collections
+    - Child sections (nested structure)
+    - Section groups (organizational units)
+
+    **Key Operations:**
+    - Detail: Complex structure assembly
+    - Update: Limited field modifications
+    - Delete: Draft-aware removal
+    - Reorder: Position management within groups/parents
+
+    **Draft Integration:**
+    - All operations validate draft state
+    - Automatic ID mapping for draft versions
+    - Prevents conflicts with published content
+end note
+
+@enduml

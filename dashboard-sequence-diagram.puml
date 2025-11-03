@@ -1,0 +1,100 @@
+@startuml Dashboard Data Flow Sequence Diagram
+
+!define BLUE_COLOR #4A90E2
+!define GREEN_COLOR #7ED321
+!define ORANGE_COLOR #F5A623
+!define PURPLE_COLOR #9013FE
+
+actor "User" as User BLUE_COLOR
+participant "Frontend\nDashboard" as Frontend
+participant "Dashboard API\n(/api/dashboard)" as DashboardAPI
+participant "Database\n(PostgreSQL)" as Database
+
+== User Opens Dashboard Menu ==
+User -> Frontend: Membuka menu dashboard
+activate Frontend
+User -> Frontend: Memasukkan filter periode waktu
+
+== Admin Panel Meminta Data Dashboard ==
+Frontend -> DashboardAPI: GET /api/dashboard\nstart_month, end_month, event_type=website_visit
+activate DashboardAPI
+
+DashboardAPI -> Database: Raw SQL query\nSELECT month, COUNT(*) FROM AnalyticsEvent\nWHERE type='website_visit' AND timestamp between dates
+activate Database
+Database --> DashboardAPI: Monthly visit counts
+deactivate Database
+
+DashboardAPI -> DashboardAPI: Map to {label: 'YYYY-MM-01', value: count}
+DashboardAPI --> Frontend: {data: [{label: '2024-01-01', value: 150}]}
+deactivate DashboardAPI
+
+Frontend -> DashboardAPI: GET /api/dashboard\nstart_month, end_month, event_type=page_view
+activate DashboardAPI
+DashboardAPI -> Database: Group analytics events by source\nfilter by type='page_view' and date range
+activate Database
+Database --> DashboardAPI: Events grouped by source URL
+deactivate Database
+
+DashboardAPI --> Frontend: {data: [{label: 'home', value: 45}, {label: 'about', value: 23}]}
+deactivate DashboardAPI
+
+Frontend -> DashboardAPI: GET /api/dashboard
+start_month, end_month, event_type contact_click
+activate DashboardAPI
+
+DashboardAPI -> Database: Group analytics events by name
+filter by type='contact_click' and date range
+activate Database
+Database --> DashboardAPI: Events grouped by contact method name
+deactivate Database
+
+DashboardAPI -> DashboardAPI: Map to {label: name, value: count}
+DashboardAPI --> Frontend: {data: [{label: 'whatsapp', value: 12}, {label: 'email', value: 8}]}
+deactivate DashboardAPI
+
+Frontend -> DashboardAPI: GET /api/dashboard
+start_month, end_month, event_type=cta_click
+activate DashboardAPI
+
+DashboardAPI -> Database: Group analytics events by name
+filter by type='cta_click' and date range
+activate Database
+Database --> DashboardAPI: Events grouped by CTA name
+deactivate Database
+
+DashboardAPI -> DashboardAPI: Map to {label: name, value: count}
+DashboardAPI --> Frontend: {data: [{label: 'download', value: 25}, {label: 'contact', value: 15}]}
+deactivate DashboardAPI
+
+== Frontend Processes and Displays Data ==
+Frontend -> Frontend: Format data for dashboard cards
+Frontend -> Frontend: Render charts and statistics
+
+Frontend --> User: Dashboard data displayed\nwith multiple cards showing analytics
+deactivate Frontend
+
+== Error Handling ==
+alt API Error
+    DashboardAPI --> Frontend: HTTP 400/500 Error response
+    Frontend -> Frontend: Handle error state
+    Frontend --> User: Display error message\n"Failed to load dashboard data"
+end
+
+== Notes ==
+note over Frontend, Database
+    **Event Types Supported:**
+    - aggregate_form_submission: Total form count
+    - form_submission: By form type
+    - website_visit: Monthly visits
+    - page_view: By page slug
+    - cta_click: By CTA name
+    - contact_click: By contact method
+    - calculator_usage: By calculator source
+
+    **Date Processing:**
+    - start_month: YYYY-MM-01 format
+    - end_month: Converted to first day of next month
+    - All queries use >= start_date AND < end_date
+end note
+
+@enduml
