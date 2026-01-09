@@ -21,6 +21,7 @@
             <div class="absolute bottom-0 right-0 w-[100%] md:w-[115%] lg:w-[130%] h-[80%] md:h-[90%] lg:h-[100%] bg-primary/40 blur-3xl rounded-full translate-y-1/2 translate-x-1/2 group-hover/projectItem:w-[150%] group-hover/projectItem:md:w-[165%] group-hover/projectItem:lg:w-[180%] group-hover/projectItem:h-[120%] group-hover/projectItem:md:h-[135%] group-hover/projectItem:lg:h-[150%] group-hover/projectItem:bg-primary/60 transition-all duration-500 ease-out pointer-events-none"></div>
             <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-orange-900/40 to-transparent pointer-events-none"></div>
             <p class="text-base md:text-xl lg:text-2xl w-full transition-all font-bold text-end relative z-10">{menu.title}</p>
+            {#if menu.description}<p class="text-xs md:text-sm w-full transition-all text-end relative z-10">{@html menu.description}</p>{/if}
           </a>
         {/each}
       </div>
