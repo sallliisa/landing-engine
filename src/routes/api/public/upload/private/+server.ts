@@ -1,14 +1,15 @@
 import { json } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import fs from 'fs';
 import path from 'path';
 
-const privateTempDir = path.join(process.cwd(), 'storage', 'temp', 'private')
+const privateTempDir = path.join(process.cwd(), 'storage', 'temp', 'private');
 
 if (!fs.existsSync(privateTempDir)) {
   fs.mkdirSync(privateTempDir, { recursive: true });
 }
 
-export const POST = async ({ request, url }) => {
+export const POST: RequestHandler = async ({ request, url }) => {
   try {
     const contentType = request.headers.get('content-type');
     if (!contentType?.includes('multipart/form-data')) {
@@ -24,16 +25,17 @@ export const POST = async ({ request, url }) => {
 
     const filename = `${Date.now()}-${file.name}`;
     const filePath = path.join(privateTempDir, filename);
-
     const buffer = Buffer.from(await file.arrayBuffer());
+
+    // Just save the raw file - processing happens on save
     fs.writeFileSync(filePath, buffer);
 
-    // const baseUrl = request.headers.get('X-Forwarded-Proto') + '://' + request.headers.get('X-Forwarded-Host');
     const baseUrl = url.origin;
-
     const publicUrl = new URL(`${baseUrl}/storage/temp/private/${filename}`);
-    return json(publicUrl, {status: 200})
+
+    return json(publicUrl, { status: 200 });
   } catch (err) {
-    return json({message: err}, {status: 500})
+    console.error('[Upload] Error:', err);
+    return json({ message: err }, { status: 500 });
   }
 };

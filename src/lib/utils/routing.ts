@@ -24,13 +24,13 @@ export function addCorsHeaders(response: Response): Response {
 
 // Check if route requires authentication
 export function isProtectedRoute(pathname: string): boolean {
-  const publicPaths = ['/api/public', '/api/login']
+  const publicPaths = ['/api/public', '/api/login', '/api/image']
   return !publicPaths.some(path => pathname.startsWith(path))
 }
 
 export async function findUser(token?: string): Promise<App.Locals['user'] | null> {
   if (!token) return null
-  
+
   const session = await prisma.session.findUnique({
     where: { token },
     include: {
