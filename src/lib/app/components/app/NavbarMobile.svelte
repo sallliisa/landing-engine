@@ -141,16 +141,18 @@
                       {/if}
                       <div class="flex flex-col gap-xs">
                         {#each level2Child.children as level3Child}
-                          {#if level3Child.page}
-                            <a
-                              href="/{page.data.menu[activeLevel1Index].slug}/{level2Child.slug}/{level3Child.slug}"
-                              class="text-on-surface text-start"
-                              onclick="{() => isMenuExpanded = false}"
-                            >
-                              {level3Child.name}
-                            </a>
-                          {:else}
-                            <p class="text-outline">{level3Child.name}</p>
+                          {#if level3Child.visible}
+                            {#if level3Child.page}
+                              <a
+                                href="/{page.data.menu[activeLevel1Index].slug}/{level2Child.slug}/{level3Child.slug}"
+                                class="text-on-surface text-start"
+                                onclick="{() => isMenuExpanded = false}"
+                              >
+                                {level3Child.name}
+                              </a>
+                            {:else}
+                              <p class="text-outline">{level3Child.name}</p>
+                            {/if}
                           {/if}
                         {/each}
                       </div>

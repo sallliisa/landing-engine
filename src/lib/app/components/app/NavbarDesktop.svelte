@@ -241,23 +241,25 @@
                     >
                       <div class="flex flex-col gap-base" bind:this="{level2MenuContentElements[level1Index][level2Index]}">
                         {#each level2Child.children as level3Child}
-                          {#if !level3Child.page}
-                            <div
-                              onfocus="{() => {}}"
-                              class="flex flex-row items-center justify-between group/menuItem"
-                              role="menu"
-                            >
-                              <p class="text-outline">{level3Child.name}</p>
-                            </div>
-                          {:else}
-                            <a
-                              onfocus="{() => {}}"
-                              class="flex flex-row items-center justify-between group/menuItem"
-                              href="/{menu.slug}/{level2Child.slug}/{level3Child.slug}"
-                              onclick="{() => (isMenuExpanded = false)}"
-                            >
-                              <p>{level3Child.name}</p>
-                            </a>
+                          {#if level3Child.visible}
+                            {#if !level3Child.page}
+                              <div
+                                onfocus="{() => {}}"
+                                class="flex flex-row items-center justify-between group/menuItem"
+                                role="menu"
+                              >
+                                <p class="text-outline">{level3Child.name}</p>
+                              </div>
+                            {:else}
+                              <a
+                                onfocus="{() => {}}"
+                                class="flex flex-row items-center justify-between group/menuItem"
+                                href="/{menu.slug}/{level2Child.slug}/{level3Child.slug}"
+                                onclick="{() => (isMenuExpanded = false)}"
+                              >
+                                <p>{level3Child.name}</p>
+                              </a>
+                            {/if}
                           {/if}
                         {/each}
                       </div>
