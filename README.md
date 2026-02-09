@@ -1,38 +1,40 @@
-# sv
+# hkr-landing
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+SvelteKit + Vite app backed by Postgres via Prisma.
 
-## Creating a project
+## Prereqs
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Node.js (recommended: 20+)
+- A Postgres database you can connect to (`DATABASE_URL`)
 
-```bash
-# create a new project in the current directory
-npx sv create
+## Fresh setup (local dev)
 
-# create a new project in my-app
-npx sv create my-app
-```
+1. Create `.env` from the example:
+   - `cp .env.example .env`
+2. Fill in required env vars in `.env`:
+   - `DATABASE_URL` (Postgres connection string)
+   - `PUBLIC_RECAPTCHA_SITEKEY`
+   - `RECAPTCHA_SECRETKEY`
+   - For local dev, you can use the Google test keys listed in `.env.example`.
+3. Install dependencies:
+   - `npm install` (or `npm ci` if you want lockfile-reproducible installs)
+4. Apply database migrations:
+   - `npx prisma migrate dev`
+5. (Optional) Seed initial data:
+   - `npx prisma db seed`
+6. Start the dev server:
+   - `npm run dev`
+   - Vite will print the local URL (usually `http://localhost:5173`).
 
-## Developing
+## Notes
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- If you use `npx prisma migrate deploy` (typical for production), also run `npx prisma generate` as part of your deploy/build.
+- Optional internal DB tunnel:
+  - `npm run tunneldb` opens an SSH tunnel to a remote Postgres on local port `5433` (requires SSH access).
+  - Point `DATABASE_URL` at `localhost:5433` if you use this.
 
-```bash
-npm run dev
+## Useful commands
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- `npx prisma studio` (inspect DB)
+- `npm run build` (production build)
+- `npm run preview` (preview build)

@@ -13,7 +13,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"prisma": {
-		"seed": "tsx prisma/seeder/index.ts"
+		"seed": "tsx prisma/seeder/index.ts",
+		"bun-seed": "bun prisma/seeder/index.ts"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^4.0.0",
