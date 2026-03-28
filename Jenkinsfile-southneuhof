@@ -1,0 +1,80 @@
+pipeline {
+  agent any
+
+  environment {
+    SSH_CRED        = 'deploy'
+    SSH_USER        = 'deploy'
+    SSH_HOST        = '10.11.0.14'
+    APP_ROOT        = '/srv/hkr-landing'
+    RELEASE_DIR     = '/srv/hkr-landing/current'
+    SHARED_ENV_FILE = '/etc/hkr-landing/hkr-landing.env'
+    PM2_APP_NAME    = 'hkr-landing'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build') {
+      agent {
+        docker {
+          image 'node:20-bookworm'
+          reuseNode true
+        }
+      }
+      steps {
+        sh '''
+          npm ci
+          npx prisma generate
+          npm run build
+        '''
+        stash includes: 'build/**,package.json,package-lock.json,ecosystem.config.cjs,prisma/**', name: 'landing-release'
+      }
+    }
+
+    stage('Deploy') {
+      agent {
+        docker {
+          image 'instrumentisto/rsync-ssh'
+          reuseNode true
+          args '-u root'
+        }
+      }
+      steps {
+        deleteDir()
+        unstash 'landing-release'
+        sshagent(credentials: ["${SSH_CRED}"]) {
+          sh '''
+            set -eu
+
+            mkdir -p ~/.ssh
+            ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+
+            ssh "$SSH_USER@$SSH_HOST" "mkdir -p '$APP_ROOT' '$RELEASE_DIR'"
+
+            rsync -av --delete ./ "$SSH_USER@$SSH_HOST:$RELEASE_DIR/"
+
+            ssh "$SSH_USER@$SSH_HOST" "
+              set -eu
+              cd '$RELEASE_DIR'
+              npm ci --omit=dev
+              if [ -d prisma/migrations ] && find prisma/migrations -mindepth 1 -maxdepth 1 -type d | grep -q .; then
+                export \$(grep -v '^#' '$SHARED_ENV_FILE' | xargs)
+                npx prisma migrate deploy
+              fi
+              export \$(grep -v '^#' '$SHARED_ENV_FILE' | xargs)
+              if pm2 describe '$PM2_APP_NAME' >/dev/null 2>&1; then
+                pm2 reload ecosystem.config.cjs --only '$PM2_APP_NAME' --update-env
+              else
+                pm2 start ecosystem.config.cjs --only '$PM2_APP_NAME' --update-env
+              fi
+            "
+          '''
+        }
+      }
+    }
+  }
+}

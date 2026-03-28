@@ -38,3 +38,25 @@ SvelteKit + Vite app backed by Postgres via Prisma.
 - `npx prisma studio` (inspect DB)
 - `npm run build` (production build)
 - `npm run preview` (preview build)
+
+## Deployment
+
+- Jenkins pipeline: [`Jenkinsfile-southneuhof`](/Users/gamer/Documents/projects/hkr-landing-suite/hkr-landing/Jenkinsfile-southneuhof)
+- PM2 config: [`ecosystem.config.cjs`](/Users/gamer/Documents/projects/hkr-landing-suite/hkr-landing/ecosystem.config.cjs)
+- Host env template: [`deploy/hkr-landing.env.example`](/Users/gamer/Documents/projects/hkr-landing-suite/hkr-landing/deploy/hkr-landing.env.example)
+- Nginx template: [`deploy/nginx/hkr-landing.conf.example`](/Users/gamer/Documents/projects/hkr-landing-suite/hkr-landing/deploy/nginx/hkr-landing.conf.example)
+- Public hostname: `https://hkr-landing.southneuhof.tech`
+
+Expected host layout:
+
+- `/srv/hkr-landing/current`
+- `/etc/hkr-landing/hkr-landing.env`
+
+Deploy behavior:
+
+- Jenkins builds in Docker with Node 20.
+- The release is synced to `/srv/hkr-landing/current`.
+- The host installs production dependencies with `npm ci --omit=dev`.
+- Prisma production migrations run only when committed migration directories exist.
+- PM2 starts or reloads `hkr-landing` after each successful deploy.
+- PM2 is installed in normal daemon mode; no boot-time startup service is configured.
