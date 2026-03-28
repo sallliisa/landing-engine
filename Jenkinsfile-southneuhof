@@ -34,7 +34,12 @@ pipeline {
             . ./.env
             set +a
             npm ci
-            npx prisma generate
+            test -n "$DATABASE_URL"
+            DATABASE_URL="$DATABASE_URL" npx prisma generate
+            DATABASE_URL="$DATABASE_URL" \
+            PUBLIC_RECAPTCHA_SITEKEY="$PUBLIC_RECAPTCHA_SITEKEY" \
+            RECAPTCHA_SECRETKEY="$RECAPTCHA_SECRETKEY" \
+            PUBLIC_APP_URL="$PUBLIC_APP_URL" \
             npm run build
           '''
         }
