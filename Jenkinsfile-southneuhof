@@ -72,11 +72,12 @@ pipeline {
               set -eu
               cd '$RELEASE_DIR'
               npm ci --omit=dev
+              set -a
+              . '${SHARED_ENV_FILE}'
+              set +a
               if [ -d prisma/migrations ] && find prisma/migrations -mindepth 1 -maxdepth 1 -type d | grep -q .; then
-                export \$(grep -v '^#' '$SHARED_ENV_FILE' | xargs)
                 npx prisma migrate deploy
               fi
-              export \$(grep -v '^#' '$SHARED_ENV_FILE' | xargs)
               if pm2 describe '$PM2_APP_NAME' >/dev/null 2>&1; then
                 pm2 reload ecosystem.config.cjs --only '$PM2_APP_NAME' --update-env
               else
