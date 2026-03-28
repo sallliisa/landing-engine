@@ -55,6 +55,7 @@ Expected host layout:
 Deploy behavior:
 
 - Jenkins builds in Docker with Node 20.
+- Jenkins build uses the `hkr-landing-build-env` secret-file credential and copies it to a temporary `.env`.
 - The release is synced to `/srv/hkr-landing/current`.
 - The host installs production dependencies with `npm ci --omit=dev`.
 - Prisma production migrations run only when committed migration directories exist.

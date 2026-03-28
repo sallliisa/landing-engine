@@ -26,11 +26,15 @@ pipeline {
         }
       }
       steps {
-        sh '''
-          npm ci
-          npx prisma generate
-          npm run build
-        '''
+        withCredentials([file(credentialsId: 'hkr-landing-build-env', variable: 'BUILD_ENV_FILE')]) {
+          sh '''
+            cp "$BUILD_ENV_FILE" .env
+            trap 'rm -f .env' EXIT
+            npm ci
+            npx prisma generate
+            npm run build
+          '''
+        }
         stash includes: 'build/**,package.json,package-lock.json,ecosystem.config.cjs,prisma/**', name: 'landing-release'
       }
     }
