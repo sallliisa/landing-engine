@@ -48,7 +48,6 @@ pipeline {
         }
       }
       steps {
-        deleteDir()
         unstash 'landing-release'
         sshagent(credentials: ["${SSH_CRED}"]) {
           sh '''
