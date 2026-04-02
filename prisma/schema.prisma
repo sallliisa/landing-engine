@@ -455,3 +455,25 @@ model Collection {
   code      String  @id @unique
   data      Json[]  @default([])
 }
+
+/// Image optimization manifest for progressive loading
+model ImageManifest {
+  id              String   @id @default(cuid())
+  /// The canonical URL path for this image (e.g., /storage/public/1234-image.jpg)
+  original_path   String   @unique
+  /// Original dimensions
+  width           Int
+  height          Int
+  /// Aspect ratio (width / height)
+  aspect_ratio    Float
+  /// Original format (jpeg, png, webp, etc.)
+  format          String
+  /// Original file size in bytes
+  size            Int
+  /// Base64 encoded tiny placeholder image
+  placeholder     String   @db.Text
+  /// JSON array of variant info: [{width, format, path}]
+  variants        Json     @default("[]")
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+}

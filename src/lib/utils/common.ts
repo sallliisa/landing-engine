@@ -35,27 +35,27 @@ export function transformFieldsForeign(fieldsForeign: any): any {
 // Add helper function to build where clause
 export function buildWhereClause(whereConfig: WhereConfig<any>) {
   const result: any = {};
-  
+
   if (whereConfig.AND) {
     result.AND = whereConfig.AND.map(condition => ({
-      [condition.field]: condition.operator === 'isNull' 
-        ? null 
+      [condition.field]: condition.operator === 'isNull'
+        ? null
         : { [condition.operator]: condition.value }
     }));
   }
-  
+
   if (whereConfig.OR) {
     result.OR = whereConfig.OR.map(condition => ({
-      [condition.field]: condition.operator === 'isNull' 
-        ? null 
+      [condition.field]: condition.operator === 'isNull'
+        ? null
         : { [condition.operator]: condition.value }
     }));
   }
 
   if (whereConfig.NOT) {
     result.NOT = whereConfig.NOT.map(condition => ({
-      [condition.field]: condition.operator === 'isNull' 
-        ? null 
+      [condition.field]: condition.operator === 'isNull'
+        ? null
         : { [condition.operator]: condition.value }
     }));
   }
@@ -68,7 +68,7 @@ export async function validateFields(data: Record<string, any>, validation?: Val
 
   for (const [field, validators] of Object.entries(validation)) {
     if (!validators) continue
-    
+
     for (const { validator, message } of validators) {
       const isValid = await validator(data[field])
       if (!isValid) {
@@ -99,7 +99,7 @@ export function formatNumber(num: number | undefined | null, locale = 'id-ID') {
 }
 
 export function cn(...inputs: ClassValue[]) {
-	return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs));
 }
 
 export function getLanguagePrefix(pathname: string): string | null {
@@ -107,12 +107,12 @@ export function getLanguagePrefix(pathname: string): string | null {
   return match ? match[0] : null;
 }
 
-export function isValidUrl (url: string) {
-  try { 
-    return Boolean(new URL(url)); 
+export function isValidUrl(url: string) {
+  try {
+    return Boolean(new URL(url));
   }
-  catch(e){ 
-    return false; 
+  catch (e) {
+    return false;
   }
 }
 
@@ -122,7 +122,7 @@ export function resolveCustomField(data: any, path: string[], arrayStrategy?: Ar
   let value = data;
   for (const segment of path) {
     if (!value) return null;
-    
+
     if (Array.isArray(value)) {
       if (!arrayStrategy || arrayStrategy === 'first') {
         value = value[0]?.[segment];
@@ -151,7 +151,7 @@ export function isOfSameOrigin(url: string) {
   try {
     const urlObj = new URL(url);
     const appUrl = process.env.PUBLIC_APP_URL || '';
-    
+
     // If PUBLIC_APP_URL is set, verify the origin matches
     if (appUrl) {
       const appOrigin = new URL(appUrl).origin;
@@ -159,7 +159,7 @@ export function isOfSameOrigin(url: string) {
         return false;
       }
     }
-    
+
     return true;
   } catch (e) {
     // If URL parsing fails, it's not a valid URL
@@ -170,10 +170,10 @@ export function isOfSameOrigin(url: string) {
 export function isValidTempFileURL(url: string): boolean {
   try {
     const urlObj = new URL(url);
-    
+
     // If PUBLIC_APP_URL is set, verify the origin matches
     if (!isOfSameOrigin(url)) return false
-    
+
     // Check if path matches /storage/temp/(public|private)/...
     const tempPathRegex = /^\/storage\/temp\/(public|private)\/.+/;
     return tempPathRegex.test(urlObj.pathname);
@@ -186,10 +186,10 @@ export function isValidTempFileURL(url: string): boolean {
 export function isValidFileURL(url: string): boolean {
   try {
     const urlObj = new URL(url);
-    
+
     // If PUBLIC_APP_URL is set, verify the origin matches
     if (!isOfSameOrigin(url)) return false
-    
+
     // Check if path starts with /storage/
     return urlObj.pathname.startsWith('/storage/');
   } catch (e) {
@@ -209,7 +209,7 @@ export function parseSearchParams(
   }
 
   // Convert string to URLSearchParams if needed
-  const params = typeof searchParams === 'string' 
+  const params = typeof searchParams === 'string'
     ? new URLSearchParams(searchParams)
     : searchParams;
 
@@ -221,9 +221,9 @@ export function parseSearchParams(
   // Process each parameter
   for (const [key, value] of params.entries()) {
     if (!key) continue; // Skip empty keys
-    
+
     const trimmedValue = value.trim();
-    
+
     // Handle multiple values for the same key by converting to array
     if (key in parsed) {
       const existingValue = parsed[key];
@@ -273,19 +273,17 @@ let n = Date.now();
 
 export function useId() {
   return (++n).toString(36);
-} 
+}
 
-export function generateGoogleMapsEmbedURL(url: string)
-{
+export function generateGoogleMapsEmbedURL(url: string) {
   let coords = /\@([0-9\.\,\-a-zA-Z]*)/.exec(url);
-  if(coords!=null)
-  {
+  if (coords != null) {
     let coordsArray = coords[1].split(',');
-    return "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d20000!2d"+coordsArray[1]+"!3d"+coordsArray[0]+"!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1486486434098";
+    return "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d20000!2d" + coordsArray[1] + "!3d" + coordsArray[0] + "!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1486486434098";
   }
 }
 
-export function getCurrencySymbol (locale: string, currency: string) {
+export function getCurrencySymbol(locale: string, currency: string) {
   return (0).toLocaleString(
     locale,
     {
@@ -301,8 +299,8 @@ export const defer = () => {
   var res, rej;
 
   var promise: any = new Promise((resolve, reject) => {
-      res = resolve;
-      rej = reject;
+    res = resolve;
+    rej = reject;
   });
 
   promise.resolve = res;
@@ -334,10 +332,10 @@ export function parseCode(text: string) {
 }
 
 export type ProcessFileUrlOptions = {
-	onTempFile?: (url: string) => Promise<string | undefined>;
-	onClearFile?: (url: string) => Promise<void>;
-	previousData?: Record<string, any>;
-	onFile?: (url: string) => Promise<void>;
+  onTempFile?: (url: string) => Promise<string | undefined>;
+  onClearFile?: (url: string) => Promise<void>;
+  previousData?: Record<string, any>;
+  onFile?: (url: string) => Promise<void>;
 };
 
 /**
@@ -347,40 +345,44 @@ export type ProcessFileUrlOptions = {
  * @returns A new object with processed file URLs
  */
 export async function processFileUrls<T extends Record<string, any>>(
-	obj: T,
-	options: ProcessFileUrlOptions = {}
+  obj: T,
+  options: ProcessFileUrlOptions = {}
 ): Promise<T> {
-	const { onTempFile, onClearFile, previousData, onFile } = options;
-	const result: Record<string, any> = Array.isArray(obj) ? [...obj] : { ...obj };
+  const { onTempFile, onClearFile, previousData, onFile } = options;
+  const result: Record<string, any> = Array.isArray(obj) ? [...obj] : { ...obj };
 
-	for (const [key, value] of Object.entries(result)) {
-		if (value === null || value === undefined) continue;
+  for (const [key, value] of Object.entries(result)) {
+    if (value === null || value === undefined) continue;
 
-		// Handle nested objects and arrays
-		if (typeof value === 'object') {
-			result[key] = await processFileUrls(value, { ...options, previousData: previousData?.[key] });
-			continue;
-		}
+    // Handle nested objects and arrays
+    if (typeof value === 'object') {
+      result[key] = await processFileUrls(value, { ...options, previousData: previousData?.[key] });
+      continue;
+    }
 
-		// Handle string values that might be file URLs
-		if (typeof value === 'string') {
-			if (isValidFileURL(value)) {
-				if (onFile) {
-					await onFile(value);
-				}
-				
-				if (isValidTempFileURL(value) && onTempFile) {
-					// Process temp file URL
-					result[key] = await onTempFile(value);
-				} else if (!value && previousData?.[key] && onClearFile) {
-					// Handle file clearing
-					await onClearFile(previousData[key]);
-				}
-			}
-		}
-	}
+    // Handle string values that might be file URLs
+    if (typeof value === 'string') {
+      if (isValidFileURL(value)) {
+        if (onFile) {
+          await onFile(value);
+        }
 
-	return result as T;
+        if (isValidTempFileURL(value) && onTempFile) {
+          // If there was a previous file and we're replacing it, delete the old one
+          if (previousData?.[key] && isValidFileURL(previousData[key]) && onClearFile) {
+            await onClearFile(previousData[key]);
+          }
+          // Process temp file URL
+          result[key] = await onTempFile(value);
+        } else if (!value && previousData?.[key] && onClearFile) {
+          // Handle file clearing
+          await onClearFile(previousData[key]);
+        }
+      }
+    }
+  }
+
+  return result as T;
 }
 
 export const debounce = (fn: Function, ms = 300) => {
