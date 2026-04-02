@@ -74,16 +74,22 @@ enum MenuItemRole {
 
 // MODELS
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  name     String
-  password String
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  name          String
+  password      String?
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   // Each user has one role.
   role_id Int
   role    Role @relation(fields: [role_id], references: [id])
 
-  sessions Session[]
+  sessions       Session[]
+  authSessions   AuthSession[]
+  authAccounts   AuthAccount[]
   verifications VerificationLog[]
 }
 
@@ -94,6 +100,50 @@ model Session {
   user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+}
+
+model AuthSession {
+  id        Int      @id @default(autoincrement())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AuthAccount {
+  id                    Int       @id @default(autoincrement())
+  accountId             String
+  providerId            String
+  userId                Int
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+model AuthVerification {
+  id         Int      @id @default(autoincrement())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
 }
 
 ///
@@ -155,8 +205,8 @@ model VerificationLog {
   id                  String             @id @default(cuid())
   action              String
   description         String?
-  verifier_id         Int
-  verifier            User               @relation(fields: [verifier_id], references: [id], onDelete: NoAction)
+  verifier_id         Int?
+  verifier            User?              @relation(fields: [verifier_id], references: [id], onDelete: SetNull)
   created_at          DateTime           @default(now())
   model               String
   data_id             String

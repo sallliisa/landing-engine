@@ -2,12 +2,15 @@ import { parseSearchParams } from '$lib/utils/common';
 import prisma from '$lib/utils/prisma';
 import { exception, success } from '$lib/utils/response';
 import { withPagination } from '$lib/utils/pagination';
+import { requirePermission } from '$lib/utils/routing';
 
-export async function GET({url}) {
+export async function GET({url, locals}) {
   let urlSearchParams = parseSearchParams(url.searchParams);
   if (!urlSearchParams.role_id) return exception('role_id is required');
   
   try {
+    requirePermission(locals, 'list-mappingPermissionRole');
+
     const paginatedData = await withPagination(async (skip, take) => {
       const searchTerm = urlSearchParams.search?.toString().toLowerCase() || '';
       

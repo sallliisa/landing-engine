@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import fs from 'fs';
 import path from 'path';
+import { requireAuthenticatedUser } from '$lib/utils/routing';
 
 const [
   privateTempDir,
@@ -17,8 +18,10 @@ if (!fs.existsSync(publicTempDir)) {
   fs.mkdirSync(publicTempDir, { recursive: true });
 }
 
-export const POST = async ({ request, url, params }) => {
+export const POST = async ({ request, url, params, locals }) => {
   try {
+    requireAuthenticatedUser(locals);
+
     const contentType = request.headers.get('content-type');
     if (!contentType?.includes('multipart/form-data')) {
       return new Response(JSON.stringify({ error: 'Invalid content type' }), { status: 400 });
@@ -47,4 +50,3 @@ export const POST = async ({ request, url, params }) => {
     return json({message: err}, {status: 500})
   }
 };
-

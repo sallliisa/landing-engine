@@ -1,12 +1,15 @@
 import prisma from '$lib/utils/prisma';
-import { json } from '@sveltejs/kit';
+import { exception, success } from '$lib/utils/response';
+import { requirePermission } from '$lib/utils/routing';
 
-export async function POST({ request }) {
+export async function POST({ request, locals }) {
 	try {
+		requirePermission(locals, 'toggle-mappingPermissionRole');
+
 		const { role_id, permission_code, active } = await request.json();
 
 		if (!role_id || !permission_code) {
-			return json({ error: 'role_id and permission_code are required' }, { status: 400 });
+			return exception('role_id and permission_code are required', 400);
 		}
 
 		await prisma.role.update({
@@ -16,9 +19,9 @@ export async function POST({ request }) {
 			}
 		});
 
-		return json({ success: true });
+		return success({ data: { success: true } }, 200);
 	} catch (error) {
 		console.error('Failed to update permission:', error);
-		return json({ error: 'Failed to update permission' }, { status: 500 });
+		return exception('Failed to update permission');
 	}
 }

@@ -1,12 +1,18 @@
 import prisma from '$lib/utils/prisma';
-import { json } from '@sveltejs/kit';
+import { exception, success } from '$lib/utils/response';
+import { requirePermission } from '$lib/utils/routing';
+import { requireMenuItemAccess } from '$lib/app/api/authorization';
 
-export async function POST({ request }) {
+export async function POST(event) {
+	const { request, locals } = event;
 	try {
+		requirePermission(locals, 'toggle-mappingRoleMenuItem');
+
 		const { menu_item_id, role_id, active } = await request.json();
+		await requireMenuItemAccess(event, { id: menu_item_id });
 
 		if (!role_id || !menu_item_id) {
-			return json({ error: 'menu_item_id and role_id are required' }, { status: 400 });
+			return exception('menu_item_id and role_id are required', 400);
 		}
 
 		await prisma.menuItem.update({
@@ -16,9 +22,9 @@ export async function POST({ request }) {
 			}
 		});
 
-		return json({ success: true });
+		return success({ data: { success: true } }, 200);
 	} catch (error) {
 		console.error('Failed to update form type role access control:', error);
-		return json({ error: 'Failed to update form type role access control' }, { status: 500 });
+		return exception('Failed to update form type role access control');
 	}
 }

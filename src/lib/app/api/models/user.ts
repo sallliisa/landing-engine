@@ -48,14 +48,33 @@ export default {
     },
     lifecycle: {
       async main(body) {
-        const data = await prisma.user.create({
-          data: {
-            name: body.name,
-            email: body.email,
-            role_id: body.role_id,
-            password: await bcrypt.hash(body.password, 10),
+        const data = await prisma.$transaction(async (tx) => {
+          const passwordHash = body.password ? await bcrypt.hash(body.password, 10) : null
+
+          const user = await tx.user.create({
+            data: {
+              name: body.name,
+              email: body.email,
+              role_id: body.role_id,
+              emailVerified: true,
+            }
+          });
+
+          if (passwordHash) {
+            await tx.authAccount.create({
+              data: {
+                id: user.id,
+                accountId: String(user.id),
+                providerId: 'credential',
+                userId: user.id,
+                password: passwordHash,
+              },
+            });
           }
+
+          return user;
         })
+
         return data
       }
     }
@@ -65,20 +84,43 @@ export default {
     fields: ['name', 'email', 'role_id', 'password'],
     lifecycle: {
       async main(body) {
-        const updateData: any = {
-          name: body.name,
-          email: body.email,
-          role_id: body.role_id,
-        }
+        const data = await prisma.$transaction(async (tx) => {
+          const passwordHash = body.password ? await bcrypt.hash(body.password, 10) : null
 
-        if (body.password) {
-          updateData.password = await bcrypt.hash(body.password, 10)
-        }
+          const updateData: any = {
+            name: body.name,
+            email: body.email,
+            role_id: body.role_id,
+          }
 
-        const data = await prisma.user.update({
-          where: { id: body.id },
-          data: updateData
+          const user = await tx.user.update({
+            where: { id: body.id },
+            data: updateData
+          });
+
+          if (passwordHash) {
+            await tx.authAccount.upsert({
+              where: {
+                id: user.id,
+              },
+              update: {
+                accountId: String(user.id),
+                providerId: 'credential',
+                password: passwordHash,
+              },
+              create: {
+                id: user.id,
+                accountId: String(user.id),
+                providerId: 'credential',
+                userId: user.id,
+                password: passwordHash,
+              },
+            });
+          }
+
+          return user;
         })
+
         return data
       }
     }

@@ -1,4 +1,5 @@
 import { languages, parseSlug } from "$lib/utils/common";
+import { requireMenuItemAccess } from "$lib/app/api/authorization";
 import prisma from "$lib/utils/prisma";
 import type { Language, MenuItem, Prisma } from "@prisma/client";
 
@@ -65,6 +66,7 @@ export default {
   },
 
   update: {
+    authorize: requireMenuItemAccess,
     by: ['id'],
     fields: ['visible', 'url', 'role', 'show_submenu_below_navbar'],
     validation: {
@@ -99,6 +101,7 @@ export default {
   },
 
   list: {
+    permission: 'view-website',
     searchableBy: ['id'],
     filterableBy: ['parent_id', "level"],
     orderBy: { order: 'asc' },
@@ -120,7 +123,7 @@ export default {
     lifecycle: {
       post: async (data, total, locals) => {
         const userRoleId = locals?.user?.role_id;
-        const isAdmin = locals?.user?.role.role_group_id <= 2;
+        const isAdmin = Boolean(locals?.isPrivilegedRole);
 
         // To add the 'can_edit' property, we must map over the data array
         // and return new objects, as the original `data` is read-only.
@@ -165,6 +168,8 @@ export default {
   },
 
   detail: {
+    permission: 'detail-menuItem',
+    authorize: requireMenuItemAccess,
     by: ['id'],
     fieldsForeign: {
       translations: {
@@ -198,7 +203,7 @@ export default {
     lifecycle: {
       async post(data: Record<string, any>, _total?: number, locals?: Record<string, any>) {
         const userRoleId = locals?.user?.role_id;
-        const isAdmin = locals?.user?.role?.role_group_id <= 2;
+        const isAdmin = Boolean(locals?.isPrivilegedRole);
         let can_edit = false;
 
         if (isAdmin) {
@@ -228,12 +233,14 @@ export default {
   },
 
   delete: {
+    authorize: requireMenuItemAccess,
     by: ['id'],
     allow: true
   },
 
   reorder: {
     allow: true,
+    authorize: requireMenuItemAccess,
     axis: ['parent_id'],
     by: ['id']
   }

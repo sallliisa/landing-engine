@@ -3,12 +3,20 @@ import { exception, success } from '$lib/utils/response'
 import { buildSectionStructure } from '$lib/utils/section.js'
 import { ensureDraftState } from '$lib/utils/page'
 import type { $Enums, SectionType } from '@prisma/client'
+import { requirePermission } from '$lib/utils/routing'
+import { requirePageTranslationAccess } from '$lib/app/api/authorization'
 
-export async function POST({request}) {
+export async function POST(event) {
+  const { request, locals } = event;
   let body = await request.json()
   try {
+    requirePermission(locals, 'create-section')
+
     if (!body.section_group_id) throw 'section_group_id is required'
     if (!body.config) throw 'config is required'
+    if (body.page_translation_id) {
+      await requirePageTranslationAccess(event, { id: body.page_translation_id })
+    }
 
     let sectionGroupId = body.section_group_id
 

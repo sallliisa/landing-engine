@@ -4,10 +4,12 @@ import { isValidFileURL, validateFields, processFileUrls } from '$lib/utils/comm
 import { saveFileFromTemp } from '$lib/utils/filestorage.js'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response'
+import { authorizeOperation } from '$lib/app/api/authorization'
 
 function mergeCreateConfigs<T>(base: ModelConfig<T>, operation?: CreateConfig<T>): CreateConfig<T> {
   return {
     allow: operation?.allow ?? base?.allow,
+    permission: operation?.permission ?? base?.permission,
     fields: operation?.fields ?? base?.fields,
     validation: operation?.validation,
     by: operation?.by ?? base?.by,
@@ -19,7 +21,8 @@ function mergeCreateConfigs<T>(base: ModelConfig<T>, operation?: CreateConfig<T>
   }
 }
 
-export async function POST({params, request, locals}) {
+export async function POST(event) {
+  const { params, request, locals } = event
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND)
       
@@ -31,6 +34,7 @@ export async function POST({params, request, locals}) {
     
     if (!mergedConfig?.allow) throw Error(MESSAGE.MODEL.OPERATION_FORBIDDEN)
     let body = await request.json()
+    await authorizeOperation(event, params.model, 'create', mergedConfig, body)
 
     // Validation check using merged config
     if (mergedConfig.validation) {

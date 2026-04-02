@@ -1,9 +1,12 @@
 import type { PageTranslation } from '@prisma/client';
+import { requirePageTranslationAccess } from '$lib/app/api/authorization';
 import prisma from '$lib/utils/prisma';
 
 export default {
 	verify: {
 		allow: true,
+		permission: 'verify-page',
+		authorize: requirePageTranslationAccess,
 		by: 'id',
 		stateField: 'status_code',
 		initialState: 'DRAFT',

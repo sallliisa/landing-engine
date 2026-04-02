@@ -1,6 +1,7 @@
 import { parseSlug } from "$lib/utils/common";
 import type { ArticleTranslation } from "@prisma/client";
 import prisma from '$lib/utils/prisma';
+import { requireArticleTranslationAccess } from '$lib/app/api/authorization';
 import { ensureArticleDraftState } from '$lib/utils/article';
 
 export default {
@@ -12,6 +13,8 @@ export default {
   },
 
   update: {
+    permission: 'update-article',
+    authorize: requireArticleTranslationAccess,
     by: ['id'],
     fields: ['title', 'slug', 'content', 'excerpt', 'thumbnail', 'status_code'],
     validation: {
@@ -34,10 +37,14 @@ export default {
   },
 
   delete: {
+    permission: 'delete-article',
+    authorize: requireArticleTranslationAccess,
     by: ['id']
   },
 
   detail: {
+    permission: 'view-article',
+    authorize: requireArticleTranslationAccess,
     by: ['article_id', 'language'],
     lifecycle: {
       async main(where) {
@@ -60,6 +67,8 @@ export default {
 
   verify: {
     allow: true,
+    permission: 'verify-article',
+    authorize: requireArticleTranslationAccess,
     by: 'id',
     stateField: 'status_code',
     initialState: 'DRAFT',

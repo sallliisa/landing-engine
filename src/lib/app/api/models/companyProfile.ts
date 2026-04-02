@@ -2,6 +2,7 @@ import type { CompanyProfile } from "@prisma/client";
 
 export default {
   allow: true,
+  permission: 'view-companyProfile',
   by: ['id'],
   fields: [
     'id', 'name', 'slogan', 'address', 'email', 'phone',
@@ -10,6 +11,7 @@ export default {
   ],
 
   update: {
+    permission: 'update-companyProfile',
     fields: [
       'name', 'slogan', 'address', 'email', 'phone',
       'facebook', 'instagram', 'twitter', 'linkedin', 'youtube', 'whatsapp',

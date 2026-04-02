@@ -3,10 +3,11 @@ import type { RequestHandler } from './$types';
 import { PrismaClient } from '@prisma/client';
 import { exception, success } from '$lib/utils/response';
 import type { FormType } from '@prisma/client';
+import { requirePermission } from '$lib/utils/routing';
 
 const prisma = new PrismaClient();
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, locals }) => {
 	const startMonth = url.searchParams.get('start_month');
 	const endMonth = url.searchParams.get('end_month');
 	const eventType = url.searchParams.get('event_type');
@@ -16,6 +17,8 @@ export const GET: RequestHandler = async ({ url }) => {
 	}
 
 	try {
+		requirePermission(locals, 'view-dashboard');
+
 		const startDate = new Date(startMonth);
 		const tempEndDate = new Date(endMonth);
 		// To include the entire end month, we set the date to the first day of the *next* month.

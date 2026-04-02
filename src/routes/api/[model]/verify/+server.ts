@@ -4,6 +4,7 @@ import prisma from '$lib/utils/prisma';
 import { exception, success } from '$lib/utils/response';
 import type { RequestHandler } from './$types';
 import type { Prisma, PrismaClient } from '@prisma/client';
+import { authorizeOperation } from '$lib/app/api/authorization';
 
 type ModelName = keyof Omit<
 	typeof prisma,
@@ -16,6 +17,7 @@ function mergeVerifyConfigs<T>(
 ): VerifyConfig<T> {
 	return {
 		allow: operation?.allow ?? base?.allow,
+		permission: operation?.permission ?? base?.permission,
 		by: operation?.by!,
 		stateField: operation?.stateField!,
 		initialState: operation?.initialState!,
@@ -25,8 +27,9 @@ function mergeVerifyConfigs<T>(
 	};
 }
 
-export const POST: RequestHandler = async ({ params, request, locals }) => {
+export const POST: RequestHandler = async (event) => {
 	try {
+		const { params, request, locals } = event;
 		const { model } = params;
 		if (!configs[`./${model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND);
 		if (!prisma[model as ModelName]) throw Error(MESSAGE.MODEL.NOT_FOUND);
@@ -40,6 +43,7 @@ export const POST: RequestHandler = async ({ params, request, locals }) => {
 
 		let body = await request.json();
 		const { action, description } = body;
+		await authorizeOperation(event, model, 'verify', mergedConfig, body);
 
 		if (!mergedConfig.by) throw new Error(`"by" is not configured for model "${model}"`);
 		const whereClause = {

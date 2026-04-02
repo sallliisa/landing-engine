@@ -1,4 +1,5 @@
 import { buildWhereClause } from '$lib/utils/common';
+import { requireFormTypeAccess } from '$lib/app/api/authorization';
 import prisma from '$lib/utils/prisma';
 import type { FormType, Prisma } from '@prisma/client';
 
@@ -21,7 +22,7 @@ export default {
     orderBy: { name: 'asc' },
     filterableBy: ['id'],
     where: ({locals}) => {
-      const isAdmin = locals?.user?.role.role_group_id <= 2;
+      const isAdmin = Boolean(locals?.isPrivilegedRole);
       if (isAdmin) return undefined
       return {
         AND: [
@@ -37,6 +38,8 @@ export default {
 
   // Detail operation config
   detail: {
+    permission: 'detail-formType',
+    authorize: requireFormTypeAccess,
     allow: true,
     by: ['id'],
   },
@@ -57,12 +60,14 @@ export default {
 
   // Update operation config
   update: {
+    authorize: requireFormTypeAccess,
     allow: true,
     by: ['id'],
   },
 
   // Delete operation config
   delete: {
+    authorize: requireFormTypeAccess,
     allow: true,
     by: ['id']
   }
