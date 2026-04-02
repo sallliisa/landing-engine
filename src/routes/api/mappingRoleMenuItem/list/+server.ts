@@ -2,12 +2,18 @@ import { parseSearchParams } from '$lib/utils/common';
 import prisma from '$lib/utils/prisma';
 import { exception, success } from '$lib/utils/response';
 import { withPagination } from '$lib/utils/pagination';
+import { requirePermission } from '$lib/utils/routing';
+import { requireMenuItemAccess } from '$lib/app/api/authorization';
 
-export async function GET({url}) {
+export async function GET(event) {
+  const { url, locals } = event;
   let urlSearchParams = parseSearchParams(url.searchParams);
   if (!urlSearchParams.menu_item_id) return exception('menu_item_id is required');
   
   try {
+    requirePermission(locals, 'list-mappingRoleMenuItem');
+    await requireMenuItemAccess(event, { id: String(urlSearchParams.menu_item_id) });
+
     const paginatedData = await withPagination(async (skip, take) => {
       const allRoles = await prisma.role.findMany({
         skip,

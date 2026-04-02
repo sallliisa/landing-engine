@@ -3,10 +3,12 @@ import prisma from '$lib/utils/prisma'
 import { exception, success } from '$lib/utils/response'
 import { configs } from '$lib/app/api/models/_index.js'
 import { MESSAGE } from '$lib/app/api/constants'
+import { authorizeOperation } from '$lib/app/api/authorization'
 
 function mergeDetailConfigs<T>(base: ModelConfig<T>, operation?: DetailConfig<T>): DetailConfig<T> {
   return {
     allow: operation?.allow ?? base?.allow,
+    permission: operation?.permission ?? base?.permission,
     fields: operation?.fields ?? base?.fields,
     where: operation?.where ?? base?.where,
     fieldsForeign: operation?.fieldsForeign ?? base?.view?.fieldsForeign,
@@ -26,6 +28,7 @@ export async function GET(event) {
     
     if (!mergedConfig?.allow) throw Error(MESSAGE.MODEL.OPERATION_FORBIDDEN)
     let urlSearchParams = parseSearchParams(url.searchParams)
+    await authorizeOperation(event, params.model, 'detail', mergedConfig, urlSearchParams)
 
     // Lifecycle hook - pre
     if (config.detail?.lifecycle?.pre) {

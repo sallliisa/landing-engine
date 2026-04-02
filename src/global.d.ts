@@ -2,6 +2,8 @@ import { RequestEvent } from "@sveltejs/kit"
 
 export {}
 
+declare module 'debug'
+
 declare global {
   declare module 'svelte-recaptcha-v2'
   type Operator = 'equals' | 'not' | 'in' | 'notIn' | 'lt' | 'lte' | 'gt' | 'gte' | 'contains' | 'some' | 'every' | 'startsWith' | 'endsWith' | 'isNull'
@@ -132,7 +134,11 @@ declare global {
     allow?: boolean,
     // Fields that will be operated in the database
     fields?: (keyof T)[],
-    permission?: string
+    permission?: string,
+    authorize?: (
+      event: RequestEvent,
+      input: Record<string, any>
+    ) => void | Promise<void>,
     // Additional conditions for filtering records
     // Supports complex logical operations (AND, OR, NOT) with various operators
     // Ex. where: {
@@ -174,14 +180,14 @@ declare global {
   type DetailConfig<T> = BaseOperationConfig<T> & ViewOperationConfig<T> & {
     lifecycle?: DetailLifecycleConfig,
   }
-  type DeleteConfig<T> = Pick<BaseOperationConfig<T>, 'by' | 'allow' | 'where'> & TransactionOperationConfig<T>
+  type DeleteConfig<T> = Pick<BaseOperationConfig<T>, 'by' | 'allow' | 'where' | 'permission' | 'authorize'> & TransactionOperationConfig<T>
 
-  type ReorderConfig<T> = Pick<BaseOperationConfig<T>, 'by' | 'allow'> & {
+  type ReorderConfig<T> = Pick<BaseOperationConfig<T>, 'by' | 'allow' | 'permission' | 'authorize'> & {
     axis: (keyof T)[],
     lifecycle?: TransactionLifecycleConfig
   }
 
-  type VerifyConfig<T> = Pick<BaseOperationConfig<T>, 'allow'> & {
+  type VerifyConfig<T> = Pick<BaseOperationConfig<T>, 'allow' | 'permission' | 'authorize'> & {
     by: (keyof T),
     stateField: keyof T;
     initialState: string;

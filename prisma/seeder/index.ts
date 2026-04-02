@@ -65,6 +65,7 @@ const permissionList = [
   "delete-menuItem",
   "detail-menuItem",
   "view-website",
+  "view-menuItem",
   "update-menuItem",
 
   "create-page",
@@ -119,6 +120,72 @@ const prisma = new PrismaClient();
 
 const main = async () => {
   try {
+    const passwordBackfillUsers = await prisma.user.findMany({
+      where: {
+        password: {
+          not: null,
+        },
+        authAccounts: {
+          none: {
+            providerId: 'credential',
+          },
+        },
+      },
+      select: {
+        id: true,
+        password: true,
+      },
+    });
+
+    for (const user of passwordBackfillUsers) {
+      if (!user.password) continue;
+
+      await prisma.authAccount.create({
+        data: {
+          id: user.id,
+          accountId: String(user.id),
+          providerId: 'credential',
+          userId: user.id,
+          password: user.password,
+        },
+      });
+    }
+
+    await prisma.permission.createMany({
+      data: permissionList.map((permission) => {
+        const splittedPermission = permission.split("-");
+        return {
+          code: permission,
+          name: splittedPermission.join(" "),
+          description: `Melakukan ${splittedPermission[0]} terhadap ${splittedPermission[1]}`,
+        };
+      }),
+      skipDuplicates: true,
+    });
+
+    await prisma.collection.createMany({
+      data: [
+        {
+          name: 'Kategori Proyek',
+          code: 'project-category',
+          data: [{"code":"apartment","name_en":"Apartment","name_id":"Apartemen"},{"code":"residential-housing","name_en":"Residential Housing","name_id":"Perumahan"},{"code":"hotel","name_en":"Hotel","name_id":"Hotel"},{"code":"property-management","name_en":"Building/Estate Management","name_id":"Building/Estate Management"},{"code":"rest-area","name_en":"Service Area","name_id":"Rest Area"}]
+        },
+        {
+          name: 'Lokasi Proyek',
+          code: 'project-location',
+          data: [{"code":"jakarta","name":"Jakarta"},{"code":"tangerang","name":"Tangerang"},{"code":"depok","name":"Depok"},{"code":"semarang","name":"Semarang"}]
+        }
+      ],
+      skipDuplicates: true,
+    })
+
+    const hasExistingSeedData = (await prisma.menuItem.count()) > 0 || (await prisma.roleGroup.count()) > 0;
+
+    if (hasExistingSeedData) {
+      console.log('Seed skipped: database already contains base content. Applied idempotent auth/permission backfills only.');
+      return;
+    }
+
     const developerGroup = await prisma.roleGroup.create({
       data: {
         name: "Developer",
@@ -141,40 +208,27 @@ const main = async () => {
       },
     });
 
+    const passwordHash = await bcrypt.hash("devcid", 10);
+
     const superAdmin = await prisma.user.create({
       data: {
         name: "Super Admin",
-        email: "dev",
-        password: await bcrypt.hash("devcid", 10),
+        email: "dev@local.test",
+        password: passwordHash,
+        emailVerified: true,
         role_id: developerRole.id,
       },
     });
 
-    const permissions = await prisma.permission.createMany({
-      data: permissionList.map((permission) => {
-        const splittedPermission = permission.split("-");
-        return {
-          code: permission,
-          name: splittedPermission.join(" "),
-          description: `Melakukan ${splittedPermission[0]} terhadap ${splittedPermission[1]}`,
-        };
-      }),
+    await prisma.authAccount.create({
+      data: {
+        id: superAdmin.id,
+        accountId: String(superAdmin.id),
+        providerId: 'credential',
+        userId: superAdmin.id,
+        password: passwordHash,
+      },
     });
-
-    const collection = await prisma.collection.createMany({
-      data: [
-        {
-          name: 'Kategori Proyek',
-          code: 'project-category',
-          data: [{"code":"apartment","name_en":"Apartment","name_id":"Apartemen"},{"code":"residential-housing","name_en":"Residential Housing","name_id":"Perumahan"},{"code":"hotel","name_en":"Hotel","name_id":"Hotel"},{"code":"property-management","name_en":"Building/Estate Management","name_id":"Building/Estate Management"},{"code":"rest-area","name_en":"Service Area","name_id":"Rest Area"}]
-        },
-        {
-          name: 'Lokasi Proyek',
-          code: 'project-location',
-          data: [{"code":"jakarta","name":"Jakarta"},{"code":"tangerang","name":"Tangerang"},{"code":"depok","name":"Depok"},{"code":"semarang","name":"Semarang"}]
-        }
-      ]
-    })
 
     const companyProfile = await prisma.companyProfile.create({
       data: {

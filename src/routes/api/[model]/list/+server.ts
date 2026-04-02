@@ -4,10 +4,12 @@ import { buildWhereClause, omitIfEmptyObject, parseSearchParams, resolveCustomFi
 import prisma from '$lib/utils/prisma.js';
 import { exception, success } from '$lib/utils/response.js';
 import { withPagination } from '$lib/utils/pagination';
+import { authorizeOperation } from '$lib/app/api/authorization';
 
 function mergeListConfigs<T>(base: ModelConfig<T>, operation?: ListConfig<T>): ListConfig<T> {
   return {
     allow: operation?.allow ?? base?.allow,
+    permission: operation?.permission ?? base?.permission,
     fields: operation?.fields ?? base?.fields,
     where: operation?.where ?? base?.where,
     fieldsForeign: operation?.fieldsForeign ?? base?.view?.fieldsForeign,
@@ -26,8 +28,8 @@ export async function GET(event) {
     const mergedConfig = mergeListConfigs(config, config.list);
     
     if (!mergedConfig?.allow) throw Error(MESSAGE.MODEL.OPERATION_FORBIDDEN);
-
     let urlSearchParams = parseSearchParams(url.searchParams);
+    await authorizeOperation(event, params.model, 'list', mergedConfig, urlSearchParams);
 
     // Lifecycle hook - pre
     if (config.list?.lifecycle?.pre) {

@@ -1,4 +1,5 @@
 import { languages, parseSlug } from "$lib/utils/common";
+import { requireArticleAccess } from "$lib/app/api/authorization";
 import prisma from "$lib/utils/prisma";
 import type { Prisma } from "@prisma/client";
 
@@ -93,6 +94,7 @@ export default {
 
   update: {
     allow: true,
+    authorize: requireArticleAccess,
     fields: ["categories", "created_at"], // Changed 'article_category_id' to 'categories'
     by: ["id"],
     validation: {
@@ -154,7 +156,7 @@ export default {
           }
         : undefined;
 
-      if (event.locals.user?.role.role_group_id <= 2)
+      if (event.locals.isPrivilegedRole)
         return event.url.searchParams.get("search")
           ? { AND: [searchWhere] }
           : undefined;
@@ -220,6 +222,7 @@ export default {
   },
 
   detail: {
+    authorize: requireArticleAccess,
     allow: true,
     by: ["id"],
     // Ensure fieldsForeign for detail also reflects 'categories'
@@ -270,6 +273,7 @@ export default {
   },
 
   delete: {
+    authorize: requireArticleAccess,
     allow: true,
     by: ["id"],
   },

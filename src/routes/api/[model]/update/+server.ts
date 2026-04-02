@@ -4,10 +4,12 @@ import { buildWhereClause, isValidFileURL, isValidTempFileURL, isValidUrl, valid
 import { deleteFile, saveFileFromTemp } from '$lib/utils/filestorage.js'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response.js'
+import { authorizeOperation } from '$lib/app/api/authorization'
 
 function mergeUpdateConfigs<T>(base: ModelConfig<T>, create?: CreateConfig<T>, update?: UpdateConfig<T>): UpdateConfig<T> {
   return {
     allow: update?.allow ?? base?.allow,
+    permission: update?.permission ?? create?.permission ?? base?.permission,
     fields: update?.fields ?? create?.fields ?? base?.fields,
     validation: update?.validation ?? create?.validation,
     where: update?.where ?? base?.where,
@@ -32,6 +34,7 @@ export async function PUT(event) {
     
     if (!mergedConfig?.allow) throw Error(MESSAGE.MODEL.OPERATION_FORBIDDEN)
     let body = await request.json()
+    await authorizeOperation(event, params.model, 'update', mergedConfig, body)
     
     if (mergedConfig.validation) {
       await validateFields(body, mergedConfig.validation)

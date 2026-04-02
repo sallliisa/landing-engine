@@ -54,6 +54,7 @@ export default {
 
   // Detail operation configuration
   detail: {
+    permission: 'view-permission',
     fields: ['name', 'code', 'description'],
     by: ['code']
   },

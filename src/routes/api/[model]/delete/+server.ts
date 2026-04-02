@@ -5,6 +5,7 @@ import { deleteFile } from '$lib/utils/filestorage'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response.js'
 import { validateFields } from '$lib/utils/common'
+import { authorizeOperation } from '$lib/app/api/authorization'
 
 function mergeDeleteConfigs<T>(
 	base: BaseOperationConfig<T>,
@@ -12,6 +13,7 @@ function mergeDeleteConfigs<T>(
 ): DeleteConfig<T> {
 	return {
 		allow: operation?.allow ?? base?.allow,
+		permission: operation?.permission ?? base?.permission,
 		by: operation?.by ?? base?.by,
 		where: operation?.where ?? base?.where,
 		lifecycle: operation?.lifecycle,
@@ -31,6 +33,7 @@ export async function DELETE(event) {
 
 		if (!mergedConfig?.allow) throw Error(MESSAGE.MODEL.OPERATION_FORBIDDEN);
 		let body = await request.json();
+		await authorizeOperation(event, params.model, 'delete', mergedConfig, body);
 
 		// Validation check using merged config
 		if (mergedConfig.validation) {

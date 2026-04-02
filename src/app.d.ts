@@ -1,34 +1,22 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
+import type { Prisma } from '@prisma/client';
 
+type CurrentUser = Prisma.UserGetPayload<{
+  include: {
+    role: {
+      include: {
+        permissions: true;
+      };
+    };
+  };
+}> | null;
 
 declare global {
   namespace App {
-    // interface Error {}
     interface Locals {
-      user: {
-        role: {
-            permissions: {
-                name: string;
-                code: string;
-                description: string | null;
-            }[];
-        } & {
-            id: number;
-            name: string;
-            role_group_id: number;
-        };
-    } & {
-        id: number;
-        name: string;
-        email: string;
-        password: string;
-        role_id: number;
-    };
+      auth?: unknown;
+      user: CurrentUser;
+      isPrivilegedRole?: boolean;
     }
-    // interface PageData {}
-    // interface PageState {}
-    // interface Platform {}
   }
 }
 

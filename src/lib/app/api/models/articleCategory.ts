@@ -1,4 +1,5 @@
 import { languages } from "$lib/utils/common";
+import { requireArticleCategoryAccess } from "$lib/app/api/authorization";
 import prisma from "$lib/utils/prisma";
 import type { ArticleCategory, Language } from "@prisma/client";
 
@@ -47,7 +48,7 @@ export default {
       }
     },
     where: ({locals}) => {
-      const isAdmin = locals?.user?.role.role_group_id <= 2;
+      const isAdmin = Boolean(locals?.isPrivilegedRole);
       if (isAdmin) return undefined
       return {
         AND: [
@@ -62,6 +63,8 @@ export default {
   },
 
   detail: {
+    permission: 'detail-articleCategory',
+    authorize: requireArticleCategoryAccess,
     allow: true,
     by: ['id'],
     fieldsForeign: {
@@ -71,7 +74,12 @@ export default {
     }
   },
 
+  update: {
+    authorize: requireArticleCategoryAccess,
+  },
+
   delete: {
+    authorize: requireArticleCategoryAccess,
     allow: true,
     by: ['id']
   }

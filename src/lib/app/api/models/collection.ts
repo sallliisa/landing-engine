@@ -7,6 +7,7 @@ export default {
   },
   create: {
     allow: true,
+    permission: 'update-collection',
     fields: ["name", "code", "data"],
     validation: {
       name: [
@@ -25,11 +26,13 @@ export default {
   },
   update: {
     allow: true,
+    permission: 'update-collection',
     by: ["code"],
     fields: ["name", "code", "data"],
   },
   list: {
     allow: true,
+    permission: 'view-collection',
     searchableBy: ["name", "code"],
     filterableBy: ["name", "code"],
     orderBy: { name: "asc" },
@@ -37,6 +40,7 @@ export default {
   detail: {
     by: ['code'],
     allow: true,
+    permission: 'view-collection',
     lifecycle: {
       post: async (data, total) => {
         return data.data
@@ -45,5 +49,6 @@ export default {
   },
   delete: {
     allow: true,
+    permission: 'update-collection',
   },
 } as ModelConfig<Prisma.CollectionGetPayload<{}>>;

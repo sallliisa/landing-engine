@@ -1,6 +1,8 @@
 import prisma from '$lib/utils/prisma';
 import { success, exception } from '$lib/utils/response';
 import type { ArticleTranslation } from '@prisma/client';
+import { requirePermission } from '$lib/utils/routing';
+import { requireArticleTranslationAccess } from '$lib/app/api/authorization';
 
 /**
  * Creates a draft copy of a published article translation.
@@ -33,10 +35,14 @@ async function createDraftFromPublished(articleTranslationId: string): Promise<A
   return draft;
 }
 
-export async function POST({ request }) {
+export async function POST(event) {
+  const { request, locals } = event;
   try {
+    requirePermission(locals, 'update-article');
+
     const { article_translation_id } = await request.json();
     if (!article_translation_id) throw new Error('Missing article_translation_id');
+    await requireArticleTranslationAccess(event, { id: article_translation_id });
     const draft = await createDraftFromPublished(article_translation_id);
     return success({ data: draft });
   } catch (err) {
