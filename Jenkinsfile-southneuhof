@@ -23,6 +23,7 @@ pipeline {
         docker {
           image 'node:20-bookworm'
           reuseNode true
+          args '-u root'
         }
       }
       steps {
@@ -41,6 +42,7 @@ pipeline {
             RECAPTCHA_SECRETKEY="$RECAPTCHA_SECRETKEY" \
             PUBLIC_APP_URL="$PUBLIC_APP_URL" \
             npm run build
+            chown -R 1000:1000 "$WORKSPACE"
           '''
         }
         stash includes: 'build/**,package.json,package-lock.json,ecosystem.config.cjs,prisma/**', name: 'landing-release'
