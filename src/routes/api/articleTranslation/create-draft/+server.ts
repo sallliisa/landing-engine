@@ -2,7 +2,7 @@ import prisma from '$lib/utils/prisma';
 import { success, exception } from '$lib/utils/response';
 import type { ArticleTranslation } from '@prisma/client';
 import { requirePermission } from '$lib/utils/routing';
-import { requireArticleTranslationAccess } from '$lib/app/api/authorization';
+import { requireArticleTranslationAccess } from '$lib/app/api/models/articleTranslation';
 
 /**
  * Creates a draft copy of a published article translation.

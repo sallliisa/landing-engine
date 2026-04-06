@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { ensureDraftState } from '$lib/utils/page';
 import { requirePermission } from '$lib/utils/routing';
-import { requirePageTranslationAccess } from '$lib/app/api/authorization';
+import { requirePageTranslationAccess } from '$lib/app/api/models/pageTranslation';
 
 /**
  * POST /api/pageTranslation/draft

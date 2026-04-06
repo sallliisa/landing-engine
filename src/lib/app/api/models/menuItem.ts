@@ -1,7 +1,26 @@
 import { languages, parseSlug } from "$lib/utils/common";
-import { requireMenuItemAccess } from "$lib/app/api/authorization";
+import { requireRoleScopedAccess } from "$lib/app/api/authorization";
+import { exception } from "$lib/utils/response";
 import prisma from "$lib/utils/prisma";
+import type { RequestEvent } from "@sveltejs/kit";
 import type { Language, MenuItem, Prisma } from "@prisma/client";
+
+export async function requireMenuItemAccess(event: RequestEvent, input: Record<string, any>) {
+  const id = input.id ?? input.menu_item_id;
+  if (!id) return;
+
+  const record = await prisma.menuItem.findUnique({
+    where: { id: String(id) },
+    select: {
+      allowedRoles: {
+        select: { id: true },
+      },
+    },
+  });
+
+  if (!record) throw exception('Record not found', 404);
+  requireRoleScopedAccess(event.locals, record.allowedRoles.map((role) => role.id));
+}
 
 export default {
   allow: true,

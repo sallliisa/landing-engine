@@ -1,7 +1,35 @@
 import { languages, parseSlug } from "$lib/utils/common";
-import { requireArticleAccess } from "$lib/app/api/authorization";
+import { requireRoleScopedAccess } from "$lib/app/api/authorization";
+import { exception } from "$lib/utils/response";
 import prisma from "$lib/utils/prisma";
+import type { RequestEvent } from "@sveltejs/kit";
 import type { Prisma } from "@prisma/client";
+
+export async function requireArticleAccess(event: RequestEvent, input: Record<string, any>) {
+  const id = input.id ?? input.article_id;
+  if (!id) return;
+
+  const record = await prisma.article.findUnique({
+    where: { id: String(id) },
+    select: {
+      categories: {
+        select: {
+          allowedRoles: {
+            select: { id: true },
+          },
+        },
+      },
+    },
+  });
+
+  if (!record) throw exception('Record not found', 404);
+
+  const allowedRoleIds = record.categories.flatMap((category) =>
+    category.allowedRoles.map((role) => role.id),
+  );
+
+  requireRoleScopedAccess(event.locals, allowedRoleIds);
+}
 
 export default {
   allow: true,

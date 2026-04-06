@@ -1,6 +1,36 @@
 import type { PageTranslation } from '@prisma/client';
-import { requirePageTranslationAccess } from '$lib/app/api/authorization';
+import type { RequestEvent } from '@sveltejs/kit';
+import { requireRoleScopedAccess } from '$lib/app/api/authorization';
 import prisma from '$lib/utils/prisma';
+import { exception } from '$lib/utils/response';
+
+export async function requirePageTranslationAccess(event: RequestEvent, input: Record<string, any>) {
+	const id = input.id ?? input.page_translation_id;
+	if (!id) return;
+
+	const record = await prisma.pageTranslation.findUnique({
+		where: { id: String(id) },
+		select: {
+			page: {
+				select: {
+					menuItem: {
+						select: {
+							allowedRoles: {
+								select: { id: true },
+							},
+						},
+					},
+				},
+			},
+		},
+	});
+
+	if (!record?.page?.menuItem) throw exception('Record not found', 404);
+	requireRoleScopedAccess(
+		event.locals,
+		record.page.menuItem.allowedRoles.map((role) => role.id),
+	);
+}
 
 export default {
 	verify: {
