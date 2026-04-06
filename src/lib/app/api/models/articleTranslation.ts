@@ -1,8 +1,34 @@
 import { parseSlug } from "$lib/utils/common";
 import type { ArticleTranslation } from "@prisma/client";
+import type { RequestEvent } from "@sveltejs/kit";
 import prisma from '$lib/utils/prisma';
-import { requireArticleTranslationAccess } from '$lib/app/api/authorization';
 import { ensureArticleDraftState } from '$lib/utils/article';
+import { exception } from '$lib/utils/response';
+import { requireArticleAccess } from './article';
+
+export async function requireArticleTranslationAccess(event: RequestEvent, input: Record<string, any>) {
+  const id = input.id;
+  if (id) {
+    const record = await prisma.articleTranslation.findUnique({
+      where: { id: String(id) },
+      select: {
+        article: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!record) throw exception('Record not found', 404);
+    await requireArticleAccess(event, { id: record.article.id });
+    return;
+  }
+
+  if (input.article_id) {
+    await requireArticleAccess(event, { id: input.article_id });
+  }
+}
 
 export default {
   allow: true,

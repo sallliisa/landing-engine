@@ -3,7 +3,7 @@ import prisma from '$lib/utils/prisma';
 import { exception, success } from '$lib/utils/response';
 import { withPagination } from '$lib/utils/pagination';
 import { requirePermission } from '$lib/utils/routing';
-import { requireFormTypeAccess } from '$lib/app/api/authorization';
+import { requireFormTypeAccess } from '$lib/app/api/models/formType';
 
 export async function GET(event) {
   const { url, locals } = event;

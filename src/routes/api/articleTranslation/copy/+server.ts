@@ -2,7 +2,7 @@ import prisma from '$lib/utils/prisma.js';
 import { success } from '$lib/utils/response';
 import { json } from '@sveltejs/kit';
 import { requirePermission } from '$lib/utils/routing';
-import { requireArticleTranslationAccess } from '$lib/app/api/authorization';
+import { requireArticleTranslationAccess } from '$lib/app/api/models/articleTranslation';
 
 export async function POST(event) {
   const { request, locals } = event;

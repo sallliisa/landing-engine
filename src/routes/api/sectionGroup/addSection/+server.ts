@@ -4,7 +4,7 @@ import { buildSectionStructure } from '$lib/utils/section.js'
 import { ensureDraftState } from '$lib/utils/page'
 import type { $Enums, SectionType } from '@prisma/client'
 import { requirePermission } from '$lib/utils/routing'
-import { requirePageTranslationAccess } from '$lib/app/api/authorization'
+import { requirePageTranslationAccess } from '$lib/app/api/models/pageTranslation'
 
 export async function POST(event) {
   const { request, locals } = event;

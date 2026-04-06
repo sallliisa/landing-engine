@@ -1,7 +1,33 @@
 import type { Prisma } from '@prisma/client';
+import type { RequestEvent } from '@sveltejs/kit';
 import dayjs from 'dayjs';
-import { requireFormSubmissionAccess } from '$lib/app/api/authorization';
+import { requireRoleScopedAccess } from '$lib/app/api/authorization';
+import { exception } from '$lib/utils/response';
 import prisma from '$lib/utils/prisma';
+
+export async function requireFormSubmissionAccess(event: RequestEvent, input: Record<string, any>) {
+  const id = input.id;
+  if (!id) return;
+
+  const record = await prisma.formSubmission.findUnique({
+    where: { id: String(id) },
+    select: {
+      formType: {
+        select: {
+          allowedRoles: {
+            select: { id: true },
+          },
+        },
+      },
+    },
+  });
+
+  if (!record) throw exception('Record not found', 404);
+  requireRoleScopedAccess(
+    event.locals,
+    record.formType.allowedRoles.map((role) => role.id),
+  );
+}
 
 export default {
   allow: true,

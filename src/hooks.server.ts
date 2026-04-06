@@ -17,12 +17,22 @@ const handleParaglide: Handle = ({ event, resolve }) => paraglideMiddleware(even
 export const customHandle: Handle = async ({ resolve, event }) => {
   const { url, request } = event
 
-  await hydrateRequestAuth(event);
-  
   // Handle API routes
   if (url.pathname.startsWith('/api')) {
     // Handle CORS preflight
     if (request.method === 'OPTIONS') return handleCorsPreflightRequest(request)
+  }
+
+  try {
+    await hydrateRequestAuth(event);
+  } catch (err) {
+    console.error('Failed to hydrate request auth:', err);
+    event.locals.auth = null;
+    event.locals.user = null;
+    event.locals.isPrivilegedRole = false;
+  }
+
+  if (url.pathname.startsWith('/api')) {
     // Check authentication for protected routes
     if (isProtectedRoute(url.pathname)) {
       try {

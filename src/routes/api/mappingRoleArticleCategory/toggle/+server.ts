@@ -1,7 +1,7 @@
 import prisma from '$lib/utils/prisma';
 import { exception, success } from '$lib/utils/response';
 import { requirePermission } from '$lib/utils/routing';
-import { requireArticleCategoryAccess } from '$lib/app/api/authorization';
+import { requireArticleCategoryAccess } from '$lib/app/api/models/articleCategory';
 
 export async function POST(event) {
 	const { request, locals } = event;
