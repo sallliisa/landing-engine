@@ -1,7 +1,7 @@
 import { MESSAGE } from '$lib/app/api/constants.js'
 import { configs } from '$lib/app/api/models/_index.js'
-import { isValidFileURL, validateFields, processFileUrls } from '$lib/utils/common.js'
-import { saveFileFromTemp } from '$lib/utils/filestorage.js'
+import { validateFields, processFileUrls } from '$lib/utils/common.js'
+import { deleteFile, saveFileFromTemp } from '$lib/utils/filestorage.js'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response'
 
@@ -20,6 +20,19 @@ function mergeCreateConfigs<T>(base: ModelConfig<T>, operation?: CreateConfig<T>
 }
 
 export async function POST({params, request, locals}) {
+  const promotedFiles = new Set<string>()
+  let persisted = false
+
+  async function bestEffortDeleteFiles(urls: Iterable<string>) {
+    for (const url of urls) {
+      try {
+        await deleteFile(url)
+      } catch (cleanupError) {
+        console.error('[model/create] Failed to delete promoted file:', url, cleanupError)
+      }
+    }
+  }
+
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND)
       
@@ -41,7 +54,9 @@ export async function POST({params, request, locals}) {
     body = await processFileUrls(body, {
       onTempFile: async (url) => {
         // If it's a temp file, move it to permanent storage
-        return await saveFileFromTemp(url);
+        const promotedUrl = await saveFileFromTemp(url);
+        promotedFiles.add(promotedUrl)
+        return promotedUrl;
       }
       // No need for onClearFile or previousData in create operation
     });
@@ -75,11 +90,16 @@ export async function POST({params, request, locals}) {
                           body
                 })
 
+    persisted = true
+
     if (config.create?.lifecycle?.post)
       data = await config.create.lifecycle.post(body, data, locals) as any
 
     return success({data})
   } catch (err) {
+    if (!persisted && promotedFiles.size > 0) {
+      await bestEffortDeleteFiles(promotedFiles)
+    }
     return exception(err)
   }
 }

@@ -77,18 +77,45 @@ export function isPassthroughFile(mimeType: string): boolean {
 }
 
 /**
- * Gets the format string from a MIME type
+ * Gets the format string from a filename extension
  */
-function getFormatFromMime(mimeType: string): string {
-    const mimeToFormat: Record<string, string> = {
-        'image/jpeg': 'jpeg',
-        'image/jpg': 'jpeg',
-        'image/png': 'png',
-        'image/webp': 'webp',
-        'image/avif': 'avif',
-        'image/tiff': 'tiff',
+function getFormatFromFilename(filename: string): keyof sharp.FormatEnum | null {
+    const ext = path.extname(filename).toLowerCase();
+    const extToFormat: Record<string, keyof sharp.FormatEnum> = {
+        '.jpg': 'jpeg',
+        '.jpeg': 'jpeg',
+        '.png': 'png',
+        '.webp': 'webp',
+        '.avif': 'avif',
+        '.tif': 'tiff',
+        '.tiff': 'tiff',
     };
-    return mimeToFormat[mimeType.toLowerCase()] || 'jpeg';
+
+    return extToFormat[ext] ?? null;
+}
+
+async function encodeBufferForFormat(
+    buffer: Buffer,
+    format: keyof sharp.FormatEnum | null
+): Promise<Buffer | null> {
+    if (!format || format === 'tiff') {
+        return null;
+    }
+
+    const pipeline = sharp(buffer);
+
+    switch (format) {
+        case 'jpeg':
+            return pipeline.jpeg({ quality: CONFIG.quality, mozjpeg: true }).toBuffer();
+        case 'png':
+            return pipeline.png({ compressionLevel: 9, adaptiveFiltering: true }).toBuffer();
+        case 'webp':
+            return pipeline.webp({ quality: CONFIG.quality }).toBuffer();
+        case 'avif':
+            return pipeline.avif({ quality: Math.max(CONFIG.quality - 10, 50) }).toBuffer();
+        default:
+            return null;
+    }
 }
 
 /**
@@ -168,7 +195,7 @@ export async function processImage(
 
     let processedBuffer = buffer;
     let { width, height } = metadata;
-    const format = metadata.format || 'jpeg';
+    const format = getFormatFromFilename(filename) || metadata.format || 'jpeg';
 
     // Resize if larger than max dimension
     if (width > CONFIG.maxDimension || height > CONFIG.maxDimension) {
@@ -184,13 +211,8 @@ export async function processImage(
         height = resizedMeta.height!;
     }
 
-    // Compress the original format
-    const compressedBuffer = await sharp(processedBuffer)
-        .jpeg({ quality: CONFIG.quality, mozjpeg: true })
-        .toBuffer();
-
-    // Use original if compression made it larger (e.g., for already optimized images)
-    const finalBuffer = compressedBuffer.length < processedBuffer.length
+    const compressedBuffer = await encodeBufferForFormat(processedBuffer, format);
+    const finalBuffer = compressedBuffer && compressedBuffer.length < processedBuffer.length
         ? compressedBuffer
         : processedBuffer;
 
