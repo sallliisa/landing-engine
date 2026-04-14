@@ -1,6 +1,6 @@
 import { MESSAGE } from '$lib/app/api/constants'
 import { configs } from '$lib/app/api/models/_index'
-import { buildWhereClause, isValidFileURL, isValidTempFileURL, isValidUrl, validateFields, processFileUrls } from '$lib/utils/common.js'
+import { buildWhereClause, collectFileUrls, validateFields, processFileUrls } from '$lib/utils/common.js'
 import { deleteFile, saveFileFromTemp } from '$lib/utils/filestorage.js'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response.js'
@@ -24,6 +24,20 @@ function mergeUpdateConfigs<T>(base: ModelConfig<T>, create?: CreateConfig<T>, u
 
 export async function PUT(event) {
   const {params, request, locals} = event
+  const promotedFiles = new Set<string>()
+  const deferredDeletes = new Set<string>()
+  let persisted = false
+
+  async function bestEffortDeleteFiles(urls: Iterable<string>) {
+    for (const url of urls) {
+      try {
+        await deleteFile(url)
+      } catch (cleanupError) {
+        console.error('[model/update] Failed to delete file:', url, cleanupError)
+      }
+    }
+  }
+
   try {
     if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND)
     if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND)
@@ -57,12 +71,13 @@ export async function PUT(event) {
     body = await processFileUrls(body, {
       onTempFile: async (url) => {
         // If it's a temp file, move it to permanent storage
-        return await saveFileFromTemp(url);
+        const promotedUrl = await saveFileFromTemp(url);
+        promotedFiles.add(promotedUrl)
+        return promotedUrl;
       },
       onClearFile: async (url) => {
-        // If file field is being cleared and there was a previous file, delete it
         if (url) {
-          await deleteFile(url);
+          deferredDeletes.add(url);
         }
       },
       previousData
@@ -86,6 +101,8 @@ export async function PUT(event) {
     if (config.update?.lifecycle?.pre)
       body = await config.update.lifecycle.pre(body, locals)
 
+    const finalFileUrls = await collectFileUrls(body)
+
     let data = config.update?.lifecycle?.main ?
                 await config.update.lifecycle.main(body, locals, whereClause)
               :
@@ -97,11 +114,21 @@ export async function PUT(event) {
                           body
                 })
 
+    persisted = true
+
     if (config.update?.lifecycle?.post)
       data = await config.update.lifecycle.post(body, data, locals) as any
 
+    const filesToDelete = [...deferredDeletes].filter((url) => !finalFileUrls.has(url))
+    if (filesToDelete.length > 0) {
+      await bestEffortDeleteFiles(filesToDelete)
+    }
+
     return success({data})
   } catch (err) {
+    if (!persisted && promotedFiles.size > 0) {
+      await bestEffortDeleteFiles(promotedFiles)
+    }
     return exception(err)
   }
 }

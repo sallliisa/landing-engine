@@ -1,10 +1,9 @@
 import { MESSAGE } from '$lib/app/api/constants'
 import { configs } from '$lib/app/api/models/_index'
-import { buildWhereClause, processFileUrls } from '$lib/utils/common'
+import { buildWhereClause, collectFileUrls, validateFields } from '$lib/utils/common'
 import { deleteFile } from '$lib/utils/filestorage'
 import prisma from '$lib/utils/prisma.js'
 import { exception, success } from '$lib/utils/response.js'
-import { validateFields } from '$lib/utils/common'
 import { authorizeOperation } from '$lib/app/api/authorization'
 
 function mergeDeleteConfigs<T>(
@@ -23,6 +22,17 @@ function mergeDeleteConfigs<T>(
 
 export async function DELETE(event) {
 	const { params, request, locals } = event;
+
+	async function bestEffortDeleteFiles(urls: Iterable<string>) {
+		for (const url of urls) {
+			try {
+				await deleteFile(url);
+			} catch (cleanupError) {
+				console.error('[model/delete] Failed to delete file:', url, cleanupError);
+			}
+		}
+	}
+
 	try {
 		if (!configs[`./${params.model}.ts`]) throw Error(MESSAGE.MODEL.CONFIG.NOT_FOUND);
 		if (!prisma[params.model as keyof typeof prisma]) throw Error(MESSAGE.MODEL.NOT_FOUND);
@@ -59,14 +69,7 @@ export async function DELETE(event) {
 
 		if (!previousData) throw Error(MESSAGE.MODEL.RECORD.NOT_FOUND);
 
-		// Handle file deletions using processFileUrls
-		await processFileUrls(previousData, {
-			onFile: async (url: string) => {
-				if (url) {
-					await deleteFile(url)
-        }
-      }
-    });
+		const fileUrls = await collectFileUrls(previousData);
 
 		// MAIN
 		let data;
@@ -81,6 +84,10 @@ export async function DELETE(event) {
 		// POST
 		if (mergedConfig.lifecycle?.post) {
 			data = await mergedConfig.lifecycle.post(body, data, locals);
+		}
+
+		if (fileUrls.size > 0) {
+			await bestEffortDeleteFiles(fileUrls);
 		}
 
 		return success({ data });

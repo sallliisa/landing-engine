@@ -352,11 +352,23 @@ export async function processFileUrls<T extends Record<string, any>>(
   const result: Record<string, any> = Array.isArray(obj) ? [...obj] : { ...obj };
 
   for (const [key, value] of Object.entries(result)) {
-    if (value === null || value === undefined) continue;
+    if (value === undefined) continue;
+
+    const previousValue = previousData?.[key];
 
     // Handle nested objects and arrays
-    if (typeof value === 'object') {
+    if (value !== null && typeof value === 'object') {
       result[key] = await processFileUrls(value, { ...options, previousData: previousData?.[key] });
+      continue;
+    }
+
+    if (
+      (value === null || value === '') &&
+      previousValue &&
+      isValidFileURL(previousValue) &&
+      onClearFile
+    ) {
+      await onClearFile(previousValue);
       continue;
     }
 
@@ -368,21 +380,35 @@ export async function processFileUrls<T extends Record<string, any>>(
         }
 
         if (isValidTempFileURL(value) && onTempFile) {
-          // If there was a previous file and we're replacing it, delete the old one
-          if (previousData?.[key] && isValidFileURL(previousData[key]) && onClearFile) {
-            await onClearFile(previousData[key]);
+          if (
+            previousValue &&
+            previousValue !== value &&
+            isValidFileURL(previousValue) &&
+            onClearFile
+          ) {
+            await onClearFile(previousValue);
           }
+
           // Process temp file URL
           result[key] = await onTempFile(value);
-        } else if (!value && previousData?.[key] && onClearFile) {
-          // Handle file clearing
-          await onClearFile(previousData[key]);
         }
       }
     }
   }
 
   return result as T;
+}
+
+export async function collectFileUrls<T extends Record<string, any>>(obj: T): Promise<Set<string>> {
+  const urls = new Set<string>();
+
+  await processFileUrls(obj, {
+    onFile: async (url) => {
+      urls.add(url);
+    }
+  });
+
+  return urls;
 }
 
 export const debounce = (fn: Function, ms = 300) => {

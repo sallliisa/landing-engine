@@ -86,18 +86,6 @@
   const webpSrcset = $derived(
     manifest ? buildSrcset(manifest.variants, "webp") : "",
   );
-  const baseDir = $derived(getBaseDir(src));
-  const largestWebp = $derived(
-    manifest
-      ? manifest.variants
-          .filter((v) => v.format === "webp")
-          .sort((a, b) => b.width - a.width)[0]
-      : null,
-  );
-  const optimizedSrc = $derived(
-    largestWebp ? `${baseDir}${largestWebp.path}` : src,
-  );
-
   onMount(async () => {
     const manifestUrl = getManifestUrl(src);
     if (!manifestUrl) {
@@ -156,10 +144,9 @@
         <source type="image/webp" srcset={webpSrcset} {sizes} />
       {/if}
 
-      <!-- Fallback img - uses largest WebP as src, with srcset for responsive -->
+      <!-- Fallback img keeps the original asset for browsers without WebP support -->
       <img
-        src={optimizedSrc}
-        srcset={webpSrcset || undefined}
+        {src}
         {sizes}
         {alt}
         loading={priority ? "eager" : "lazy"}
