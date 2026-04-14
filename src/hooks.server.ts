@@ -4,6 +4,8 @@ import { sequence } from '@sveltejs/kit/hooks';
 import { building } from '$app/environment';
 import { auth } from '$lib/auth';
 import { svelteKitHandler } from 'better-auth/svelte-kit';
+import { cookieMaxAge, cookieName } from '$lib/paraglide/runtime';
+import { getPreviewLocale } from '$lib/server/preview';
 import { addCorsHeaders, handleCorsPreflightRequest, hydrateRequestAuth, isProtectedRoute, requireAuthenticatedUser } from '$lib/utils/routing';
 
 const handleParaglide: Handle = ({ event, resolve }) => paraglideMiddleware(event.request, ({ request, locale }) => {
@@ -16,6 +18,37 @@ const handleParaglide: Handle = ({ event, resolve }) => paraglideMiddleware(even
 
 export const customHandle: Handle = async ({ resolve, event }) => {
   const { url, request } = event
+
+  const previewLocale = await getPreviewLocale(url.pathname);
+  if (previewLocale) {
+    const headers = new Headers(request.headers);
+    const rawCookie = headers.get('cookie');
+    const cookies = new Map(
+      (rawCookie ?? '')
+        .split(';')
+        .map((cookie) => cookie.trim())
+        .filter(Boolean)
+        .map((cookie) => {
+          const separatorIndex = cookie.indexOf('=');
+          if (separatorIndex === -1) return [cookie, ''];
+          return [cookie.slice(0, separatorIndex), cookie.slice(separatorIndex + 1)];
+        }),
+    );
+
+    cookies.set(cookieName, previewLocale);
+    headers.set(
+      'cookie',
+      Array.from(cookies.entries())
+        .map(([name, value]) => `${name}=${value}`)
+        .join('; '),
+    );
+
+    event.request = new Request(request, { headers });
+    event.cookies.set(cookieName, previewLocale, {
+      path: '/',
+      maxAge: cookieMaxAge,
+    });
+  }
 
   // Handle API routes
   if (url.pathname.startsWith('/api')) {

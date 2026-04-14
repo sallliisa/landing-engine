@@ -1,8 +1,8 @@
 import prisma from '$lib/utils/prisma.js'
 import { error } from '@sveltejs/kit'
-import {sectionLoaders} from './sections/index.js'
 import { getLocale } from '$lib/paraglide/runtime.js';
 import { parseSearchParams } from '$lib/utils/common.js';
+import { loadSectionsForPageTranslation } from '$lib/server/landing-page.js';
 
 export async function load({ params, parent, url, cookies }) {
   console.debug('[DEBUG]', {
@@ -53,46 +53,11 @@ export async function load({ params, parent, url, cookies }) {
     throw error(404, 'Page or translation not found for this path and locale');
   }
 
-  const pageTranslation = targetMenuItem.page[0].translations[0];
-  const currentPageSectionGroup = pageTranslation?.sectionGroups[0]?.id || null;
-
-  if (!currentPageSectionGroup) throw error(500, 'Section group not found for this page translation')
-
-  const pageSectionGroup = await prisma.sectionGroup.findUnique({
-    where: {id: currentPageSectionGroup},
-    include: {
-      sections: {
-        orderBy: {
-          order: 'asc'
-        }
-      }
-    }
-  });
-
   const currentPageSearchParams = parseSearchParams(url.searchParams);
+  const pageTranslation = targetMenuItem.page[0].translations[0];
+  const resolvedPage = await loadSectionsForPageTranslation(pageTranslation.id);
 
-  if (!pageSectionGroup) throw error(500, 'Section group not found');
+  if (!resolvedPage) throw error(404, 'Page translation not found');
 
-  const sectionsWithData = await Promise.all(
-    pageSectionGroup.sections.map(async (section) => {
-      if (!section.section_type_code) return section
-      const loader = sectionLoaders[section.section_type_code]
-      let data = null
-      if (loader) {
-        try {
-          data = await loader(section);
-        } catch (loaderError) {
-           console.error(`Error loading data for section ${section.id} (${section.section_type_code}):`, loaderError);
-           data = null;
-        }
-      }
-      // return data !== null ? data : section;
-      return {
-        ...section,
-        data,
-      }
-    })
-  );
-
-  return { sections: sectionsWithData, };
-}
+  return { sections: resolvedPage.sections, currentPageSearchParams };
+} 
